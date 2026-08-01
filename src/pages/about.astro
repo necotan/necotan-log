@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+
+const description = 'necotan log.について(技術スタック、RSS、免責事項など)';
+
+const headings = [
+  { depth: 2, slug: 'tech-stack', text: '技術スタック' },
+  { depth: 2, slug: 'rss', text: 'RSSについて' },
+  { depth: 2, slug: 'disclaimer', text: '免責事項' },
+];
+---
+
+<BaseLayout title="About | necotan log." description={description}>
+  <div class="mx-auto max-w-6xl px-6 py-12 lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:items-start lg:gap-12">
+    <div class="lg:col-start-1 lg:row-start-1">
+      <h1 class="text-3xl font-semibold tracking-tight text-fg">About</h1>
+
+      <TableOfContents headings={headings} variant="mobile" />
+
+      <div class="article-body max-w-3xl">
+        <p class="mt-6">
+          necotan log.は、写真・カメラ、愛車、デスク環境、個人開発など、日々の記録を残すために作成した個人ブログです。
+        </p>
+        <p>
+          普段はnoteで写真エッセイを中心に発信していましたが、写真以外の趣味を書く場所として、このブログを立ち上げました。
+        </p>
+
+        <h2 id="tech-stack">技術スタック</h2>
+        <p>
+          necotan log.はAstro / Tailwind CSSで構築し、Cloudflare
+          Pagesでホスティングしています。記事はMarkdown/MDXで執筆し、Astro
+          Content Layerでビルド時に静的HTMLへ変換しています。写真はCloudflare
+          R2にアップロードし、astro:assetsで最適化して配信しています。型はTypeScriptで統一しています。
+        </p>
+
+        <h2 id="rss">RSSについて</h2>
+        <p>
+          記事は<a href="/rss.xml">RSSフィード</a>でも配信しています。お好きなRSSリーダーで購読してください。
+        </p>
+
+        <h2 id="disclaimer">免責事項</h2>
+        <p>
+          本サイトの内容は執筆時点の情報に基づく個人の記録であり、正確性を保証するものではありません。掲載内容を参考にした行動により生じた損害について、運営者は責任を負いかねます。写真・文章の無断転載はご遠慮ください。
+        </p>
+      </div>
+    </div>
+
+    <TableOfContents headings={headings} variant="desktop" />
+  </div>
+</BaseLayout>

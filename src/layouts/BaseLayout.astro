@@ -1,0 +1,66 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+
+interface Props {
+  title: string;
+  description: string;
+  /** Header/Footerを表示しない単独ページ(404など)ではfalseにする */
+  chrome?: boolean;
+  /** OGP/Twitter Card用の画像(未指定時はサイト共通のog-default.pngを使用) */
+  image?: string;
+  /** OGPのog:type(記事詳細ページではArticleLayoutから'article'を渡す) */
+  type?: 'website' | 'article';
+}
+
+const { title, description, chrome = true, image, type = 'website' } = Astro.props;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const ogImageURL = new URL(image ?? '/og-default.png', Astro.site).href;
+---
+
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>
+      const stored = localStorage.getItem('theme');
+      const theme = stored ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+    </script>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="canonical" href={canonicalURL} />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <meta name="description" content={description} />
+    <title>{title}</title>
+
+    <meta property="og:type" content={type} />
+    <meta property="og:site_name" content="necotan log." />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:image" content={ogImageURL} />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageURL} />
+  </head>
+  <body class="flex min-h-screen flex-col bg-bg text-fg">
+    {
+      chrome ? (
+        <>
+          <Header />
+          <main class="flex-1">
+            <slot />
+          </main>
+          <Footer />
+        </>
+      ) : (
+        <slot />
+      )
+    }
+  </body>
+</html>

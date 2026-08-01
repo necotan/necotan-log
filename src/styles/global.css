@@ -1,0 +1,156 @@
+@import "tailwindcss";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/noto-sans-jp";
+
+/* prefers-color-schemeではなく.darkクラスでダーク/ライトを切り替える(darkMode: 'class'相当) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  /* モノトーン基調(グレースケールのみ、色相を持つアクセントカラーは使わない) */
+  --color-bg: var(--bg);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-fg: var(--fg);
+  --color-fg-muted: var(--fg-muted);
+  --color-border: var(--border);
+
+  /* 欧文はInter、和文はNoto Sans JPでOSに依存しない見た目の統一感を出す */
+  --font-sans:
+    'Inter Variable', 'Noto Sans JP Variable', ui-sans-serif, system-ui, sans-serif;
+}
+
+/* ダークモードを基準に設計し、ライトモードはその反転として構築する */
+/* gray系は青みがかった色相を持つため、純粋な無彩色のneutral系を使う */
+:root {
+  --bg: var(--color-neutral-950);
+  --bg-subtle: var(--color-neutral-900);
+  --fg: var(--color-neutral-50);
+  --fg-muted: var(--color-neutral-400);
+  --border: var(--color-neutral-800);
+}
+
+:root:not(.dark) {
+  --bg: var(--color-neutral-50);
+  --bg-subtle: var(--color-white);
+  --fg: var(--color-neutral-950);
+  --fg-muted: var(--color-neutral-500);
+  --border: var(--color-neutral-200);
+}
+
+/* 記事本文(Markdownレンダリング結果)のタイポグラフィ。既存パレット(--fg/--bg-subtle等)のみを使う */
+@layer components {
+  .article-body {
+    color: var(--fg);
+    line-height: 1.8;
+  }
+
+  .article-body h2 {
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    font-size: 1.375rem;
+    font-weight: 600;
+  }
+
+  .article-body h3 {
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+  }
+
+  .article-body p {
+    margin-top: 1.25rem;
+  }
+
+  .article-body a {
+    color: var(--fg);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .article-body ul,
+  .article-body ol {
+    margin-top: 1.25rem;
+    padding-left: 1.5rem;
+  }
+
+  .article-body ul {
+    list-style: disc;
+  }
+
+  .article-body ol {
+    list-style: decimal;
+  }
+
+  .article-body li + li {
+    margin-top: 0.5rem;
+  }
+
+  .article-body blockquote {
+    margin-top: 1.5rem;
+    border-left: 2px solid var(--border);
+    padding-left: 1rem;
+    color: var(--fg-muted);
+  }
+
+  .article-body img {
+    margin-top: 1.5rem;
+    border-radius: 0.5rem;
+    border: 1px solid var(--border);
+  }
+
+  .article-body .image-grid {
+    margin-top: 1.5rem;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
+  }
+
+  .article-body .image-grid[data-count='3'],
+  .article-body .image-grid[data-count='4'] {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .article-body .image-grid img {
+    margin-top: 0;
+    aspect-ratio: 1 / 1;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .article-body code {
+    background-color: var(--bg-subtle);
+    padding: 0.15rem 0.4rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+  }
+
+  .article-body pre {
+    margin-top: 1.5rem;
+    overflow-x: auto;
+    border-radius: 0.5rem;
+    background-color: var(--bg-subtle);
+    padding: 1rem;
+  }
+
+  .article-body pre code {
+    background-color: transparent;
+    padding: 0;
+  }
+}
+
+/* 404ページのターミナル風カーソル点滅(CSSアニメーションのみ、JS不使用) */
+@keyframes terminal-blink {
+  0%,
+  50% {
+    opacity: 1;
+  }
+  50.01%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.terminal-caret {
+  animation: terminal-blink 1s steps(1) infinite;
+}

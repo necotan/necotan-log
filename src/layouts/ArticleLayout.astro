@@ -1,0 +1,205 @@
+---
+import { Share2 } from '@lucide/astro';
+import BaseLayout from './BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+import { categoryLabels, type Category } from '../lib/categories';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface RelatedPost {
+  href: string;
+  title: string;
+  description: string;
+  pubDate: Date;
+  category: Category;
+  heroImage?: string;
+}
+
+interface AdjacentPost {
+  href: string;
+  title: string;
+}
+
+interface Props {
+  title: string;
+  description: string;
+  pubDate: Date;
+  category: Category;
+  tags?: string[];
+  heroImage?: string;
+  readingMinutes: number;
+  headings: Heading[];
+  prevPost?: AdjacentPost;
+  nextPost?: AdjacentPost;
+  relatedPosts: RelatedPost[];
+}
+
+const {
+  title,
+  description,
+  pubDate,
+  category,
+  tags,
+  heroImage,
+  readingMinutes,
+  headings,
+  prevPost,
+  nextPost,
+  relatedPosts,
+} = Astro.props;
+
+const formattedDate = pubDate.toLocaleDateString('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+});
+
+const shareUrl = Astro.url.href;
+const shareText = `${title} | necotan log.`;
+const shareHref = `https://x.com/intent/post?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
+const categoryHref = new URL(`/category/${category}/`, Astro.site).href;
+const homeHref = new URL('/', Astro.site).href;
+
+const articleJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Article',
+  headline: title,
+  description,
+  ...(heroImage ? { image: [heroImage] } : {}),
+  datePublished: pubDate.toISOString(),
+  author: { '@type': 'Person', name: 'necotan' },
+  mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL },
+};
+
+const breadcrumbJsonLd = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'necotan log.', item: homeHref },
+    { '@type': 'ListItem', position: 2, name: categoryLabels[category], item: categoryHref },
+    { '@type': 'ListItem', position: 3, name: title, item: canonicalURL },
+  ],
+};
+---
+
+<BaseLayout
+  title={`${title} | necotan log.`}
+  description={description}
+  image={heroImage}
+  type="article"
+>
+  <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} is:inline />
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} is:inline />
+  <article class="mx-auto max-w-6xl px-6 py-12 lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:items-start lg:gap-12">
+    <div class="lg:col-start-1 lg:row-start-1">
+      <header>
+        <nav aria-label="パンくずリスト" class="flex items-center gap-2 overflow-hidden text-xs text-fg-muted">
+          <a href="/" class="shrink-0 hover:text-fg">
+            Home
+          </a>
+          <span class="shrink-0" aria-hidden="true">/</span>
+          <a href={`/category/${category}/`} class="shrink-0 hover:text-fg">
+            {categoryLabels[category]}
+          </a>
+          <span class="shrink-0" aria-hidden="true">/</span>
+          <span class="min-w-0 truncate font-medium text-fg" aria-current="page">{title}</span>
+        </nav>
+
+        <div class="mt-5 flex flex-wrap items-center gap-2">
+          <a
+            href={`/category/${category}/`}
+            class="rounded-full bg-fg px-3 py-1 text-xs font-medium text-bg transition-opacity hover:opacity-80"
+          >
+            {categoryLabels[category]}
+          </a>
+          {
+            tags &&
+              tags.map((tag) => (
+                <a
+                  href={`/tag/${encodeURIComponent(tag)}/`}
+                  class="rounded-full border border-border px-3 py-1 text-xs text-fg-muted hover:border-fg hover:text-fg"
+                >
+                  #{tag}
+                </a>
+              ))
+          }
+        </div>
+        <h1 class="mt-4 text-3xl font-semibold tracking-tight text-fg">{title}</h1>
+        <div class="mt-3 flex flex-wrap items-center gap-3 text-sm text-fg-muted">
+          <time datetime={pubDate.toISOString()}>{formattedDate}</time>
+          <span aria-hidden="true">/</span>
+          <span>{readingMinutes} min read</span>
+        </div>
+      </header>
+
+      <TableOfContents headings={headings} variant="mobile" />
+
+      <div class="article-body mt-8 max-w-3xl">
+        <slot />
+      </div>
+
+      <div class="mt-8 border-t border-border pt-8">
+        <a
+          href={shareHref}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm text-fg-muted hover:border-fg hover:text-fg"
+        >
+          <Share2 class="size-4" />
+          Share on X
+        </a>
+      </div>
+
+      {
+        (prevPost || nextPost) && (
+          <nav class="mt-8 grid grid-cols-1 gap-4 border-t border-border pt-8 sm:grid-cols-2" aria-label="前後の記事">
+            {prevPost && (
+              <a href={prevPost.href} class="rounded-lg border border-border p-4 hover:border-fg">
+                <p class="text-xs text-fg-muted">Previous</p>
+                <p class="mt-1 line-clamp-2 text-sm font-medium text-fg">{prevPost.title}</p>
+              </a>
+            )}
+            {nextPost && (
+              <a
+                href={nextPost.href}
+                class:list={['rounded-lg border border-border p-4 hover:border-fg', !prevPost && 'sm:col-start-2']}
+              >
+                <p class="text-xs text-fg-muted">Next</p>
+                <p class="mt-1 line-clamp-2 text-sm font-medium text-fg">{nextPost.title}</p>
+              </a>
+            )}
+          </nav>
+        )
+      }
+
+      {
+        relatedPosts.length > 0 && (
+          <section class="mt-10 border-t border-border pt-8">
+            <p class="text-sm font-semibold text-fg">Related</p>
+            <div class="mt-4 grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+              {relatedPosts.map((post) => (
+                <ArticleCard
+                  href={post.href}
+                  title={post.title}
+                  description={post.description}
+                  pubDate={post.pubDate}
+                  category={post.category}
+                  heroImage={post.heroImage}
+                />
+              ))}
+            </div>
+          </section>
+        )
+      }
+    </div>
+
+    <TableOfContents headings={headings} variant="desktop" />
+  </article>
+</BaseLayout>

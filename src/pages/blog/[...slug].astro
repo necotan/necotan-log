@@ -1,0 +1,56 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { estimateReadingMinutes } from '../../lib/readingTime';
+
+export async function getStaticPaths() {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const sorted = [...posts].sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+  return sorted.map((post, index) => ({
+    params: { slug: post.id },
+    props: {
+      post,
+      newerPost: sorted[index - 1],
+      olderPost: sorted[index + 1],
+      relatedPosts: sorted
+        .filter((p) => p.id !== post.id && p.data.category === post.data.category)
+        .slice(0, 3),
+    },
+  }));
+}
+
+interface Props {
+  post: CollectionEntry<'blog'>;
+  newerPost?: CollectionEntry<'blog'>;
+  olderPost?: CollectionEntry<'blog'>;
+  relatedPosts: CollectionEntry<'blog'>[];
+}
+
+const { post, newerPost, olderPost, relatedPosts } = Astro.props as Props;
+const { Content, headings } = await render(post);
+const readingMinutes = estimateReadingMinutes(post.body ?? '');
+---
+
+<ArticleLayout
+  title={post.data.title}
+  description={post.data.description}
+  pubDate={post.data.pubDate}
+  category={post.data.category}
+  tags={post.data.tags}
+  heroImage={post.data.heroImage}
+  readingMinutes={readingMinutes}
+  headings={headings}
+  prevPost={olderPost && { href: `/blog/${olderPost.id}/`, title: olderPost.data.title }}
+  nextPost={newerPost && { href: `/blog/${newerPost.id}/`, title: newerPost.data.title }}
+  relatedPosts={relatedPosts.map((p) => ({
+    href: `/blog/${p.id}/`,
+    title: p.data.title,
+    description: p.data.description,
+    pubDate: p.data.pubDate,
+    category: p.data.category,
+    heroImage: p.data.heroImage,
+  }))}
+>
+  <Content />
+</ArticleLayout>

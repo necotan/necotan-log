@@ -1,0 +1,30 @@
+---
+import { snsLinks } from '../lib/navigation';
+
+const year = new Date().getFullYear();
+---
+
+<footer>
+  <div class="mx-auto max-w-6xl px-6 py-12 text-center">
+    <p class="text-lg font-semibold tracking-tight text-fg">necotan log.</p>
+
+    <div class="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-fg-muted">
+      {
+        snsLinks.map((sns) => (
+          <a
+            href={sns.href}
+            class="hover:text-fg"
+            target={sns.href.startsWith('http') ? '_blank' : undefined}
+            rel={sns.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+          >
+            {sns.label}
+          </a>
+        ))
+      }
+    </div>
+
+    <p class="mt-8 text-xs text-fg-muted">
+      &copy; {year} necotan. All rights reserved.
+    </p>
+  </div>
+</footer>

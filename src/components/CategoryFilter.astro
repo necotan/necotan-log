@@ -1,0 +1,27 @@
+---
+import { categoryFilters } from '../lib/categories';
+
+interface Props {
+  activeHref: string;
+}
+
+const { activeHref } = Astro.props;
+---
+
+<nav class="flex flex-wrap gap-2">
+  {
+    categoryFilters.map((item) => (
+      <a
+        href={item.href}
+        class:list={[
+          'rounded-full border px-4 py-1.5 text-sm transition-colors',
+          item.href === activeHref
+            ? 'border-transparent bg-fg text-bg'
+            : 'border-border text-fg-muted hover:border-fg hover:text-fg',
+        ]}
+      >
+        {item.label}
+      </a>
+    ))
+  }
+</nav>

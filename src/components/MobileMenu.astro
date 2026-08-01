@@ -1,0 +1,116 @@
+---
+import { X } from '@lucide/astro';
+import { navGroups, snsLinks, isNavActive } from '../lib/navigation';
+
+const pathname = Astro.url.pathname;
+const year = new Date().getFullYear();
+---
+
+<div
+  id="mobile-menu"
+  class="fixed inset-0 z-50 hidden flex-col bg-bg text-fg"
+  role="dialog"
+  aria-modal="true"
+  aria-label="サイトメニュー"
+>
+  <div class="flex items-center justify-between px-6 py-5">
+    <button
+      id="mobile-menu-close"
+      type="button"
+      aria-label="メニューを閉じる"
+      class="rounded-full p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-fg"
+    >
+      <X class="size-6" />
+    </button>
+    <p class="text-sm font-medium tracking-wide">necotan log.</p>
+    <span class="size-6" aria-hidden="true"></span>
+  </div>
+
+  <nav class="flex flex-1 flex-col items-center justify-center gap-8 pb-16">
+    {
+      navGroups.map((group, groupIndex) => (
+        <>
+          {groupIndex > 0 && <span class="h-px w-32 bg-border" aria-hidden="true" />}
+          <div class="flex flex-col items-center gap-8">
+            {group.map((item) => (
+              <a
+                href={item.href}
+                class:list={[
+                  'text-2xl font-medium tracking-wide',
+                  isNavActive(pathname, item.href) ? 'text-fg underline underline-offset-4' : 'text-fg-muted',
+                ]}
+              >
+                {item.label}
+              </a>
+            ))}
+          </div>
+        </>
+      ))
+    }
+  </nav>
+
+  <div class="flex flex-wrap items-center justify-center gap-6 px-6 text-sm text-fg-muted">
+    {
+      snsLinks.map((sns) => (
+        <a
+          href={sns.href}
+          class="hover:text-fg"
+          target={sns.href.startsWith('http') ? '_blank' : undefined}
+          rel={sns.href.startsWith('http') ? 'noopener noreferrer' : undefined}
+        >
+          {sns.label}
+        </a>
+      ))
+    }
+  </div>
+
+  <p class="mt-6 pb-10 text-center text-xs text-fg-muted">
+    &copy; {year} necotan. All rights reserved.
+  </p>
+</div>
+
+<script>
+  const menu = document.getElementById('mobile-menu');
+  const openButton = document.getElementById('mobile-menu-open');
+  const closeButton = document.getElementById('mobile-menu-close');
+
+  function openMenu() {
+    if (!menu) return;
+    menu.classList.remove('hidden');
+    menu.classList.add('flex');
+    document.body.classList.add('overflow-hidden');
+    openButton?.setAttribute('aria-expanded', 'true');
+    closeButton?.focus();
+  }
+
+  function resetMenu() {
+    if (!menu) return;
+    menu.classList.add('hidden');
+    menu.classList.remove('flex');
+    document.body.classList.remove('overflow-hidden');
+    openButton?.setAttribute('aria-expanded', 'false');
+  }
+
+  function closeMenu() {
+    resetMenu();
+    openButton?.focus();
+  }
+
+  openButton?.addEventListener('click', openMenu);
+  closeButton?.addEventListener('click', closeMenu);
+
+  menu?.addEventListener('click', (event) => {
+    if (event.target instanceof HTMLAnchorElement) {
+      closeMenu();
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !menu?.classList.contains('hidden')) {
+      closeMenu();
+    }
+  });
+
+  // bfcache復元時にメニューが開いた状態のまま(body固定=スクロール不可)残るのを防ぐ
+  window.addEventListener('pageshow', resetMenu);
+</script>

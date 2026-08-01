@@ -1,0 +1,86 @@
+---
+import { Menu, Moon, Sun } from '@lucide/astro';
+import MobileMenu from './MobileMenu.astro';
+import { navGroups, isNavActive } from '../lib/navigation';
+
+const pathname = Astro.url.pathname;
+---
+
+<header id="site-header" class="sticky top-0 z-40 px-4 pt-4 md:px-6">
+  <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-2xl border border-border bg-bg-subtle/60 px-6 py-3 backdrop-blur-md">
+    <a href="/" class="text-lg font-semibold tracking-tight text-fg">
+      necotan log.
+    </a>
+
+    <nav class="hidden items-center gap-4 md:flex">
+      {
+        navGroups.map((group, groupIndex) => (
+          <>
+            {groupIndex > 0 && <span class="h-4 w-px bg-border" aria-hidden="true" />}
+            <div class="flex items-center gap-6">
+              {group.map((item) => (
+                <a
+                  href={item.href}
+                  class:list={[
+                    'text-sm transition-colors',
+                    isNavActive(pathname, item.href)
+                      ? 'font-semibold text-fg underline underline-offset-4'
+                      : 'text-fg-muted hover:text-fg',
+                  ]}
+                  aria-current={isNavActive(pathname, item.href) ? 'page' : undefined}
+                >
+                  {item.label}
+                </a>
+              ))}
+            </div>
+          </>
+        ))
+      }
+    </nav>
+
+    <div class="flex items-center gap-2">
+      <button
+        id="mobile-menu-open"
+        type="button"
+        aria-haspopup="dialog"
+        aria-expanded="false"
+        aria-controls="mobile-menu"
+        class="flex items-center gap-1.5 text-sm text-fg-muted transition-colors hover:text-fg md:hidden"
+      >
+        <Menu class="size-4" />
+        Menu
+      </button>
+
+      <button
+        id="theme-toggle"
+        type="button"
+        aria-label="ダーク/ライトモードを切り替える"
+        aria-pressed="false"
+        class="rounded-lg p-2 text-fg-muted transition-colors hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+      >
+        <Moon class="size-4 dark:hidden" />
+        <Sun class="hidden size-4 dark:block" />
+      </button>
+    </div>
+  </div>
+</header>
+
+<MobileMenu />
+
+<script>
+  const themeToggle = document.getElementById('theme-toggle');
+  themeToggle?.setAttribute('aria-pressed', String(document.documentElement.classList.contains('dark')));
+
+  themeToggle?.addEventListener('click', () => {
+    const isDark = document.documentElement.classList.toggle('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    themeToggle.setAttribute('aria-pressed', String(isDark));
+  });
+
+  // 明示的な選択(localStorage)が無い場合のみ、OS側のダーク/ライト切替に追従する
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
+    if (localStorage.getItem('theme')) return;
+    document.documentElement.classList.toggle('dark', event.matches);
+    themeToggle?.setAttribute('aria-pressed', String(event.matches));
+  });
+</script>
