@@ -1,4 +1,6 @@
 ---
+import { ChevronDown } from '@lucide/astro';
+
 interface Heading {
   depth: number;
   slug: string;
@@ -17,8 +19,8 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
 {
   items.length > 0 &&
     (variant === 'desktop' ? (
-      <nav aria-label="目次" class="hidden lg:sticky lg:top-24 lg:block">
-        <p class="text-sm font-semibold text-fg">目次</p>
+      <nav aria-label="TOC" class="hidden lg:sticky lg:top-24 lg:block">
+        <p class="text-sm font-semibold text-fg">TOC</p>
         <ul class="mt-3 space-y-2 border-l border-border pl-4 text-sm">
           {items.map((heading) => (
             <li class:list={[heading.depth === 3 && 'pl-4']}>
@@ -30,17 +32,104 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
         </ul>
       </nav>
     ) : (
-      <details class="mt-8 mb-8 rounded-lg border border-border p-4 lg:hidden">
-        <summary class="cursor-pointer text-sm font-semibold text-fg">目次</summary>
-        <ul class="mt-3 space-y-2 text-sm">
-          {items.map((heading) => (
-            <li class:list={[heading.depth === 3 && 'pl-4']}>
-              <a href={`#${heading.slug}`} class="text-fg-muted transition-colors hover:text-fg">
-                {heading.text}
-              </a>
-            </li>
-          ))}
-        </ul>
+      <details class="toc-details mt-8 mb-8 rounded-lg border border-border p-4 lg:hidden">
+        <summary class="flex cursor-pointer list-none items-center justify-between text-sm font-semibold text-fg [&::-webkit-details-marker]:hidden">
+          TOC
+          <ChevronDown class="toc-chevron size-4 text-fg-muted transition-transform duration-300" aria-hidden="true" />
+        </summary>
+        <div class="toc-content">
+          <ul class="mt-3 space-y-2 text-sm">
+            {items.map((heading) => (
+              <li class:list={[heading.depth === 3 && 'pl-4']}>
+                <a href={`#${heading.slug}`} class="text-fg-muted transition-colors hover:text-fg">
+                  {heading.text}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </details>
     ))
 }
+
+<script>
+  // detailsはopen属性を外すと即座に非表示になりCSSのtransitionが効かないため、WAAPIで高さをアニメーションし、閉じる時はアニメーション完了後にopenを外す
+  // 目標の高さはopen属性を一時的に切り替えて実測する(足し算で求めるとpadding/marginの分ズレる)
+  class TocAccordion {
+    private readonly details: HTMLDetailsElement;
+    private readonly summary: HTMLElement;
+    private readonly chevron: HTMLElement | null;
+    private animation: Animation | null = null;
+    private isClosing = false;
+    private isExpanding = false;
+
+    constructor(details: HTMLDetailsElement) {
+      this.details = details;
+      this.summary = details.querySelector('summary')!;
+      this.chevron = details.querySelector('.toc-chevron');
+      this.summary.addEventListener('click', (event) => this.onClick(event));
+    }
+
+    private onClick(event: MouseEvent) {
+      event.preventDefault();
+      this.details.style.overflow = 'hidden';
+
+      if (this.isClosing || !this.details.open) {
+        this.open();
+      } else if (this.isExpanding || this.details.open) {
+        this.shrink();
+      }
+    }
+
+    private shrink() {
+      this.isClosing = true;
+      this.chevron?.classList.remove('rotate-180');
+
+      const startHeight = `${this.details.offsetHeight}px`;
+      this.details.open = false;
+      const endHeight = `${this.details.offsetHeight}px`;
+      this.details.open = true;
+      this.details.style.height = startHeight;
+
+      this.animation?.cancel();
+      this.animation = this.details.animate({ height: [startHeight, endHeight] }, { duration: 250, easing: 'ease' });
+      this.animation.onfinish = () => this.onAnimationFinish(false);
+      this.animation.oncancel = () => {
+        this.isClosing = false;
+      };
+    }
+
+    private open() {
+      this.details.style.height = `${this.details.offsetHeight}px`;
+      this.details.open = true;
+      this.chevron?.classList.add('rotate-180');
+      requestAnimationFrame(() => this.expand());
+    }
+
+    private expand() {
+      this.isExpanding = true;
+      const startHeight = `${this.details.offsetHeight}px`;
+      this.details.style.height = '';
+      const endHeight = `${this.details.offsetHeight}px`;
+      this.details.style.height = startHeight;
+
+      this.animation?.cancel();
+      this.animation = this.details.animate({ height: [startHeight, endHeight] }, { duration: 250, easing: 'ease' });
+      this.animation.onfinish = () => this.onAnimationFinish(true);
+      this.animation.oncancel = () => {
+        this.isExpanding = false;
+      };
+    }
+
+    private onAnimationFinish(open: boolean) {
+      this.details.open = open;
+      this.animation = null;
+      this.isClosing = false;
+      this.isExpanding = false;
+      this.details.style.height = '';
+      this.details.style.overflow = '';
+    }
+  }
+
+  document.querySelectorAll<HTMLDetailsElement>('.toc-details').forEach((details) => new TocAccordion(details));
+</script>
