@@ -5,15 +5,11 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <BaseLayout title="404 | necotan log." description="Page not found" chrome={false}>
   <div class="flex min-h-screen justify-center bg-bg px-6 pt-24 font-mono text-fg md:items-center md:pt-6">
     <div class="w-full max-w-lg">
-      <p><span class="text-fg-muted">$</span> curl https://necotanlog.../this-article</p>
-      <p class="text-fg-muted opacity-80">
-        curl: (404) Not Found
-      </p>
+      <p><span class="text-fg-muted">$</span> curl -sI https://necotan-log.necomiya-necotan.workers.dev<span class="req-path">/this-article</span></p>
+      <p class="text-fg-muted opacity-80">HTTP/2 404</p>
+      <p class="text-fg-muted opacity-80">content-type: text/html; charset=utf-8</p>
 
-      <p class="mt-6"><span class="text-fg-muted">$</span> git log --oneline --grep="this-page"</p>
-      <p class="text-fg-muted opacity-80">
-        fatal: no such commit
-      </p>
+      <p class="mt-6"><span class="text-fg-muted">$</span> git log --oneline --grep="<span class="req-term">this-article</span>"</p>
 
       <p class="mt-6">
         <span class="text-fg-muted">$</span> <span class="terminal-caret">█</span>
@@ -27,4 +23,15 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </div>
     </div>
   </div>
+
+  <script is:inline>
+    const path = location.pathname;
+    const term = path.replace(/^\/|\/$/g, '') || 'home';
+    document.querySelectorAll('.req-path').forEach((el) => {
+      el.textContent = path;
+    });
+    document.querySelectorAll('.req-term').forEach((el) => {
+      el.textContent = term;
+    });
+  </script>
 </BaseLayout>
