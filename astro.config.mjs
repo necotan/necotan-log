@@ -7,8 +7,7 @@ import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
 import rehypeImageGrid from './src/lib/rehypeImageGrid.ts';
 
-// TODO: 独自ドメイン取得後、正式なURLに差し替え
-const SITE_URL = 'https://necotan-log.necomiya-necotan.workers.dev';
+const SITE_URL = 'https://necotan-log.com';
 
 // https://astro.build/config
 export default defineConfig({
