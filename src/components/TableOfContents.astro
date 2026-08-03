@@ -24,7 +24,13 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
         <ul class="mt-3 space-y-2 border-l border-border pl-4 text-sm">
           {items.map((heading) => (
             <li class:list={[heading.depth === 3 && 'pl-4']}>
-              <a href={`#${heading.slug}`} class="text-fg-muted transition-colors hover:text-fg">
+              <a
+                href={`#${heading.slug}`}
+                data-toc-link
+                data-slug={heading.slug}
+                class="flex items-center gap-2 text-fg-muted transition-colors hover:text-fg"
+              >
+                <span data-toc-dot class="size-1.5 shrink-0 rounded-full border border-border transition-colors" aria-hidden="true" />
                 {heading.text}
               </a>
             </li>
@@ -132,4 +138,49 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
   }
 
   document.querySelectorAll<HTMLDetailsElement>('.toc-details').forEach((details) => new TocAccordion(details));
+
+  // 見出しが画面上部30%圏内に入ったらTOC側のドットと文字色を現在地としてハイライトする
+  class TocScrollSpy {
+    private readonly links: HTMLAnchorElement[];
+    private activeSlug: string | null = null;
+
+    constructor(links: HTMLAnchorElement[]) {
+      this.links = links;
+    }
+
+    setActive(slug: string) {
+      if (slug === this.activeSlug) return;
+      this.activeSlug = slug;
+
+      for (const link of this.links) {
+        const isActive = link.dataset.slug === slug;
+        link.classList.toggle('text-fg', isActive);
+        link.classList.toggle('text-fg-muted', !isActive);
+
+        const dot = link.querySelector<HTMLElement>('[data-toc-dot]');
+        dot?.classList.toggle('bg-fg', isActive);
+        dot?.classList.toggle('border-fg', isActive);
+        dot?.classList.toggle('border-border', !isActive);
+      }
+    }
+  }
+
+  const tocLinks = Array.from(document.querySelectorAll<HTMLAnchorElement>('[data-toc-link]'));
+  const headingElements = tocLinks
+    .map((link) => (link.dataset.slug ? document.getElementById(link.dataset.slug) : null))
+    .filter((el): el is HTMLElement => el !== null);
+
+  if (tocLinks.length > 0 && headingElements.length > 0) {
+    const spy = new TocScrollSpy(tocLinks);
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) spy.setActive(entry.target.id);
+        }
+      },
+      { rootMargin: '0px 0px -70% 0px', threshold: 0 },
+    );
+
+    headingElements.forEach((heading) => observer.observe(heading));
+  }
 </script>
