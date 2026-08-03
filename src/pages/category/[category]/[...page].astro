@@ -1,24 +1,31 @@
 ---
-import { getCollection } from 'astro:content';
-import BaseLayout from '../../layouts/BaseLayout.astro';
-import ArticleCard from '../../components/ArticleCard.astro';
-import CategoryFilter from '../../components/CategoryFilter.astro';
-import { CATEGORIES, categoryLabels, categoryDescriptions } from '../../lib/categories';
+import { getCollection, type CollectionEntry } from 'astro:content';
+import type { GetStaticPathsOptions, Page } from 'astro';
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ArticleCard from '../../../components/ArticleCard.astro';
+import CategoryFilter from '../../../components/CategoryFilter.astro';
+import Pagination from '../../../components/Pagination.astro';
+import { CATEGORIES, categoryLabels, categoryDescriptions } from '../../../lib/categories';
 
-export async function getStaticPaths() {
-  return CATEGORIES.map((category) => ({ params: { category } }));
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const posts = await getCollection('blog', ({ data }) => !data.draft);
+
+  return CATEGORIES.flatMap((category) => {
+    const filtered = posts
+      .filter((post) => post.data.category === category)
+      .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+
+    return paginate(filtered, { params: { category }, pageSize: 9 });
+  });
 }
 
 const { category } = Astro.params;
+const { page } = Astro.props as { page: Page<CollectionEntry<'blog'>> };
 
-const posts = (
-  await getCollection('blog', ({ data }) => !data.draft && data.category === category)
-).sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf());
+const label = categoryLabels[category as keyof typeof categoryLabels];
+const description = categoryDescriptions[category as keyof typeof categoryDescriptions];
 
-const label = categoryLabels[category];
-const description = categoryDescriptions[category];
-
-const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
+const canonicalURL = new URL(`/category/${category}/`, Astro.site).href;
 const homeHref = new URL('/', Astro.site).href;
 
 const breadcrumbJsonLd = {
@@ -42,10 +49,10 @@ const breadcrumbJsonLd = {
   </section>
 
   {
-    posts.length > 0 ? (
+    page.data.length > 0 ? (
       <section class="mx-auto max-w-6xl px-6 py-10">
         <div class="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
-          {posts.map((post) => (
+          {page.data.map((post) => (
             <ArticleCard
               href={`/blog/${post.id}/`}
               title={post.data.title}
@@ -56,6 +63,7 @@ const breadcrumbJsonLd = {
             />
           ))}
         </div>
+        <Pagination page={page} basePath={`/category/${category}/`} />
       </section>
     ) : (
       <section class="mx-auto flex min-h-[50vh] max-w-6xl items-center justify-center px-6 text-center">

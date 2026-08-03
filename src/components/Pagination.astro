@@ -1,0 +1,136 @@
+---
+import type { Page } from 'astro';
+
+interface Props {
+  page: Page<unknown>;
+  basePath: string;
+}
+
+const { page, basePath } = Astro.props;
+
+const pageUrl = (num: number) => (num === 1 ? basePath : `${basePath}${num}/`);
+
+/**
+ * 現在ページの前後siblingCount件と先頭/末尾を残し、間が1件だけ空くなら埋め、2件以上空くなら「…」に畳んで表示件数を抑える
+ */
+function getPageItems(currentPage: number, lastPage: number, siblingCount: number): (number | 'ellipsis')[] {
+  const pages = new Set<number>([1, lastPage]);
+  for (let i = currentPage - siblingCount; i <= currentPage + siblingCount; i++) {
+    if (i >= 1 && i <= lastPage) pages.add(i);
+  }
+
+  const sorted = Array.from(pages).sort((a, b) => a - b);
+  const items: (number | 'ellipsis')[] = [];
+  let prev = 0;
+
+  for (const p of sorted) {
+    if (prev) {
+      if (p - prev === 2) {
+        items.push(prev + 1);
+      } else if (p - prev > 2) {
+        items.push('ellipsis');
+      }
+    }
+    items.push(p);
+    prev = p;
+  }
+
+  return items;
+}
+
+// モバイルでは横幅が限られるため、siblingCountを1つ減らして表示件数を抑える
+const mobilePageItems = getPageItems(page.currentPage, page.lastPage, 1);
+const desktopPageItems = getPageItems(page.currentPage, page.lastPage, 2);
+
+const prevNextClass =
+  'shrink-0 rounded-full border border-border px-5 py-2 text-xs font-medium tracking-wide text-fg-muted uppercase transition-colors';
+const numberClass = 'flex size-9 shrink-0 items-center justify-center rounded-full border text-sm transition-colors';
+---
+
+{
+  page.lastPage > 1 && (
+    <Fragment>
+      <nav class="mt-20 flex items-center justify-center gap-2 sm:hidden" aria-label="ページネーション">
+        <a
+          href={page.url.prev ?? '#'}
+          aria-disabled={!page.url.prev}
+          tabindex={page.url.prev ? undefined : -1}
+          class:list={[prevNextClass, page.url.prev ? 'hover:border-fg hover:text-fg' : 'pointer-events-none opacity-40']}
+        >
+          Prev
+        </a>
+
+        {mobilePageItems.map((item) =>
+          item === 'ellipsis' ? (
+            <span class="flex size-9 shrink-0 items-center justify-center text-fg-muted" aria-hidden="true">
+              …
+            </span>
+          ) : (
+            <a
+              href={pageUrl(item)}
+              aria-current={item === page.currentPage ? 'page' : undefined}
+              class:list={[
+                numberClass,
+                item === page.currentPage
+                  ? 'border-transparent bg-fg text-bg'
+                  : 'border-border text-fg-muted hover:border-fg hover:text-fg',
+              ]}
+            >
+              {item}
+            </a>
+          ),
+        )}
+
+        <a
+          href={page.url.next ?? '#'}
+          aria-disabled={!page.url.next}
+          tabindex={page.url.next ? undefined : -1}
+          class:list={[prevNextClass, page.url.next ? 'hover:border-fg hover:text-fg' : 'pointer-events-none opacity-40']}
+        >
+          Next
+        </a>
+      </nav>
+
+      <nav class="mt-20 hidden items-center justify-center gap-2 sm:flex" aria-label="ページネーション">
+        <a
+          href={page.url.prev ?? '#'}
+          aria-disabled={!page.url.prev}
+          tabindex={page.url.prev ? undefined : -1}
+          class:list={[prevNextClass, page.url.prev ? 'hover:border-fg hover:text-fg' : 'pointer-events-none opacity-40']}
+        >
+          Prev
+        </a>
+
+        {desktopPageItems.map((item) =>
+          item === 'ellipsis' ? (
+            <span class="flex size-9 shrink-0 items-center justify-center text-fg-muted" aria-hidden="true">
+              …
+            </span>
+          ) : (
+            <a
+              href={pageUrl(item)}
+              aria-current={item === page.currentPage ? 'page' : undefined}
+              class:list={[
+                numberClass,
+                item === page.currentPage
+                  ? 'border-transparent bg-fg text-bg'
+                  : 'border-border text-fg-muted hover:border-fg hover:text-fg',
+              ]}
+            >
+              {item}
+            </a>
+          ),
+        )}
+
+        <a
+          href={page.url.next ?? '#'}
+          aria-disabled={!page.url.next}
+          tabindex={page.url.next ? undefined : -1}
+          class:list={[prevNextClass, page.url.next ? 'hover:border-fg hover:text-fg' : 'pointer-events-none opacity-40']}
+        >
+          Next
+        </a>
+      </nav>
+    </Fragment>
+  )
+}
