@@ -1,0 +1,48 @@
+---
+import { getCollection, type CollectionEntry } from 'astro:content';
+import type { GetStaticPathsOptions, Page } from 'astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ArticleCard from '../components/ArticleCard.astro';
+import CategoryFilter from '../components/CategoryFilter.astro';
+import Pagination from '../components/Pagination.astro';
+
+export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
+  const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+    (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+  );
+
+  return paginate(posts, { pageSize: 9 });
+}
+
+const { page } = Astro.props as { page: Page<CollectionEntry<'blog'>> };
+---
+
+<BaseLayout title="necotan log." description="写真・カメラ、愛車、デスク、個人開発を記録する個人ブログ">
+  <section class="mx-auto max-w-6xl px-6 pt-10">
+    <CategoryFilter activeHref="/" />
+  </section>
+
+  <section class="mx-auto max-w-6xl px-6 py-10">
+    {
+      page.data.length > 0 ? (
+        <>
+          <div class="grid grid-cols-1 gap-x-8 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
+            {page.data.map((post) => (
+              <ArticleCard
+                href={`/blog/${post.id}/`}
+                title={post.data.title}
+                description={post.data.description}
+                pubDate={post.data.pubDate}
+                category={post.data.category}
+                heroImage={post.data.heroImage}
+              />
+            ))}
+          </div>
+          <Pagination page={page} basePath="/" />
+        </>
+      ) : (
+        <p class="text-fg-muted">まだ記事がありません。</p>
+      )
+    }
+  </section>
+</BaseLayout>
