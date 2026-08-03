@@ -25,7 +25,12 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   </div>
 
   <script is:inline>
-    const path = location.pathname;
+    let path = location.pathname;
+    try {
+      path = decodeURIComponent(path);
+    } catch {
+      // 不正なパーセントエンコーディングの場合はそのまま表示する
+    }
     const term = path.replace(/^\/|\/$/g, '') || 'home';
     document.querySelectorAll('.req-path').forEach((el) => {
       el.textContent = path;
