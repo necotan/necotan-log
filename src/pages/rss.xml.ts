@@ -32,7 +32,7 @@ export async function GET(context: APIContext) {
 
   return rss({
     title: 'necotan log.',
-    description: '写真・カメラ、愛車、デスク、個人開発を記録する個人ブログ',
+    description: 'necotan log.は、写真・カメラ、愛車、デスク環境、個人開発など、日々の記録を残すために作成した個人ブログです。',
     site: context.site,
     items,
     customData: '<language>ja</language>',
