@@ -17,7 +17,7 @@ export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
 const { page } = Astro.props as { page: Page<CollectionEntry<'blog'>> };
 ---
 
-<BaseLayout title="necotan log." description="写真・カメラ、愛車、デスク、個人開発を記録する個人ブログ">
+<BaseLayout title="necotan log." description="necotan log.は、写真・カメラ、愛車、デスク環境、個人開発など、日々の記録を残すために作成した個人ブログです。">
   <section class="mx-auto max-w-6xl px-6 pt-10">
     <CategoryFilter activeHref="/" />
   </section>
