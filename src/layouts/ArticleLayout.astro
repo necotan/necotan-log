@@ -61,7 +61,7 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
 
 const shareUrl = Astro.url.href;
 const shareText = `${title} | necotan log.`;
-const shareHref = `https://x.com/intent/post?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
+const shareHref = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
 const categoryHref = new URL(`/category/${category}/`, Astro.site).href;
