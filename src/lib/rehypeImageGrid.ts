@@ -10,10 +10,20 @@ function isWhitespaceText(node: RootContent): boolean {
   return node.type === 'text' && node.value.trim() === '';
 }
 
-/**
- * 画像だけで構成された<p>を検出し、画像が2枚以上あれば、<div class="image-grid">にまとめてミニグリッド表示にする
- * Astro内部のrehypeImagesは<img>のtagNameを保ったままpropertiesだけ、差し替えるため、tagNameで判定するこの処理はプラグインの実行順に関係なく機能する
- */
+// 2枚の画像を縦写真ペアとして扱いたいとき、Markdownのtitle記法で ![alt](url "vertical") のように付与する
+const PORTRAIT_MARKER = 'vertical';
+
+function hasPortraitMarker(node: Element): boolean {
+  return node.properties.title === PORTRAIT_MARKER;
+}
+
+function stripPortraitMarker(node: Element): void {
+  if (node.properties.title === PORTRAIT_MARKER) {
+    delete node.properties.title;
+  }
+}
+
+// PORTRAIT_MARKER付き画像がちょうど2枚の<p>だけimage-gridにまとめる (title属性はツールチップ化を防ぐため出力前に除去する)
 const rehypeImageGrid: Plugin<[], Root> = () => (tree) => {
   visit(tree, 'element', (node: Element) => {
     if (node.tagName !== 'p') {
@@ -23,7 +33,14 @@ const rehypeImageGrid: Plugin<[], Root> = () => (tree) => {
     const isImagesOnly = node.children.every((child) => isImgElement(child) || isWhitespaceText(child));
     const images = node.children.filter(isImgElement);
 
-    if (!isImagesOnly || images.length < 2) {
+    if (!isImagesOnly) {
+      return;
+    }
+
+    const isPortraitPair = images.length === 2 && images.every(hasPortraitMarker);
+    images.forEach(stripPortraitMarker);
+
+    if (!isPortraitPair) {
       return;
     }
 
@@ -31,7 +48,6 @@ const rehypeImageGrid: Plugin<[], Root> = () => (tree) => {
     node.properties = {
       ...node.properties,
       className: ['image-grid'],
-      dataCount: images.length,
     };
     node.children = images;
   });
