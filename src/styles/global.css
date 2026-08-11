@@ -26,6 +26,10 @@
   --fg: var(--color-neutral-50);
   --fg-muted: var(--color-neutral-400);
   --border: var(--color-neutral-800);
+
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-sheen: rgba(255, 255, 255, 0.16);
+  --glass-inner-shadow: rgba(0, 0, 0, 0.4);
 }
 
 :root:not(.dark) {
@@ -34,6 +38,19 @@
   --fg: var(--color-neutral-950);
   --fg-muted: var(--color-neutral-500);
   --border: var(--color-neutral-200);
+
+  --glass-border: rgba(0, 0, 0, 0.08);
+  --glass-sheen: rgba(255, 255, 255, 0.9);
+  --glass-inner-shadow: rgba(0, 0, 0, 0.04);
+}
+
+@layer components {
+  .glass-panel {
+    border: 1px solid var(--glass-border);
+    box-shadow:
+      inset 0 1px 0 0 var(--glass-sheen),
+      inset 0 -1px 0 0 var(--glass-inner-shadow);
+  }
 }
 
 /* 記事本文(Markdownレンダリング結果)のタイポグラフィ。既存パレット(--fg/--bg-subtle等)のみを使う */
