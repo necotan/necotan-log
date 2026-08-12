@@ -22,10 +22,8 @@ const pathname = Astro.url.pathname;
                 <a
                   href={item.href}
                   class:list={[
-                    'text-sm transition-colors',
-                    isNavActive(pathname, item.href)
-                      ? 'font-semibold text-fg underline underline-offset-4'
-                      : 'text-fg-muted hover:text-fg',
+                    'text-sm text-fg underline-offset-4 hover:underline',
+                    isNavActive(pathname, item.href) ? 'font-semibold underline' : '',
                   ]}
                   aria-current={isNavActive(pathname, item.href) ? 'page' : undefined}
                 >
@@ -45,7 +43,7 @@ const pathname = Astro.url.pathname;
         aria-haspopup="dialog"
         aria-expanded="false"
         aria-controls="mobile-menu"
-        class="flex items-center gap-1.5 text-sm text-fg-muted transition-colors hover:text-fg md:hidden"
+        class="flex items-center gap-1.5 text-sm text-fg md:hidden"
       >
         <Menu class="size-4" />
         Menu
@@ -56,7 +54,7 @@ const pathname = Astro.url.pathname;
         type="button"
         aria-label="ダーク/ライトモードを切り替える"
         aria-pressed="false"
-        class="rounded-lg p-2 text-fg-muted transition-colors hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+        class="rounded-lg p-2 text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
       >
         <Moon class="size-4 dark:hidden" />
         <Sun class="hidden size-4 dark:block" />
