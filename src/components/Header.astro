@@ -2,7 +2,14 @@
 import { Menu, Moon, Sun } from '@lucide/astro';
 import MobileMenu from './MobileMenu.astro';
 import { navGroups, isNavActive } from '../lib/navigation';
+import type { Category } from '../lib/categories';
 
+interface Props {
+  /** 記事詳細ページなど、pathnameだけではnav項目と一致しない場合に現在のカテゴリを渡す */
+  activeCategory?: Category;
+}
+
+const { activeCategory } = Astro.props;
 const pathname = Astro.url.pathname;
 ---
 
@@ -23,9 +30,9 @@ const pathname = Astro.url.pathname;
                   href={item.href}
                   class:list={[
                     'text-sm text-fg underline-offset-4 hover:underline',
-                    isNavActive(pathname, item.href) ? 'font-semibold underline' : '',
+                    isNavActive(pathname, item.href, activeCategory) ? 'font-semibold underline' : '',
                   ]}
-                  aria-current={isNavActive(pathname, item.href) ? 'page' : undefined}
+                  aria-current={isNavActive(pathname, item.href, activeCategory) ? 'page' : undefined}
                 >
                   {item.label}
                 </a>
@@ -63,7 +70,7 @@ const pathname = Astro.url.pathname;
   </div>
 </header>
 
-<MobileMenu />
+<MobileMenu activeCategory={activeCategory} />
 
 <script>
   const themeToggle = document.getElementById('theme-toggle');

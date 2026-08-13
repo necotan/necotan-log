@@ -2,6 +2,7 @@
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import type { Category } from '../lib/categories';
 
 interface Props {
   title: string;
@@ -12,9 +13,11 @@ interface Props {
   image?: string;
   /** OGPのog:type(記事詳細ページではArticleLayoutから'article'を渡す) */
   type?: 'website' | 'article';
+  /** 記事詳細ページなど、URLだけではnavのカテゴリ項目と一致しない場合に渡す */
+  activeCategory?: Category;
 }
 
-const { title, description, chrome = true, image, type = 'website' } = Astro.props;
+const { title, description, chrome = true, image, type = 'website', activeCategory } = Astro.props;
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL(image ?? '/og-default.png', Astro.site).href;
@@ -52,7 +55,7 @@ const ogImageURL = new URL(image ?? '/og-default.png', Astro.site).href;
     {
       chrome ? (
         <>
-          <Header />
+          <Header activeCategory={activeCategory} />
           <main class="flex-1">
             <slot />
           </main>
