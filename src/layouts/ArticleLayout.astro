@@ -94,6 +94,7 @@ const breadcrumbJsonLd = {
   description={description}
   image={heroImage}
   type="article"
+  activeCategory={category}
 >
   <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} is:inline />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} is:inline />

@@ -1,3 +1,5 @@
+import type { Category } from './categories';
+
 export type NavItem = {
   label: string;
   href: string;
@@ -29,9 +31,13 @@ export const snsLinks: SnsLink[] = [
   { label: 'RSS', href: '/rss.xml' },
 ];
 
-export function isNavActive(pathname: string, href: string): boolean {
+export function isNavActive(pathname: string, href: string, activeCategory?: Category): boolean {
   if (href === '/') {
     return pathname === '/';
+  }
+  // 記事詳細ページではpathnameがカテゴリnavのhrefと一致しないため、記事のカテゴリを別途受け取って判定する
+  if (activeCategory && href === `/category/${activeCategory}/`) {
+    return true;
   }
   return pathname === href || pathname.startsWith(href);
 }

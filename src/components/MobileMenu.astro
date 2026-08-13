@@ -1,7 +1,13 @@
 ---
 import { X } from '@lucide/astro';
 import { navGroups, snsLinks, isNavActive } from '../lib/navigation';
+import type { Category } from '../lib/categories';
 
+interface Props {
+  activeCategory?: Category;
+}
+
+const { activeCategory } = Astro.props;
 const pathname = Astro.url.pathname;
 const year = new Date().getFullYear();
 ---
@@ -37,7 +43,9 @@ const year = new Date().getFullYear();
                 href={item.href}
                 class:list={[
                   'text-2xl font-medium tracking-wide',
-                  isNavActive(pathname, item.href) ? 'text-fg underline underline-offset-4' : 'text-fg-muted',
+                  isNavActive(pathname, item.href, activeCategory)
+                    ? 'text-fg underline underline-offset-4'
+                    : 'text-fg-muted',
                 ]}
               >
                 {item.label}
