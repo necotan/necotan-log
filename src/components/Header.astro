@@ -16,7 +16,7 @@ const pathname = Astro.url.pathname;
       {
         navGroups.map((group, groupIndex) => (
           <>
-            {groupIndex > 0 && <span class="h-4 w-px bg-border" aria-hidden="true" />}
+            {groupIndex > 0 && <span class="h-4 w-px bg-fg" aria-hidden="true" />}
             <div class="flex items-center gap-6">
               {group.map((item) => (
                 <a
