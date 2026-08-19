@@ -5,6 +5,9 @@
 /* prefers-color-schemeではなく.darkクラスでダーク/ライトを切り替える(darkMode: 'class'相当) */
 @custom-variant dark (&:where(.dark, .dark *));
 
+/* ナビバーのピン留め状態(.header-pinned)を示すバリアント */
+@custom-variant pinned (&:where(.header-pinned, .header-pinned *));
+
 @theme inline {
   /* モノトーン基調(グレースケールのみ、色相を持つアクセントカラーは使わない) */
   --color-bg: var(--bg);

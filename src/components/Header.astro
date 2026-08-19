@@ -1,5 +1,5 @@
 ---
-import { Menu, Moon, Sun } from '@lucide/astro';
+import { Menu, Moon, Pin, PinOff, Sun } from '@lucide/astro';
 import MobileMenu from './MobileMenu.astro';
 import { navGroups, isNavActive } from '../lib/navigation';
 import type { Category } from '../lib/categories';
@@ -13,7 +13,7 @@ const { activeCategory } = Astro.props;
 const pathname = Astro.url.pathname;
 ---
 
-<header id="site-header" class="sticky top-0 z-40 px-4 pt-4 md:px-6">
+<header id="site-header" class="pinned:sticky pinned:top-0 z-40 px-4 pt-4 md:px-6">
   <div class="glass-panel mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-2xl bg-bg-subtle/60 px-6 py-3 backdrop-blur-md">
     <a href="/" class="text-lg font-semibold tracking-tight text-fg">
       necotan log.
@@ -56,16 +56,29 @@ const pathname = Astro.url.pathname;
         Menu
       </button>
 
-      <button
-        id="theme-toggle"
-        type="button"
-        aria-label="ダーク/ライトモードを切り替える"
-        aria-pressed="false"
-        class="rounded-lg p-2 text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
-      >
-        <Moon class="size-4 dark:hidden" />
-        <Sun class="hidden size-4 dark:block" />
-      </button>
+      <div class="flex items-center">
+        <button
+          id="header-pin-toggle"
+          type="button"
+          aria-label="ナビバーを上部に固定する"
+          aria-pressed="false"
+          class="rounded-lg p-2 text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+        >
+          <Pin class="size-4 pinned:hidden" />
+          <PinOff class="hidden size-4 pinned:block" />
+        </button>
+
+        <button
+          id="theme-toggle"
+          type="button"
+          aria-label="ダーク/ライトモードを切り替える"
+          aria-pressed="false"
+          class="rounded-lg p-2 text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+        >
+          <Moon class="size-4 dark:hidden" />
+          <Sun class="hidden size-4 dark:block" />
+        </button>
+      </div>
     </div>
   </div>
 </header>
@@ -80,6 +93,18 @@ const pathname = Astro.url.pathname;
     const isDark = document.documentElement.classList.toggle('dark');
     localStorage.setItem('theme', isDark ? 'dark' : 'light');
     themeToggle.setAttribute('aria-pressed', String(isDark));
+  });
+
+  const headerPinToggle = document.getElementById('header-pin-toggle');
+  headerPinToggle?.setAttribute(
+    'aria-pressed',
+    String(document.documentElement.classList.contains('header-pinned')),
+  );
+
+  headerPinToggle?.addEventListener('click', () => {
+    const isPinned = document.documentElement.classList.toggle('header-pinned');
+    localStorage.setItem('header-pinned', String(isPinned));
+    headerPinToggle.setAttribute('aria-pressed', String(isPinned));
   });
 
   // 明示的な選択(localStorage)が無い場合のみ、OS側のダーク/ライト切替に追従する
