@@ -6,6 +6,7 @@ import mdx from '@astrojs/mdx';
 import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
 import rehypeImageGrid from './src/lib/rehypeImageGrid.ts';
+import rehypeEmbed from './src/lib/rehypeEmbed.ts';
 
 const SITE_URL = 'https://necotan-log.com';
 
@@ -24,8 +25,14 @@ export default defineConfig({
   },
 
   markdown: {
+    // ```embed```コードブロックはYouTube埋め込み、リンクカードに変換するため、Shikiのハイライト対象から除外する
+    syntaxHighlight: {
+      type: 'shiki',
+      excludeLangs: ['math', 'embed'],
+    },
     // 連続する画像だけの段落をdiv.image-gridにまとめてミニグリッド表示する
-    processor: unified({ rehypePlugins: [rehypeImageGrid] }),
+    // ```embed```コードブロックをYouTube埋め込み、リンクカードに変換する
+    processor: unified({ rehypePlugins: [rehypeImageGrid, rehypeEmbed] }),
   },
 
   vite: {
