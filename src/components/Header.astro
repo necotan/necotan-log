@@ -29,8 +29,8 @@ const pathname = Astro.url.pathname;
                 <a
                   href={item.href}
                   class:list={[
-                    'text-sm text-fg underline-offset-4 hover:underline',
-                    isNavActive(pathname, item.href, activeCategory) ? 'font-semibold underline' : '',
+                    'nav-link text-sm text-fg',
+                    isNavActive(pathname, item.href, activeCategory) ? 'nav-link-active font-semibold' : '',
                   ]}
                   aria-current={isNavActive(pathname, item.href, activeCategory) ? 'page' : undefined}
                 >
@@ -84,6 +84,22 @@ const pathname = Astro.url.pathname;
 </header>
 
 <MobileMenu activeCategory={activeCategory} />
+
+<style>
+  /* 下線をbackground-imageで描画し、hover時にbackground-sizeをアニメーションさせて左から右にイージングで伸ばす */
+  .nav-link {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1px;
+    transition: background-size 0.35s ease-out;
+  }
+
+  .nav-link:hover,
+  .nav-link-active {
+    background-size: 100% 1px;
+  }
+</style>
 
 <script>
   const themeToggle = document.getElementById('theme-toggle');
