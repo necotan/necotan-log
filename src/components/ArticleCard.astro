@@ -62,7 +62,9 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
     transition: background-size 0.35s ease-out;
   }
 
-  .group:hover .card-title-underline {
-    background-size: 100% 1px;
+  @media (hover: hover) {
+    .group:hover .card-title-underline {
+      background-size: 100% 1px;
+    }
   }
 </style>
