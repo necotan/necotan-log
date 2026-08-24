@@ -49,6 +49,17 @@
   }
 }
 
+*,
+*::before,
+*::after {
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease,
+    fill 0.2s ease,
+    stroke 0.2s ease;
+}
+
 /* 記事本文(Markdownレンダリング結果)のタイポグラフィ。既存パレット(--fg/--bg-subtle等)のみを使う */
 @layer components {
   .article-body {
