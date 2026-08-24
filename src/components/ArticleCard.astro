@@ -40,8 +40,8 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
       }
     </div>
 
-    <h3 class="mt-3 line-clamp-2 text-base font-semibold text-fg group-hover:underline group-hover:underline-offset-2">
-      {title}
+    <h3 class="mt-3 line-clamp-2 text-base font-semibold text-fg">
+      <span class="card-title-underline">{title}</span>
     </h3>
     <p class="mt-1 line-clamp-2 text-sm text-fg-muted">{description}</p>
     <div class="mt-2 flex items-center gap-2 text-xs text-fg-muted">
@@ -51,3 +51,18 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
     </div>
   </a>
 </article>
+
+<style>
+  /* 下線をbackground-imageで描画し、hover時にbackground-sizeをアニメーションさせて左から右にイージングで伸ばす */
+  .card-title-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1.5px;
+    transition: background-size 0.35s ease-out;
+  }
+
+  .group:hover .card-title-underline {
+    background-size: 100% 1.5px;
+  }
+</style>

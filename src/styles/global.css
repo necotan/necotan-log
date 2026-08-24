@@ -241,9 +241,18 @@
     -webkit-box-orient: vertical;
   }
 
-  .article-body .embed-link-card:hover .embed-link-card-title {
-    text-decoration: underline;
-    text-underline-offset: 2px;
+  /* 下線をbackground-imageで描画し、hover時にbackground-sizeをアニメーションさせて左から右にイージングで伸ばす */
+  /* テキスト本来のinline要素(span)に付与することで、下線をブロック幅ではなく文字幅に合わせる */
+  .article-body .embed-link-card-title-text {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-repeat: no-repeat;
+    background-position: 0 100%;
+    background-size: 0% 1.5px;
+    transition: background-size 0.35s ease-out;
+  }
+
+  .article-body .embed-link-card:hover .embed-link-card-title-text {
+    background-size: 100% 1.5px;
   }
 
   .article-body .embed-link-card-description {

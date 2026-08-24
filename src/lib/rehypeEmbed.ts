@@ -79,7 +79,14 @@ function buildLinkCard(data: LinkCardData): Element {
       type: 'element',
       tagName: 'span',
       properties: { className: ['embed-link-card-title'] },
-      children: [{ type: 'text', value: data.title }],
+      children: [
+        {
+          type: 'element',
+          tagName: 'span',
+          properties: { className: ['embed-link-card-title-text'] },
+          children: [{ type: 'text', value: data.title }],
+        },
+      ],
     },
   ];
 
