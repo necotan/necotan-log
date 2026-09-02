@@ -30,7 +30,7 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
             src={heroImage}
             inferSize
             alt=""
-            class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
+            class="card-hero-image h-full w-full object-cover group-hover:scale-105"
           />
         ) : (
           <div class="flex h-full w-full items-center justify-center bg-bg-subtle">
@@ -53,6 +53,11 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
 </article>
 
 <style>
+  /* Tailwindのscale-*はtransformではなくCSSのscaleプロパティを直接変更するため、scaleを対象にtransitionを指定する */
+  .card-hero-image {
+    transition: scale 0.3s ease-out !important;
+  }
+
   /* 下線をbackground-imageで描画し、hover時にbackground-sizeをアニメーションさせて左から右にイージングで伸ばす */
   .card-title-underline {
     background-image: linear-gradient(currentColor, currentColor);
