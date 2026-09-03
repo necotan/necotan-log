@@ -120,6 +120,7 @@
     margin-top: 1.5rem;
     border-radius: 0.5rem;
     border: 1px solid var(--border);
+    cursor: zoom-in;
   }
 
   .article-body .image-grid {

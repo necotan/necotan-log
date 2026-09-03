@@ -1,6 +1,7 @@
 ---
 import BaseLayout from './BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
+import ImageViewer from '../components/ImageViewer.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import { categoryLabels, type Category } from '../lib/categories';
 
@@ -204,4 +205,6 @@ const breadcrumbJsonLd = {
 
     <TableOfContents headings={headings} variant="desktop" />
   </article>
+
+  <ImageViewer />
 </BaseLayout>
