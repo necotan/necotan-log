@@ -1,0 +1,68 @@
+---
+---
+
+<div
+  id="image-viewer"
+  class="fixed inset-0 z-50 hidden items-center justify-center bg-bg p-4"
+  role="dialog"
+  aria-modal="true"
+  aria-label="画像ビューア"
+>
+  <button
+    id="image-viewer-close"
+    type="button"
+    aria-label="閉じる"
+    class="absolute top-4 right-4 rounded-full px-3 py-2 text-sm text-fg-muted hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+  >
+    Close
+  </button>
+  <img id="image-viewer-img" src="" alt="" class="max-h-full max-w-full rounded-lg object-contain" />
+</div>
+
+<script>
+  const viewer = document.getElementById('image-viewer');
+  const viewerImg = document.getElementById('image-viewer-img') as HTMLImageElement | null;
+  const closeButton = document.getElementById('image-viewer-close');
+
+  function openViewer(src: string, alt: string): void {
+    if (!viewer || !viewerImg) return;
+    viewerImg.src = src;
+    viewerImg.alt = alt;
+    viewer.classList.remove('hidden');
+    viewer.classList.add('flex');
+    document.body.classList.add('overflow-hidden');
+  }
+
+  function closeViewer(): void {
+    if (!viewer || !viewerImg) return;
+    viewer.classList.add('hidden');
+    viewer.classList.remove('flex');
+    viewerImg.src = '';
+    document.body.classList.remove('overflow-hidden');
+  }
+
+  // 記事本文内の画像だけをビューア対象にする
+  document.querySelectorAll<HTMLImageElement>('.article-body img').forEach((img) => {
+    img.tabIndex = 0;
+    img.setAttribute('role', 'button');
+    img.setAttribute('aria-label', `${img.alt || '画像'}を拡大表示`);
+
+    img.addEventListener('click', () => openViewer(img.currentSrc || img.src, img.alt));
+    img.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      openViewer(img.currentSrc || img.src, img.alt);
+    });
+  });
+
+  closeButton?.addEventListener('click', closeViewer);
+
+  // 背景クリックで閉じる
+  viewer?.addEventListener('click', (event) => {
+    if (event.target === viewer) closeViewer();
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && !viewer?.classList.contains('hidden')) closeViewer();
+  });
+</script>
