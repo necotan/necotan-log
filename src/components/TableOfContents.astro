@@ -1,5 +1,5 @@
 ---
-import { ChevronDown } from '@lucide/astro';
+import { ChevronDown, ChevronUp } from '@lucide/astro';
 
 interface Heading {
   depth: number;
@@ -36,6 +36,13 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
             </li>
           ))}
         </ul>
+        <a
+          href="#top"
+          class="mt-4 flex items-center gap-2 pl-4 text-sm text-fg-muted transition-colors hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+        >
+          <ChevronUp class="size-3.5 shrink-0" aria-hidden="true" />
+          Back to top
+        </a>
       </nav>
     ) : (
       <details class="toc-details mt-8 mb-8 rounded-lg border border-border p-4 lg:hidden">
