@@ -148,7 +148,7 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
 
   document.querySelectorAll<HTMLDetailsElement>('.toc-details').forEach((details) => new TocAccordion(details));
 
-  // 見出しが画面上部30%圏内に入ったらTOC側のドットと文字色を現在地としてハイライトする
+  // スクロール位置に応じてTOCのリンクをハイライトする
   class TocScrollSpy {
     private readonly links: HTMLAnchorElement[];
     private activeSlug: string | null = null;
@@ -157,12 +157,12 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
       this.links = links;
     }
 
-    setActive(slug: string) {
+    setActive(slug: string | null) {
       if (slug === this.activeSlug) return;
       this.activeSlug = slug;
 
       for (const link of this.links) {
-        const isActive = link.dataset.slug === slug;
+        const isActive = slug !== null && link.dataset.slug === slug;
         link.classList.toggle('text-fg', isActive);
         link.classList.toggle('text-fg-muted', !isActive);
 
@@ -181,15 +181,28 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
 
   if (tocLinks.length > 0 && headingElements.length > 0) {
     const spy = new TocScrollSpy(tocLinks);
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          if (entry.isIntersecting) spy.setActive(entry.target.id);
-        }
-      },
-      { rootMargin: '0px 0px -70% 0px', threshold: 0 },
-    );
+    const activeLinePercent = 30;
+
+    // ラインより上にある最後の見出しを現在地とする
+    const updateActive = () => {
+      const lineY = (window.innerHeight * activeLinePercent) / 100;
+      let activeSlug: string | null = null;
+
+      for (const heading of headingElements) {
+        if (heading.getBoundingClientRect().top > lineY) break;
+        activeSlug = heading.id;
+      }
+
+      spy.setActive(activeSlug);
+    };
+
+    const observer = new IntersectionObserver(updateActive, {
+      rootMargin: `0px 0px -${100 - activeLinePercent}% 0px`,
+      threshold: 0,
+    });
 
     headingElements.forEach((heading) => observer.observe(heading));
+    window.addEventListener('resize', updateActive);
+    updateActive();
   }
 </script>
