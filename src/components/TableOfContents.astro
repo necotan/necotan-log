@@ -40,7 +40,9 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
           href="#top"
           class="mt-4 flex items-center gap-2 pl-4 text-sm text-fg-muted transition-colors hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
         >
-          <ChevronUp class="size-3.5 shrink-0" aria-hidden="true" />
+          <span class="flex w-1.5 shrink-0 justify-center" aria-hidden="true">
+            <ChevronUp class="size-3.5 shrink-0" />
+          </span>
           Back to top
         </a>
       </nav>
