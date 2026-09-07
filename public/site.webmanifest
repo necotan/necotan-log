@@ -1,0 +1,21 @@
+{
+  "name": "necotan log.",
+  "short_name": "necotan log.",
+  "description": "necotan log.は、写真・カメラ、愛車、デスク環境、個人開発など、日々の記録を残すために作成した個人ブログです。",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#fafafa",
+  "theme_color": "#fafafa",
+  "icons": [
+    {
+      "src": "/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
