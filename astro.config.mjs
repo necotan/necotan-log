@@ -36,7 +36,12 @@ export default defineConfig({
   },
 
   vite: {
-    plugins: [tailwindcss()]
+    plugins: [tailwindcss()],
+    build: {
+      // アイコンはdata URIにインライン化せず、必ずハッシュ付きファイルとして出力する
+      assetsInlineLimit: (filePath) =>
+        /(favicon|apple-touch-icon|icon-\d+x\d+)\./.test(filePath) ? false : undefined,
+    },
   },
 
   integrations: [mdx(), sitemap()]
