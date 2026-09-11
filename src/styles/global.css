@@ -31,6 +31,15 @@
   --border: var(--color-neutral-800);
 
   --glass-border: rgba(255, 255, 255, 0.12);
+
+  /* 404ページのターミナルウィンドウ */
+  --terminal-bg: var(--color-neutral-900);
+  --terminal-titlebar: var(--color-neutral-800);
+  --terminal-border: var(--color-neutral-700);
+
+  --terminal-dot-close: #ff5f57;
+  --terminal-dot-minimize: #febc2e;
+  --terminal-dot-maximize: #28c840;
 }
 
 :root:not(.dark) {
@@ -41,6 +50,10 @@
   --border: var(--color-neutral-200);
 
   --glass-border: rgba(0, 0, 0, 0.08);
+
+  --terminal-bg: var(--color-white);
+  --terminal-titlebar: var(--color-neutral-100);
+  --terminal-border: var(--color-neutral-300);
 }
 
 @layer components {
@@ -299,4 +312,74 @@
 
 .terminal-caret {
   animation: terminal-blink 1s steps(1) infinite;
+}
+
+/* 404ページのターミナルウィンドウ */
+@layer components {
+  .terminal-window {
+    overflow: hidden;
+    border: 1px solid var(--terminal-border);
+    border-radius: 0.625rem;
+    background-color: var(--terminal-bg);
+  }
+
+  .terminal-titlebar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    border-bottom: 1px solid var(--terminal-border);
+    background-color: var(--terminal-titlebar);
+    padding: 0.5rem 0.75rem;
+  }
+
+  .terminal-dots {
+    display: flex;
+    flex-shrink: 0;
+    gap: 0.375rem;
+  }
+
+  .terminal-dot {
+    width: 0.625rem;
+    height: 0.625rem;
+    border-radius: 9999px;
+  }
+
+  .terminal-dot-close {
+    background-color: var(--terminal-dot-close);
+  }
+
+  .terminal-dot-minimize {
+    background-color: var(--terminal-dot-minimize);
+  }
+
+  .terminal-dot-maximize {
+    background-color: var(--terminal-dot-maximize);
+  }
+
+  .terminal-title {
+    flex: 1;
+    overflow: hidden;
+    padding-right: calc(2.625rem + 0.5rem);
+    color: var(--fg-muted);
+    font-size: 0.75rem;
+    text-align: center;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .terminal-body {
+    padding: 1rem;
+    font-size: 0.875rem;
+    line-height: 1.7;
+    overflow-wrap: anywhere;
+  }
+
+  .terminal-prompt {
+    color: var(--fg-muted);
+    user-select: none;
+  }
+
+  .terminal-output {
+    color: var(--fg-muted);
+  }
 }

@@ -5,15 +5,28 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 <BaseLayout title="404 | necotan log." description="Page not found" chrome={false}>
   <div class="flex min-h-screen justify-center bg-bg px-6 pt-24 font-mono text-fg md:items-center md:pt-6">
     <div class="w-full max-w-lg">
-      <p><span class="text-fg-muted">$</span> curl -sI https://necotan-log.com<span class="req-path">/this-article</span></p>
-      <p class="text-fg-muted opacity-80">HTTP/2 404</p>
-      <p class="text-fg-muted opacity-80">content-type: text/html; charset=utf-8</p>
+      <div class="terminal-window">
+        <div class="terminal-titlebar">
+          <span class="terminal-dots" aria-hidden="true">
+            <span class="terminal-dot terminal-dot-close"></span>
+            <span class="terminal-dot terminal-dot-minimize"></span>
+            <span class="terminal-dot terminal-dot-maximize"></span>
+          </span>
+          <span class="terminal-title font-sans">~/necotan-log — bash</span>
+        </div>
 
-      <p class="mt-6"><span class="text-fg-muted">$</span> git log --oneline --grep="<span class="req-term">this-article</span>"</p>
+        <div class="terminal-body">
+          <p><span class="terminal-prompt">$</span> curl -sI https://necotan-log.com<span class="req-path">/this-article</span></p>
+          <p class="terminal-output">HTTP/2 404</p>
+          <p class="terminal-output">content-type: text/html; charset=utf-8</p>
 
-      <p class="mt-6">
-        <span class="text-fg-muted">$</span> <span class="terminal-caret">█</span>
-      </p>
+          <p class="mt-6"><span class="terminal-prompt">$</span> git log --oneline --grep="<span class="req-term">this-article</span>"</p>
+
+          <p class="mt-6">
+            <span class="terminal-prompt">$</span> <span class="terminal-caret">█</span>
+          </p>
+        </div>
+      </div>
 
       <div class="mt-10 border-t border-border pt-6">
         <p class="text-lg font-semibold text-fg">404 — Page Not Found</p>
