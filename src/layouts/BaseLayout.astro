@@ -33,6 +33,7 @@ const ogImageURL = new URL(image ?? '/og-default.png', Astro.site).href;
       const stored = localStorage.getItem('theme');
       const theme = stored ?? (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
       document.documentElement.classList.toggle('dark', theme === 'dark');
+      document.documentElement.style.colorScheme = theme;
 
       const headerPinned = localStorage.getItem('header-pinned') === 'true';
       document.documentElement.classList.toggle('header-pinned', headerPinned);
