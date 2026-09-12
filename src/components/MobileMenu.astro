@@ -62,7 +62,7 @@ const year = new Date().getFullYear();
       snsLinks.map((sns) => (
         <a
           href={sns.href}
-          class="hover:text-fg"
+          class="text-fg-muted hover:text-fg"
           target={sns.href.startsWith('http') ? '_blank' : undefined}
           rel={sns.href.startsWith('http') ? 'noopener noreferrer' : undefined}
         >

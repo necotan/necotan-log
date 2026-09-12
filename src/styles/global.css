@@ -24,6 +24,8 @@
 /* ダークモードを基準に設計し、ライトモードはその反転として構築する */
 /* gray系は青みがかった色相を持つため、純粋な無彩色のneutral系を使う */
 :root {
+  color-scheme: dark;
+
   --bg: var(--color-neutral-950);
   --bg-subtle: var(--color-neutral-900);
   --fg: var(--color-neutral-50);
@@ -43,6 +45,8 @@
 }
 
 :root:not(.dark) {
+  color-scheme: light;
+
   --bg: var(--color-neutral-50);
   --bg-subtle: var(--color-white);
   --fg: var(--color-neutral-950);
@@ -54,6 +58,10 @@
   --terminal-bg: var(--color-white);
   --terminal-titlebar: var(--color-neutral-100);
   --terminal-border: var(--color-neutral-300);
+}
+
+html {
+  background-color: var(--bg);
 }
 
 @layer components {
