@@ -105,11 +105,25 @@ const pathname = Astro.url.pathname;
   const themeToggle = document.getElementById('theme-toggle');
   themeToggle?.setAttribute('aria-pressed', String(document.documentElement.classList.contains('dark')));
 
-  themeToggle?.addEventListener('click', () => {
-    const isDark = document.documentElement.classList.toggle('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+  const THEME_TRANSITION_MS = 250;
+  let themeTransitionTimer: ReturnType<typeof setTimeout> | undefined;
+
+  const applyTheme = (isDark: boolean): void => {
+    document.documentElement.classList.add('theme-transition');
+    document.documentElement.classList.toggle('dark', isDark);
     document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
-    themeToggle.setAttribute('aria-pressed', String(isDark));
+    themeToggle?.setAttribute('aria-pressed', String(isDark));
+
+    clearTimeout(themeTransitionTimer);
+    themeTransitionTimer = setTimeout(() => {
+      document.documentElement.classList.remove('theme-transition');
+    }, THEME_TRANSITION_MS);
+  };
+
+  themeToggle?.addEventListener('click', () => {
+    const isDark = !document.documentElement.classList.contains('dark');
+    localStorage.setItem('theme', isDark ? 'dark' : 'light');
+    applyTheme(isDark);
   });
 
   const headerPinToggle = document.getElementById('header-pin-toggle');
@@ -127,8 +141,6 @@ const pathname = Astro.url.pathname;
   // 明示的な選択(localStorage)が無い場合のみ、OS側のダーク/ライト切替に追従する
   matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (event) => {
     if (localStorage.getItem('theme')) return;
-    document.documentElement.classList.toggle('dark', event.matches);
-    document.documentElement.style.colorScheme = event.matches ? 'dark' : 'light';
-    themeToggle?.setAttribute('aria-pressed', String(event.matches));
+    applyTheme(event.matches);
   });
 </script>

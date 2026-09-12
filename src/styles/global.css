@@ -70,9 +70,9 @@ html {
   }
 }
 
-*,
-*::before,
-*::after {
+.theme-transition *,
+.theme-transition *::before,
+.theme-transition *::after {
   transition:
     background-color 0.2s ease,
     color 0.2s ease,
