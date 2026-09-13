@@ -15,6 +15,8 @@
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
   --color-border: var(--border);
+  --color-badge-bg: var(--badge-bg);
+  --color-badge-fg: var(--badge-fg);
 
   /* 欧文はInter、和文はNoto Sans JPでOSに依存しない見た目の統一感を出す */
   --font-sans:
@@ -31,6 +33,9 @@
   --fg: var(--color-neutral-50);
   --fg-muted: var(--color-neutral-400);
   --border: var(--color-neutral-800);
+
+  --badge-bg: var(--color-neutral-800);
+  --badge-fg: var(--color-neutral-300);
 
   --glass-border: rgba(255, 255, 255, 0.12);
 
@@ -52,6 +57,9 @@
   --fg: var(--color-neutral-950);
   --fg-muted: var(--color-neutral-500);
   --border: var(--color-neutral-200);
+
+  --badge-bg: var(--color-neutral-200);
+  --badge-fg: var(--color-neutral-600);
 
   --glass-border: rgba(0, 0, 0, 0.08);
 

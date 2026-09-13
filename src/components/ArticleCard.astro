@@ -45,7 +45,7 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
     </h3>
     <p class="mt-1 line-clamp-2 text-xs text-fg-muted">{description}</p>
     <div class="mt-2 flex items-center gap-2 text-xs text-fg-muted">
-      <span class="rounded-full bg-fg px-2 py-0.5 text-[11px] font-medium text-bg">{categoryLabels[category]}</span>
+      <span class="rounded-full bg-badge-bg px-2 py-0.5 text-[11px] font-medium text-badge-fg">{categoryLabels[category]}</span>
       <span aria-hidden="true">/</span>
       <time datetime={pubDate.toISOString()}>{formattedDate}</time>
     </div>
