@@ -196,13 +196,19 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
       spy.setActive(activeSlug);
     };
 
-    const observer = new IntersectionObserver(updateActive, {
-      rootMargin: `0px 0px -${100 - activeLinePercent}% 0px`,
-      threshold: 0,
-    });
+    // IntersectionObserverは見出しが判定エリアを1フレームで飛び越えると通知されない(Back to topや高速スクロール)ため、スクロールごとに再計算する
+    let isUpdateScheduled = false;
+    const scheduleUpdate = () => {
+      if (isUpdateScheduled) return;
+      isUpdateScheduled = true;
+      requestAnimationFrame(() => {
+        isUpdateScheduled = false;
+        updateActive();
+      });
+    };
 
-    headingElements.forEach((heading) => observer.observe(heading));
-    window.addEventListener('resize', updateActive);
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
     updateActive();
   }
 </script>
