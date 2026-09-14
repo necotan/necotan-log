@@ -47,13 +47,13 @@ const pathname = Astro.url.pathname;
       <button
         id="mobile-menu-open"
         type="button"
+        aria-label="メニューを開く"
         aria-haspopup="dialog"
         aria-expanded="false"
         aria-controls="mobile-menu"
-        class="flex items-center gap-1.5 rounded-lg text-sm text-fg md:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+        class="rounded-lg p-2 text-fg md:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
       >
         <Menu class="size-4" />
-        Menu
       </button>
 
       <div class="flex items-center">
