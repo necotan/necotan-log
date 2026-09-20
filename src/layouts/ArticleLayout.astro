@@ -98,7 +98,7 @@ const breadcrumbJsonLd = {
 >
   <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} is:inline />
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} is:inline />
-  <article class="mx-auto max-w-6xl px-6 py-12 lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:items-start lg:gap-12">
+  <article class="mx-auto max-w-6xl px-6 py-12 lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:items-start lg:gap-12 lg:transition-[grid-template-columns] lg:duration-300 lg:ease-out lg:toc-collapsed:grid-cols-[minmax(0,1fr)_4rem]">
     <div class="lg:col-start-1 lg:row-start-1">
       <header>
         <nav aria-label="パンくずリスト" class="flex items-center gap-2 overflow-hidden text-xs text-fg-muted">
@@ -142,7 +142,7 @@ const breadcrumbJsonLd = {
 
       <TableOfContents headings={headings} variant="mobile" />
 
-      <div class="article-body mt-8 max-w-3xl">
+      <div class="article-body mt-8 max-w-3xl transition-[max-width] duration-300 ease-out lg:toc-collapsed:max-w-4xl">
         <slot />
       </div>
 
