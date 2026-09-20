@@ -1,4 +1,5 @@
 ---
+import { Image } from 'astro:assets';
 import BaseLayout from './BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import ImageViewer from '../components/ImageViewer.astro';
@@ -32,6 +33,7 @@ interface Props {
   category: Category;
   tags?: string[];
   heroImage?: string;
+  showHeroImage: boolean;
   readingMinutes: number;
   headings: Heading[];
   prevPost?: AdjacentPost;
@@ -46,6 +48,7 @@ const {
   category,
   tags,
   heroImage,
+  showHeroImage,
   readingMinutes,
   headings,
   prevPost,
@@ -139,6 +142,21 @@ const breadcrumbJsonLd = {
           <span>{readingMinutes} min read</span>
         </div>
       </header>
+
+      {
+        showHeroImage && heroImage && (
+          <figure class="article-hero mt-8 max-w-3xl transition-[max-width] duration-300 ease-out lg:toc-collapsed:max-w-4xl">
+            <Image
+              src={heroImage}
+              inferSize
+              loading="eager"
+              fetchpriority="high"
+              alt=""
+              class="w-full cursor-zoom-in rounded-lg border border-border"
+            />
+          </figure>
+        )
+      }
 
       <TableOfContents headings={headings} variant="mobile" />
 

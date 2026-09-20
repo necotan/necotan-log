@@ -140,7 +140,7 @@
   }
 
   // 記事本文内の画像を収集してビューア対象にする
-  const articleImages = Array.from(document.querySelectorAll<HTMLImageElement>('.article-body img'));
+  const articleImages = Array.from(document.querySelectorAll<HTMLImageElement>('.article-hero img, .article-body img'));
   images = articleImages.map((img) => ({ src: img.currentSrc || img.src, alt: img.alt }));
   buildSlides();
 
