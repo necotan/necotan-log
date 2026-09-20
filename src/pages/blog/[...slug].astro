@@ -39,6 +39,7 @@ const readingMinutes = estimateReadingMinutes(post.body ?? '');
   category={post.data.category}
   tags={post.data.tags}
   heroImage={post.data.heroImage}
+  showHeroImage={post.data.showHeroImage}
   readingMinutes={readingMinutes}
   headings={headings}
   prevPost={olderPost && { href: `/blog/${olderPost.id}/`, title: olderPost.data.title }}
