@@ -8,6 +8,9 @@
 /* ナビバーのピン留め状態(.header-pinned)を示すバリアント */
 @custom-variant pinned (&:where(.header-pinned, .header-pinned *));
 
+/* 目次を閉じた状態(.toc-collapsed)を示すバリアント */
+@custom-variant toc-collapsed (&:where(.toc-collapsed, .toc-collapsed *));
+
 @theme inline {
   /* モノトーン基調(グレースケールのみ、色相を持つアクセントカラーは使わない) */
   --color-bg: var(--bg);

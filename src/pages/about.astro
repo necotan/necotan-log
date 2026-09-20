@@ -12,13 +12,13 @@ const headings = [
 ---
 
 <BaseLayout title="About | necotan log." description={description}>
-  <div class="mx-auto max-w-6xl px-6 py-12 lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:items-start lg:gap-12">
+  <div class="mx-auto max-w-6xl px-6 py-12 lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:items-start lg:gap-12 lg:transition-[grid-template-columns] lg:duration-300 lg:ease-out lg:toc-collapsed:grid-cols-[minmax(0,1fr)_4rem]">
     <div class="lg:col-start-1 lg:row-start-1">
       <h1 class="text-3xl font-semibold tracking-tight text-fg">About</h1>
 
       <TableOfContents headings={headings} variant="mobile" />
 
-      <div class="article-body max-w-3xl">
+      <div class="article-body max-w-3xl transition-[max-width] duration-300 ease-out lg:toc-collapsed:max-w-4xl">
         <p class="mt-6">
           necotan log.は、写真・カメラ、愛車、デスク環境、個人開発など、日々の記録を残すために作成した個人ブログです。
         </p>
