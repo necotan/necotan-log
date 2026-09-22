@@ -148,6 +148,42 @@ html {
     color: var(--fg-muted);
   }
 
+  .article-body table {
+    margin-top: 1.5rem;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    overflow: hidden;
+    font-size: 0.875rem;
+    line-height: 1.6;
+  }
+
+  .article-body th,
+  .article-body td {
+    padding: 0.625rem 0.875rem;
+    text-align: left;
+    vertical-align: top;
+  }
+
+  .article-body thead th {
+    background-color: var(--bg-subtle);
+    color: var(--fg-muted);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  .article-body tr:not(:last-child) > td,
+  .article-body thead th {
+    border-bottom: 1px solid var(--border);
+  }
+
+  .article-body td:first-child {
+    white-space: nowrap;
+    color: var(--fg-muted);
+  }
+
   .article-body img {
     margin-top: 1.5rem;
     border-radius: 0.5rem;
