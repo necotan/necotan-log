@@ -14,10 +14,10 @@ const { activeHref } = Astro.props;
       <a
         href={item.href}
         class:list={[
-          'rounded-full border px-4 py-1.5 text-sm',
+          'rounded-full border border-border px-4 py-1.5 text-sm transition-colors',
           item.href === activeHref
-            ? 'border-transparent bg-fg text-bg'
-            : 'border-border text-fg-muted hover:border-fg hover:text-fg',
+            ? 'bg-fg/5 font-semibold text-fg'
+            : 'text-fg-muted hover:bg-fg/5 hover:text-fg',
         ]}
       >
         {item.label}
