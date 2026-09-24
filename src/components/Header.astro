@@ -99,6 +99,12 @@ const pathname = Astro.url.pathname;
   .nav-link-active {
     background-size: 100% 1px;
   }
+
+  /* bfcacheから復元した直後は離脱時の:hover状態が残るため、マウスが動くまでhoverの下線を出さない */
+  :global(html.nav-hover-suppressed) .nav-link:not(.nav-link-active) {
+    background-size: 0% 1px;
+    transition: none;
+  }
 </style>
 
 <script>
@@ -136,6 +142,18 @@ const pathname = Astro.url.pathname;
     const isPinned = document.documentElement.classList.toggle('header-pinned');
     localStorage.setItem('header-pinned', String(isPinned));
     headerPinToggle.setAttribute('aria-pressed', String(isPinned));
+  });
+
+  // 戻る/進むでbfcacheから復元されたとき、離脱時にhoverしていたnavリンクの下線が表示されるのを防ぐ
+  window.addEventListener('pagehide', () => {
+    document.documentElement.classList.add('nav-hover-suppressed');
+    window.addEventListener(
+      'pointermove',
+      () => {
+        document.documentElement.classList.remove('nav-hover-suppressed');
+      },
+      { once: true },
+    );
   });
 
   // 明示的な選択(localStorage)が無い場合のみ、OS側のダーク/ライト切替に追従する
