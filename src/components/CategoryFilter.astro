@@ -14,7 +14,8 @@ const { activeHref } = Astro.props;
       <a
         href={item.href}
         class:list={[
-          'rounded-full border border-border px-4 py-1.5 text-sm transition-colors',
+          // transition-colorsは遷移直後に既定のリンク色(青)から文字色・枠線色がフェードするため、背景色のみに限定する
+          'rounded-full border border-border px-4 py-1.5 text-sm transition-[background-color]',
           item.href === activeHref
             ? 'bg-fg/5 font-semibold text-fg'
             : 'text-fg-muted hover:bg-fg/5 hover:text-fg',
