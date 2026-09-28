@@ -1,6 +1,6 @@
 # necotan log.
 
-写真・カメラ、愛車、デスク環境、個人開発などの日々の記録を残す個人ブログです。Astroで構築し、Cloudflare Pagesでホスティングしています。
+写真・カメラ、愛車、デスク環境、個人開発などの日々の記録を残す個人ブログです。Astroで構築し、Cloudflare Workersでホスティングしています。
 
 ## 技術スタック
 
@@ -8,7 +8,7 @@
 - [Tailwind CSS v4](https://tailwindcss.com/)
 - [@fontsource-variable/inter](https://fontsource.org/fonts/inter) / [@fontsource-variable/noto-sans-jp](https://fontsource.org/fonts/noto-sans-jp)
 - [@lucide/astro](https://lucide.dev/)
-- Cloudflare Pages / Cloudflare R2
+- Cloudflare Workers / Cloudflare R2
 
 ## プロジェクト構成
 
