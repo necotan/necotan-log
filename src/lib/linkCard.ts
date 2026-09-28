@@ -106,8 +106,22 @@ async function fetchLinkCard(url: string): Promise<LinkCardData> {
   }
 }
 
+// タイムアウトはAbortErrorになるため秒数を明示し、fetch failedは原因を付け足す
+function describeFetchError(error: unknown): string {
+  if (!(error instanceof Error)) {
+    return String(error);
+  }
+  if (error.name === 'AbortError') {
+    return `timeout after ${FETCH_TIMEOUT_MS}ms`;
+  }
+  if (error.cause instanceof Error) {
+    return `${error.message}: ${error.cause.message}`;
+  }
+  return error.message;
+}
+
 // OGP情報を取得し.cache/link-cards.jsonに永続化する
-// 取得失敗時はURLをタイトルとするフォールバックを返す(非キャッシュ)
+// 取得失敗時は警告をログに出し、URLをタイトルとするフォールバックを返す
 export async function getLinkCard(url: string): Promise<LinkCardData> {
   const store = loadCache();
   const cached = store[url];
@@ -117,7 +131,10 @@ export async function getLinkCard(url: string): Promise<LinkCardData> {
 
   let promise = pending.get(url);
   if (!promise) {
-    promise = fetchLinkCard(url).catch((): LinkCardData => ({ url, title: url, description: '', image: null }));
+    promise = fetchLinkCard(url).catch((error: unknown): LinkCardData => {
+      console.warn(`[linkCard] OGPの取得に失敗しました: ${url} (${describeFetchError(error)})`);
+      return { url, title: url, description: '', image: null };
+    });
     pending.set(url, promise);
   }
 
