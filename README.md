@@ -24,6 +24,8 @@
 │   ├── lib/              # categories.ts, navigation.ts, readingTime.ts など
 │   ├── pages/            # ルーティング(index, about, category/[category], tag/[tag], blog/[...slug] など)
 │   └── styles/           # global.css(テーマ変数・記事本文タイポグラフィ)
+├── .cache/
+│   └── link-cards.json   # リンクカードのOGPキャッシュ
 ├── astro.config.mjs
 └── package.json
 ```
@@ -50,6 +52,22 @@ draft: false # trueにすると一覧・RSSから除外される
 
 - カテゴリの定義・ラベルは [src/lib/categories.ts](src/lib/categories.ts)
 - ナビゲーション項目は [src/lib/navigation.ts](src/lib/navigation.ts)
+
+### 埋め込み・リンクカード
+
+`embed` コードブロックにURLを1つ書くと、YouTubeは埋め込みプレーヤー、それ以外はOGPを取得したリンクカードに変換される。
+
+````md
+```embed
+https://example.com/
+```
+````
+
+リンクカードのOGPはビルド時に取得し、`.cache/link-cards.json` に保存する。本番ビルドは毎回クリーンな環境で走るため、このファイルもコミットしてローカルで取得した結果を使用する。
+
+- リンクカードを含む記事を追加したら、`npm run dev` か `npm run build` を実行し `.cache/link-cards.json` を更新して、記事と一緒にコミットする。
+- 保存済みのURLは再取得しない。リンク先のOGPを取り直したいときは、該当エントリを削除してから再度ビルドする。
+- 取得に失敗したURLは保存されず、ビルドログに `[linkCard]` の警告が出る。本番でも再取得を試み、失敗すればホスト名だけのカードになる。
 
 ## コマンド
 
