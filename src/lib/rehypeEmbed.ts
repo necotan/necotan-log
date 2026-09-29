@@ -158,22 +158,25 @@ const rehypeEmbed: Plugin<[], Root> = () => async (tree) => {
     }
   });
 
-  for (const { node, index, siblings } of targets) {
-    const raw = getBlockText(node);
+  // 置換位置は収集時のindexで決まるため、OGP取得を並列にしても完了順に依存しない
+  await Promise.all(
+    targets.map(async ({ node, index, siblings }): Promise<void> => {
+      const raw = getBlockText(node);
 
-    let url: URL;
-    try {
-      url = new URL(raw);
-    } catch {
-      // 不正なURLはコードブロックのまま残す
-      continue;
-    }
+      let url: URL;
+      try {
+        url = new URL(raw);
+      } catch {
+        // 不正なURLはコードブロックのまま残す
+        return;
+      }
 
-    const youtubeId = extractYouTubeId(url);
-    const replacement = youtubeId ? buildYouTubeEmbed(youtubeId) : buildLinkCard(await getLinkCard(url.href));
+      const youtubeId = extractYouTubeId(url);
+      const replacement = youtubeId ? buildYouTubeEmbed(youtubeId) : buildLinkCard(await getLinkCard(url.href));
 
-    siblings[index] = replacement;
-  }
+      siblings[index] = replacement;
+    })
+  );
 };
 
 export default rehypeEmbed;
