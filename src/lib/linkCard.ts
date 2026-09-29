@@ -41,28 +41,42 @@ function saveCache(): void {
   writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2));
 }
 
+const NAMED_ENTITIES: Record<string, string> = {
+  amp: '&',
+  lt: '<',
+  gt: '>',
+  quot: '"',
+  apos: "'",
+  nbsp: ' ',
+};
+
+// 1回のreplaceで処理し、&amp;lt;のような二重デコードを防ぐ
 function decodeEntities(text: string): string {
-  return text
-    .replace(/&amp;/g, '&')
-    .replace(/&lt;/g, '<')
-    .replace(/&gt;/g, '>')
-    .replace(/&quot;/g, '"')
-    .replace(/&#39;/g, "'");
+  return text.replace(/&(#x[0-9a-f]+|#\d+|[a-z]+);/gi, (whole: string, ref: string): string => {
+    if (ref.startsWith('#')) {
+      const isHex = ref[1] === 'x' || ref[1] === 'X';
+      const codePoint = isHex ? parseInt(ref.slice(2), 16) : parseInt(ref.slice(1), 10);
+      return codePoint > 0 && codePoint <= 0x10ffff ? String.fromCodePoint(codePoint) : whole;
+    }
+    return NAMED_ENTITIES[ref] ?? whole;
+  });
 }
 
+// contentの値は開きと同じクォートで閉じる(content="necotan's log"をアポストロフィで切らない)
+// 値に開きのクォートを含めないことで、別の<meta>タグをまたいだマッチを防ぐ
 function extractMeta(html: string, names: string[]): string | null {
   for (const name of names) {
     const propertyFirst = new RegExp(
-      `<meta[^>]+(?:property|name)=["']${name}["'][^>]+content=["']([^"']*)["']`,
+      `<meta[^>]+(?:property|name)=["']${name}["'][^>]+content=(["'])((?:(?!\\1)[\\s\\S])*)\\1`,
       'i'
     );
     const contentFirst = new RegExp(
-      `<meta[^>]+content=["']([^"']*)["'][^>]+(?:property|name)=["']${name}["']`,
+      `<meta[^>]+content=(["'])((?:(?!\\1)[\\s\\S])*)\\1[^>]+(?:property|name)=["']${name}["']`,
       'i'
     );
     const match = html.match(propertyFirst) ?? html.match(contentFirst);
-    if (match?.[1]) {
-      return decodeEntities(match[1]);
+    if (match?.[2]) {
+      return decodeEntities(match[2]);
     }
   }
   return null;
