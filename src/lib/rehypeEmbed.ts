@@ -1,7 +1,7 @@
 import type { Element, Root, RootContent } from 'hast';
 import type { Plugin } from 'unified';
 import { visit } from 'unist-util-visit';
-import { getLinkCard, type LinkCardData } from './linkCard';
+import { getDisplayHost, getLinkCard, type LinkCardData } from './linkCard';
 
 // ```embed\nhttps://...\n``` のコードフェンスをYouTube埋め込み、リンクカードに変換する
 const EMBED_LANGUAGE_CLASS = 'language-embed';
@@ -103,7 +103,7 @@ function buildLinkCard(data: LinkCardData): Element {
     type: 'element',
     tagName: 'span',
     properties: { className: ['embed-link-card-site'] },
-    children: [{ type: 'text', value: data.url }],
+    children: [{ type: 'text', value: getDisplayHost(data.url) }],
   });
 
   const children: Element[] = [];

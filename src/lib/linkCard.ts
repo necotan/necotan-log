@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import path from 'node:path';
+import { domainToUnicode } from 'node:url';
 
 export interface LinkCardData {
   url: string;
@@ -110,7 +111,7 @@ async function fetchLinkCard(url: string): Promise<LinkCardData> {
 
     const titleTagMatch = html.match(/<title[^>]*>([^<]*)<\/title>/i);
     const titleTagText = decodeEntities(titleTagMatch?.[1]?.trim() ?? '');
-    const title = extractMeta(html, ['og:title', 'twitter:title']) ?? (titleTagText || url);
+    const title = extractMeta(html, ['og:title', 'twitter:title']) ?? (titleTagText || getDisplayHost(resolvedUrl));
     const description = extractMeta(html, ['og:description', 'twitter:description']) ?? '';
     const image = resolveImageUrl(extractMeta(html, ['og:image', 'twitter:image']), resolvedUrl);
 
@@ -134,8 +135,18 @@ function describeFetchError(error: unknown): string {
   return error.message;
 }
 
+// 表示用のホスト名を返す（国際化ドメインはPunycode(xn--...)から日本語表記に戻す）
+export function getDisplayHost(url: string): string {
+  try {
+    const { hostname } = new URL(url);
+    return domainToUnicode(hostname) || hostname;
+  } catch {
+    return url;
+  }
+}
+
 // OGP情報を取得し.cache/link-cards.jsonに永続化する
-// 取得失敗時は警告をログに出し、URLをタイトルとするフォールバックを返す
+// 取得失敗時は警告をログに出し、ホスト名をタイトルとするフォールバックを返す(非キャッシュ)
 export async function getLinkCard(url: string): Promise<LinkCardData> {
   const store = loadCache();
   const cached = store[url];
@@ -145,17 +156,19 @@ export async function getLinkCard(url: string): Promise<LinkCardData> {
 
   let promise = pending.get(url);
   if (!promise) {
-    promise = fetchLinkCard(url).catch((error: unknown): LinkCardData => {
-      console.warn(`[linkCard] OGPの取得に失敗しました: ${url} (${describeFetchError(error)})`);
-      return { url, title: url, description: '', image: null };
-    });
+    promise = fetchLinkCard(url).then(
+      (data: LinkCardData): LinkCardData => {
+        store[url] = data;
+        saveCache();
+        return data;
+      },
+      (error: unknown): LinkCardData => {
+        console.warn(`[linkCard] OGPの取得に失敗しました: ${url} (${describeFetchError(error)})`);
+        return { url, title: getDisplayHost(url), description: '', image: null };
+      }
+    );
     pending.set(url, promise);
   }
 
-  const data = await promise;
-  if (data.title !== url) {
-    store[url] = data;
-    saveCache();
-  }
-  return data;
+  return promise;
 }
