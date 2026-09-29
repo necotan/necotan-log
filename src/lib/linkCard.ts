@@ -9,6 +9,7 @@ export interface LinkCardData {
   image: string | null;
 }
 
+// リポジトリにコミットし、毎回クリーンビルドになる本番でもローカルで取得済みのOGPを使う
 const CACHE_FILE = path.resolve('.cache/link-cards.json');
 const FETCH_TIMEOUT_MS = 8000;
 const USER_AGENT = 'Mozilla/5.0 (compatible; necotan-log-bot/1.0; +https://necotan-log.com)';
@@ -38,8 +39,12 @@ function saveCache(): void {
   if (!cache) {
     return;
   }
+  // キーをURL順に並べ、取得順によってコミット時の差分が揺れないようにする
+  const sorted = Object.fromEntries(
+    Object.entries(cache).sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
+  );
   mkdirSync(path.dirname(CACHE_FILE), { recursive: true });
-  writeFileSync(CACHE_FILE, JSON.stringify(cache, null, 2));
+  writeFileSync(CACHE_FILE, `${JSON.stringify(sorted, null, 2)}\n`);
 }
 
 const NAMED_ENTITIES: Record<string, string> = {
