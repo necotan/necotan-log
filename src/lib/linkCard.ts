@@ -140,7 +140,7 @@ function describeFetchError(error: unknown): string {
   return error.message;
 }
 
-// 表示用のホスト名を返す（国際化ドメインはPunycode(xn--...)から日本語表記に戻す）
+// 表示用のホスト名を返す(国際化ドメインはPunycode(xn--...)から日本語表記に戻す)
 export function getDisplayHost(url: string): string {
   try {
     const { hostname } = new URL(url);

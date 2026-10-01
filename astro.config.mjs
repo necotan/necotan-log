@@ -14,7 +14,6 @@ const SITE_URL = 'https://necotan-log.com';
 export default defineConfig({
   site: SITE_URL,
 
-  // devToolbarを非表示にする
   devToolbar: {
     enabled: false,
   },
@@ -30,8 +29,6 @@ export default defineConfig({
       type: 'shiki',
       excludeLangs: ['math', 'embed'],
     },
-    // 連続する画像だけの段落をdiv.image-gridにまとめてミニグリッド表示する
-    // ```embed```コードブロックをYouTube埋め込み、リンクカードに変換する
     processor: unified({ rehypePlugins: [rehypeImageGrid, rehypeEmbed] }),
   },
 
