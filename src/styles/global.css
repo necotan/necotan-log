@@ -81,6 +81,22 @@ html {
   }
 }
 
+/* 下線をbackground-imageで描画し、hover時にbackground-sizeをアニメーションさせて左から右にイージングで伸ばす */
+/* ブロック要素に付けると下線がブロック幅になるため、文字を包むinline要素に付ける */
+/* 各セレクタ内で@applyして使い、元のカスケードレイヤーと詳細度を保つ(クラスとして付けると.theme-transitionとの優先順位が変わる) */
+@utility animated-underline {
+  background-image: linear-gradient(currentColor, currentColor);
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  background-size: 0% 1px;
+  transition: background-size 0.35s ease-out;
+}
+
+/* transition-colorsは遷移直後に既定のリンク色(青)から文字色・枠線色がフェードするため、背景色のみに限定する */
+@utility transition-bg {
+  @apply transition-[background-color];
+}
+
 .theme-transition *,
 .theme-transition *::before,
 .theme-transition *::after {
@@ -323,14 +339,8 @@ html {
     -webkit-box-orient: vertical;
   }
 
-  /* 下線をbackground-imageで描画し、hover時にbackground-sizeをアニメーションさせて左から右にイージングで伸ばす */
-  /* テキスト本来のinline要素(span)に付与することで、下線をブロック幅ではなく文字幅に合わせる */
   .article-body .embed-link-card-title-text {
-    background-image: linear-gradient(currentColor, currentColor);
-    background-repeat: no-repeat;
-    background-position: 0 100%;
-    background-size: 0% 1px;
-    transition: background-size 0.35s ease-out;
+    @apply animated-underline;
   }
 
   .article-body .embed-link-card:hover .embed-link-card-title-text {

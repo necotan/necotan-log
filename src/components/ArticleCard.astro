@@ -53,18 +53,15 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
 </article>
 
 <style>
+  @reference "../styles/global.css";
+
   /* Tailwindのscale-*はtransformではなくCSSのscaleプロパティを直接変更するため、scaleを対象にtransitionを指定する */
   .card-hero-image {
     transition: scale 0.3s ease-out !important;
   }
 
-  /* 下線をbackground-imageで描画し、hover時にbackground-sizeをアニメーションさせて左から右にイージングで伸ばす */
   .card-title-underline {
-    background-image: linear-gradient(currentColor, currentColor);
-    background-repeat: no-repeat;
-    background-position: 0 100%;
-    background-size: 0% 1px;
-    transition: background-size 0.35s ease-out;
+    @apply animated-underline;
   }
 
   @media (hover: hover) {
