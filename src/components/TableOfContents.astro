@@ -187,7 +187,6 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
     });
   }
 
-  // スクロール位置に応じてTOCのリンクをハイライトする
   class TocScrollSpy {
     private readonly links: HTMLAnchorElement[];
     private activeSlug: string | null = null;

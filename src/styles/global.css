@@ -209,7 +209,6 @@ html {
     height: auto;
   }
 
-  /* スマホ幅では1列にする */
   @media (max-width: 639px) {
     .article-body .image-grid {
       grid-template-columns: 1fr;
@@ -285,7 +284,6 @@ html {
     border-radius: 0.5rem;
   }
 
-  /* スマホ幅では正方形までに留める */
   @media (max-width: 639px) {
     .article-body .embed-link-card-image-frame {
       aspect-ratio: 1 / 1;
