@@ -83,7 +83,7 @@ html {
 
 /* 下線をbackground-imageで描画し、hover時にbackground-sizeをアニメーションさせて左から右にイージングで伸ばす */
 /* ブロック要素に付けると下線がブロック幅になるため、文字を包むinline要素に付ける */
-/* 各セレクタ内で@applyして使い、元のカスケードレイヤーと詳細度を保つ(クラスとして付けると.theme-transitionとの優先順位が変わる) */
+/* 各セレクタ内で@applyして使い、元のカスケードレイヤーと詳細度を保つ */
 @utility animated-underline {
   background-image: linear-gradient(currentColor, currentColor);
   background-repeat: no-repeat;
@@ -97,15 +97,74 @@ html {
   @apply transition-[background-color];
 }
 
+/* テーマ切替は各要素の色をtransitionせず、:rootで色トークン自体を補間して全要素をそのまま追従させる */
+/* 要素ごとだと、継承した色を自分でもtransitionするアイコンなどがiOSで遅れ、独自のtransitionを持つnavリンクは色だけ瞬時に変わる */
+/* 補間するには型が必要なため、テーマ切替で変わるトークンを<color>として登録する */
+@property --bg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --bg-subtle {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --fg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --fg-muted {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --border {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --badge-bg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --badge-fg {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+@property --glass-border {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
+:root.theme-transition {
+  transition:
+    --bg 0.2s ease,
+    --bg-subtle 0.2s ease,
+    --fg 0.2s ease,
+    --fg-muted 0.2s ease,
+    --border 0.2s ease,
+    --badge-bg 0.2s ease,
+    --badge-fg 0.2s ease,
+    --glass-border 0.2s ease;
+}
+
+/* 各要素自身のtransition(transition-colorsなど)は補間中の色に毎フレーム反応してやり直しになり遅れるため、切替中は止める */
 .theme-transition *,
 .theme-transition *::before,
 .theme-transition *::after {
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease,
-    border-color 0.2s ease,
-    fill 0.2s ease,
-    stroke 0.2s ease;
+  transition: none !important;
 }
 
 /* 記事本文(Markdownレンダリング結果)のタイポグラフィ。既存パレット(--fg/--bg-subtle等)のみを使う */
