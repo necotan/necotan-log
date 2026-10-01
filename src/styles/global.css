@@ -113,6 +113,11 @@ html {
     font-weight: 600;
   }
 
+  /* ナビバーをピン留めしている間は、目次から飛んだ見出しがヘッダーの裏に隠れないようにする */
+  .header-pinned .article-body :is(h2, h3) {
+    scroll-margin-top: 6rem;
+  }
+
   .article-body p {
     margin-top: 1.25rem;
   }
