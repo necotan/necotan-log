@@ -1,6 +1,20 @@
-# necotan log.
+<h1 align="center">necotan log.</h1>
 
-写真・カメラ、愛車、デスク環境、個人開発などの日々の記録を残す個人ブログです。Astroで構築し、Cloudflare Workersでホスティングしています。
+<p align="center">
+  <img src="public/necotan-log.png" width="120" alt="necotan log.">
+</p>
+
+<p align="center">
+  A personal blog documenting everyday life — photography & cameras, my car, desk setup, and side projects.
+</p>
+
+<p align="center">
+  <img src="https://img.shields.io/badge/Astro-5-BC52EE?logo=astro&logoColor=white">
+  <img src="https://img.shields.io/badge/Tailwind%20CSS-v4-06B6D4?logo=tailwindcss&logoColor=white">
+  <img src="https://img.shields.io/badge/Cloudflare-Workers%20%2F%20R2-F38020?logo=cloudflare&logoColor=white">
+  <br>
+  <a href="https://necotan-log.com"><img src="https://img.shields.io/badge/Site-necotan--log.com-000000?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDJhMTQuNSAxNC41IDAgMCAwIDAgMjAgMTQuNSAxNC41IDAgMCAwIDAtMjAiLz48cGF0aCBkPSJNMiAxMmgyMCIvPjwvc3ZnPg=="></a>
+</p>
 
 ## 技術スタック
 
