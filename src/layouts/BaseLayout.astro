@@ -4,7 +4,6 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import type { Category } from '../lib/categories';
 import faviconPngUrl from '../assets/favicon-32x32.png?url';
-import faviconSvgUrl from '../assets/favicon.svg?url';
 import appleTouchIconUrl from '../assets/apple-touch-icon.png?url';
 
 interface Props {
@@ -43,7 +42,6 @@ const ogImageURL = new URL(image ?? '/og-default.png', Astro.site).href;
     </script>
     <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48" type="image/x-icon" />
     <link rel="icon" type="image/png" sizes="32x32" href={faviconPngUrl} />
-    <link rel="icon" type="image/svg+xml" href={faviconSvgUrl} />
     <link rel="apple-touch-icon" sizes="180x180" href={appleTouchIconUrl} />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="canonical" href={canonicalURL} />
