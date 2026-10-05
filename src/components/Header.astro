@@ -94,12 +94,12 @@ const pathname = Astro.url.pathname;
 
   .nav-link:hover,
   .nav-link-active {
-    background-size: 100% 1px;
+    --underline-opacity: 1;
   }
 
   /* bfcache復元直後のhover下線を抑止する(付け外しは下のscriptを参照) */
   :global(html.nav-hover-suppressed) .nav-link:not(.nav-link-active) {
-    background-size: 0% 1px;
+    --underline-opacity: 0;
     transition: none;
   }
 </style>
