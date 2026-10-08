@@ -5,9 +5,9 @@ import { Search, X } from '@lucide/astro';
 <dialog
   id="search-dialog"
   aria-label="サイト内検索"
-  class="m-0 h-dvh max-h-none w-full max-w-none bg-bg p-0 text-fg backdrop:bg-black/40 backdrop:backdrop-blur-sm open:flex open:flex-col md:mx-auto md:mt-[12vh] md:h-auto md:max-h-[76vh] md:max-w-2xl md:rounded-2xl md:border md:border-border"
+  class="m-0 h-dvh max-h-none w-full max-w-none bg-bg p-0 text-fg backdrop:bg-black/40 backdrop:backdrop-blur-sm open:flex open:flex-col md:mx-auto md:mt-[12vh] md:h-fit md:max-h-[76vh] md:max-w-2xl md:rounded-2xl md:border md:border-border"
 >
-  <form role="search" class="flex shrink-0 items-center gap-3 border-b border-border px-4 py-3 md:px-5" id="search-form">
+  <form role="search" class="mx-4 flex shrink-0 items-center gap-3 border-b border-border py-3 md:mx-5" id="search-form">
     <Search class="size-4 shrink-0 text-fg-muted" aria-hidden="true" />
     <input
       id="search-input"
@@ -15,7 +15,7 @@ import { Search, X } from '@lucide/astro';
       enterkeyhint="search"
       autocomplete="off"
       spellcheck="false"
-      placeholder="Search"
+      placeholder="Search posts…"
       aria-label="検索キーワード"
       aria-controls="search-results"
       class="search-input min-w-0 flex-1 bg-transparent py-1.5 text-base text-fg placeholder:text-fg-muted focus:outline-none"
@@ -31,6 +31,10 @@ import { Search, X } from '@lucide/astro';
   </form>
 
   <div class="min-h-0 flex-1 overflow-y-auto overscroll-contain">
+    <div id="search-empty" class="px-4 py-16 text-center md:px-5">
+      <p class="text-sm font-medium text-fg">Search the log</p>
+      <p class="mt-1.5 text-sm text-fg-muted">Titles, tags, and everything in between</p>
+    </div>
     <p id="search-status" class="px-4 pt-4 text-xs text-fg-muted empty:hidden md:px-5" aria-live="polite"></p>
     <ul id="search-results" class="flex flex-col py-2"></ul>
   </div>
@@ -102,6 +106,7 @@ import { Search, X } from '@lucide/astro';
   const closeButton = document.getElementById('search-close');
   const status = document.getElementById('search-status');
   const list = document.getElementById('search-results');
+  const emptyState = document.getElementById('search-empty');
   const template = document.getElementById('search-result-template');
 
   // インデックスは astro build 後に pagefind が dist/ へ生成するため、実行時にURLで読み込む
@@ -155,6 +160,7 @@ import { Search, X } from '@lucide/astro';
   async function runSearch(term: string): Promise<void> {
     if (!list) return;
     const query = term.trim();
+    emptyState?.classList.toggle('hidden', query !== '');
     if (!query) {
       list.replaceChildren();
       setStatus('');
@@ -237,7 +243,6 @@ import { Search, X } from '@lucide/astro';
   window.addEventListener('pageshow', () => {
     closeSearch();
     if (input instanceof HTMLInputElement) input.value = '';
-    list?.replaceChildren();
-    setStatus('');
+    void runSearch('');
   });
 </script>
