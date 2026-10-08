@@ -1,5 +1,7 @@
 ---
 import { Search, X } from '@lucide/astro';
+
+const messageClass = 'px-4 pt-[28dvh] pb-16 text-center md:px-5 md:py-16';
 ---
 
 <dialog
@@ -31,9 +33,13 @@ import { Search, X } from '@lucide/astro';
   </form>
 
   <div class="search-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain">
-    <div id="search-empty" class="px-4 pt-[28dvh] pb-16 text-center md:px-5 md:py-16">
+    <div id="search-empty" class={messageClass}>
       <p class="text-sm font-medium text-fg">Search the log</p>
       <p class="mt-1.5 text-sm text-fg-muted">Titles, tags, and everything in between</p>
+    </div>
+    <div id="search-no-results" class:list={[messageClass, 'hidden']}>
+      <p class="text-sm font-medium text-fg">No results</p>
+      <p class="mt-1.5 text-sm text-fg-muted">Try a different or shorter word</p>
     </div>
     <p id="search-status" class="px-4 pt-4 text-xs text-fg-muted empty:hidden md:px-5" aria-live="polite"></p>
     <ul id="search-results" class="flex flex-col py-2"></ul>
@@ -115,6 +121,7 @@ import { Search, X } from '@lucide/astro';
   const status = document.getElementById('search-status');
   const list = document.getElementById('search-results');
   const emptyState = document.getElementById('search-empty');
+  const noResults = document.getElementById('search-no-results');
   const template = document.getElementById('search-result-template');
 
   // インデックスは astro build 後に pagefind が dist/ へ生成するため、実行時にURLで読み込む
@@ -170,6 +177,7 @@ import { Search, X } from '@lucide/astro';
     const query = term.trim();
     emptyState?.classList.toggle('hidden', query !== '');
     if (!query) {
+      noResults?.classList.add('hidden');
       list.replaceChildren();
       setStatus('');
       return;
@@ -191,7 +199,8 @@ import { Search, X } from '@lucide/astro';
     const items = results.map(renderResult).filter((item): item is HTMLLIElement => item !== null);
     list.replaceChildren(...items);
     const count = response.results.length;
-    setStatus(count === 0 ? 'No results' : `${count} ${count === 1 ? 'result' : 'results'}`);
+    noResults?.classList.toggle('hidden', count !== 0);
+    setStatus(count === 0 ? '' : `${count} ${count === 1 ? 'result' : 'results'}`);
   }
 
   function openSearch(trigger: HTMLElement | null): void {
