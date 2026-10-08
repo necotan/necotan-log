@@ -1,218 +1,41 @@
 ---
-import { Search, X } from '@lucide/astro';
-
-const messageClass = 'px-4 pt-[28dvh] pb-16 text-center md:px-5 md:py-16';
+import { X } from '@lucide/astro';
+import SearchPanel from './SearchPanel.astro';
 ---
 
 <dialog
   id="search-dialog"
   aria-label="サイト内検索"
-  class="m-0 h-dvh max-h-none w-full max-w-none bg-bg p-0 text-fg backdrop:bg-black/40 backdrop:backdrop-blur-sm open:flex open:flex-col md:mx-auto md:mt-[12vh] md:h-fit md:max-h-[76vh] md:max-w-2xl md:rounded-2xl md:border md:border-border"
+  class="mx-auto mt-[12vh] h-fit max-h-[76vh] w-full max-w-2xl rounded-2xl border border-border bg-bg p-0 text-fg backdrop:bg-black/40 backdrop:backdrop-blur-sm open:flex open:flex-col"
 >
-  <form role="search" class="mx-4 flex shrink-0 items-center gap-3 border-b border-border py-3 md:mx-5" id="search-form">
-    <Search class="size-4 shrink-0 text-fg-muted" aria-hidden="true" />
-    <input
-      id="search-input"
-      type="search"
-      enterkeyhint="search"
-      autocomplete="off"
-      spellcheck="false"
-      placeholder="Search posts…"
-      aria-label="検索キーワード"
-      aria-controls="search-results"
-      class="search-input min-w-0 flex-1 bg-transparent py-1.5 text-base text-fg placeholder:text-fg-muted focus:outline-none"
-    />
+  <SearchPanel variant="dialog">
     <button
-      id="search-close"
+      slot="actions"
       type="button"
+      data-search-close
       aria-label="検索を閉じる"
       class="rounded-full p-2 text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-fg"
     >
       <X class="size-5" />
     </button>
-  </form>
-
-  <div class="search-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain">
-    <div id="search-empty" class={messageClass}>
-      <p class="text-sm font-medium text-fg">Search the log</p>
-      <p class="mt-1.5 text-sm text-fg-muted">Titles, tags, and everything in between</p>
-    </div>
-    <div id="search-no-results" class:list={[messageClass, 'hidden']}>
-      <p class="text-sm font-medium text-fg">No results</p>
-      <p class="mt-1.5 text-sm text-fg-muted">Try a different or shorter word</p>
-    </div>
-    <p id="search-status" class="px-4 pt-4 text-xs text-fg-muted empty:hidden md:px-5" aria-live="polite"></p>
-    <ul id="search-results" class="flex flex-col py-2"></ul>
-  </div>
+  </SearchPanel>
 </dialog>
 
-<template id="search-result-template">
-  <li>
-    <a class="search-result flex gap-4 px-4 py-3 hover:bg-fg/5 focus-visible:bg-fg/5 focus-visible:outline-none md:px-5">
-      <span class="search-result-thumb aspect-[4/3] w-20 shrink-0 overflow-hidden rounded-md bg-bg-subtle">
-        <img alt="" loading="lazy" class="size-full object-cover" />
-      </span>
-      <span class="flex min-w-0 flex-1 flex-col gap-1">
-        <span class="search-result-meta text-xs text-fg-muted"></span>
-        <span class="search-result-title line-clamp-2 text-sm font-semibold text-fg"></span>
-        <span class="search-result-excerpt line-clamp-2 text-xs leading-relaxed text-fg-muted"></span>
-      </span>
-    </a>
-  </li>
-</template>
-
-<style>
-  @reference "../styles/global.css";
-
-  .search-scroll {
-    scrollbar-width: none;
-  }
-
-  .search-scroll::-webkit-scrollbar {
-    display: none;
-  }
-
-  .search-input::-webkit-search-cancel-button {
-    appearance: none;
-  }
-
-  .search-result-excerpt :global(mark) {
-    background: transparent;
-    color: var(--fg);
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 2px;
-  }
-</style>
-
 <script>
-  interface PagefindResultData {
-    url: string;
-    excerpt: string;
-    meta: {
-      title?: string;
-      image?: string;
-      date?: string;
-      category?: string;
-    };
-  }
-
-  interface PagefindResult {
-    id: string;
-    data: () => Promise<PagefindResultData>;
-  }
-
-  interface PagefindSearchResponse {
-    results: PagefindResult[];
-  }
-
-  interface Pagefind {
-    init: () => Promise<void>;
-    options: (options: { excerptLength?: number }) => Promise<void>;
-    debouncedSearch: (term: string, options?: object, debounceMs?: number) => Promise<PagefindSearchResponse | null>;
-  }
-
-  const MAX_RESULTS = 20;
+  import { createSearch, loadPagefind } from '../lib/search';
 
   const dialog = document.getElementById('search-dialog');
-  const form = document.getElementById('search-form');
-  const input = document.getElementById('search-input');
-  const closeButton = document.getElementById('search-close');
-  const status = document.getElementById('search-status');
-  const list = document.getElementById('search-results');
-  const emptyState = document.getElementById('search-empty');
-  const noResults = document.getElementById('search-no-results');
-  const template = document.getElementById('search-result-template');
-
-  // インデックスは astro build 後に pagefind が dist/ へ生成するため、実行時にURLで読み込む
-  // import() を直接書くとViteがpreload処理で包み、Astroがインライン化したscriptでは __VITE_PRELOAD__ が未置換のまま残って実行時エラーになる
-  const importPagefind = new Function('return import("/pagefind/pagefind.js")') as () => Promise<Pagefind>;
-
-  let pagefindPromise: Promise<Pagefind | null> | undefined;
+  const search = dialog ? createSearch(dialog) : null;
+  const desktopQuery = matchMedia('(min-width: 48rem)');
   let lastTrigger: HTMLElement | null = null;
 
-  function loadPagefind(): Promise<Pagefind | null> {
-    pagefindPromise ??= importPagefind()
-      .then(async (module) => {
-        await module.options({ excerptLength: 40 });
-        await module.init();
-        return module;
-      })
-      .catch(() => null);
-    return pagefindPromise;
-  }
-
-  function setStatus(text: string): void {
-    if (status) status.textContent = text;
-  }
-
-  function renderResult(data: PagefindResultData): HTMLLIElement | null {
-    if (!(template instanceof HTMLTemplateElement)) return null;
-    const fragment = template.content.cloneNode(true);
-    if (!(fragment instanceof DocumentFragment)) return null;
-    const item = fragment.querySelector('li');
-    const link = fragment.querySelector('a');
-    const thumb = fragment.querySelector('.search-result-thumb');
-    const image = fragment.querySelector('img');
-    const meta = fragment.querySelector('.search-result-meta');
-    const title = fragment.querySelector('.search-result-title');
-    const excerpt = fragment.querySelector('.search-result-excerpt');
-    if (!item || !link || !thumb || !image || !meta || !title || !excerpt) return null;
-
-    link.href = data.url;
-    if (data.meta.image) {
-      image.src = data.meta.image;
-    } else {
-      thumb.remove();
-    }
-    meta.textContent = [data.meta.category, data.meta.date].filter(Boolean).join(' / ');
-    title.textContent = data.meta.title ?? '';
-    // Pagefindの抜粋は本文をエスケープ済みで、<mark>だけを含む
-    excerpt.innerHTML = data.excerpt;
-    return item;
-  }
-
-  async function runSearch(term: string): Promise<void> {
-    if (!list) return;
-    const query = term.trim();
-    emptyState?.classList.toggle('hidden', query !== '');
-    if (!query) {
-      noResults?.classList.add('hidden');
-      list.replaceChildren();
-      setStatus('');
-      return;
-    }
-
-    const pagefind = await loadPagefind();
-    if (!pagefind) {
-      setStatus('Search is available after build (npm run build && npm run preview).');
-      return;
-    }
-
-    const response = await pagefind.debouncedSearch(query, {}, 200);
-    // より新しい入力で置き換えられた検索はnullが返る
-    if (!response) return;
-
-    const results = await Promise.all(response.results.slice(0, MAX_RESULTS).map((result) => result.data()));
-    if (input instanceof HTMLInputElement && input.value.trim() !== query) return;
-
-    const items = results.map(renderResult).filter((item): item is HTMLLIElement => item !== null);
-    list.replaceChildren(...items);
-    const count = response.results.length;
-    noResults?.classList.toggle('hidden', count !== 0);
-    setStatus(count === 0 ? '' : `${count} ${count === 1 ? 'result' : 'results'}`);
-  }
-
   function openSearch(trigger: HTMLElement | null): void {
-    if (!(dialog instanceof HTMLDialogElement) || dialog.open) return;
+    if (!(dialog instanceof HTMLDialogElement) || dialog.open || !search) return;
     lastTrigger = trigger;
     dialog.showModal();
     document.body.classList.add('overflow-hidden');
-    // iOSはタップのイベント内で同期的にfocusしないとキーボードが出ないため、Pagefindの読み込みより先に行う
-    if (input instanceof HTMLInputElement) {
-      input.focus();
-      input.select();
-    }
+    search.input.focus();
+    search.input.select();
     void loadPagefind();
   }
 
@@ -220,32 +43,28 @@ const messageClass = 'px-4 pt-[28dvh] pb-16 text-center md:px-5 md:py-16';
     if (dialog instanceof HTMLDialogElement && dialog.open) dialog.close();
   }
 
-  document.querySelectorAll<HTMLElement>('[data-search-open]').forEach((button) => {
-    button.addEventListener('click', () => openSearch(button));
+  document.querySelectorAll<HTMLElement>('[data-search-open]').forEach((trigger) => {
+    trigger.addEventListener('click', (event) => {
+      if (!desktopQuery.matches) return;
+      event.preventDefault();
+      openSearch(trigger);
+    });
   });
 
-  closeButton?.addEventListener('click', closeSearch);
+  dialog?.querySelector('[data-search-close]')?.addEventListener('click', closeSearch);
 
   dialog?.addEventListener('close', () => {
     document.body.classList.remove('overflow-hidden');
-    lastTrigger?.focus();
+    lastTrigger?.focus({ preventScroll: true });
   });
 
-  // PCのモーダル表示で、パネル外(::backdrop)のクリックはdialog自身へのクリックとして届く
+  // パネル外(::backdrop)のクリックはdialog自身へのクリックとして届く
   dialog?.addEventListener('click', (event) => {
     if (event.target === dialog) closeSearch();
   });
 
-  input?.addEventListener('input', () => {
-    if (input instanceof HTMLInputElement) void runSearch(input.value);
-  });
-
-  form?.addEventListener('submit', (event) => {
-    event.preventDefault();
-    if (input instanceof HTMLInputElement) input.blur();
-  });
-
   document.addEventListener('keydown', (event) => {
+    if (!desktopQuery.matches) return;
     const target = event.target;
     const isTyping =
       target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
@@ -255,11 +74,12 @@ const messageClass = 'px-4 pt-[28dvh] pb-16 text-center md:px-5 md:py-16';
     openSearch(document.querySelector<HTMLElement>('[data-search-open]'));
   });
 
-  // bfcache復元時にダイアログが開いた状態(body固定=スクロール不可)のまま残るのを防ぐ
+  // bfcache復元時にダイアログが開いたまま残るのを防ぐ
   // 入力欄はブラウザによって空に戻るが結果リストは残るため、両方を空にして食い違いをなくす
   window.addEventListener('pageshow', () => {
     closeSearch();
-    if (input instanceof HTMLInputElement) input.value = '';
-    void runSearch('');
+    if (!search) return;
+    search.input.value = '';
+    void search.run('');
   });
 </script>

@@ -45,16 +45,14 @@ const pathname = Astro.url.pathname;
     </nav>
 
     <div class="flex items-center">
-      <button
-        type="button"
+      <a
+        href="/search/"
         data-search-open
         aria-label="サイト内を検索"
-        aria-haspopup="dialog"
-        aria-controls="search-dialog"
         class="rounded-lg p-2 text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
       >
         <Search class="size-4" />
-      </button>
+      </a>
 
       <button
         type="button"

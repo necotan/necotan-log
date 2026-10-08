@@ -41,5 +41,6 @@ export default defineConfig({
     },
   },
 
-  integrations: [mdx(), sitemap()]
+  // 検索ページは中身が空のため、検索エンジンに載せない
+  integrations: [mdx(), sitemap({ filter: (page) => !page.endsWith('/search/') })]
 });
