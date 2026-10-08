@@ -1,0 +1,52 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SearchPanel from '../components/SearchPanel.astro';
+---
+
+<BaseLayout title="Search | necotan log." description="necotan log. の記事をキーワードで検索します。">
+  <section id="search-page" class="mx-auto max-w-2xl px-6 pt-6 pb-16">
+    <h1 class="sr-only">Search</h1>
+    <SearchPanel variant="page" />
+  </section>
+</BaseLayout>
+
+<script>
+  import { createSearch } from '../lib/search';
+
+  const root = document.getElementById('search-page');
+  const search = root ? createSearch(root) : null;
+
+  // 記事から戻ったときやURLを共有したときに同じ結果を出せるよう、検索語を?q=に持たせる
+  function readQuery(): string {
+    return new URLSearchParams(location.search).get('q') ?? '';
+  }
+
+  function writeQuery(term: string): void {
+    const url = new URL(location.href);
+    if (term.trim()) {
+      url.searchParams.set('q', term.trim());
+    } else {
+      url.searchParams.delete('q');
+    }
+    history.replaceState(history.state, '', url);
+  }
+
+  if (search) {
+    search.input.addEventListener('input', () => writeQuery(search.input.value));
+
+    const initial = readQuery();
+    search.input.value = initial;
+    void search.run(initial);
+    // iOSはタップ外のfocusではキーボードを出さないが、PCで直接開いたときはすぐ入力できるようにする
+    if (!initial) search.input.focus();
+
+    // bfcache復元時、autocomplete=offの入力欄はブラウザによって空に戻されるため、URLの検索語で入れ直す
+    window.addEventListener('pageshow', (event) => {
+      if (!event.persisted) return;
+      const query = readQuery();
+      if (search.input.value === query) return;
+      search.input.value = query;
+      void search.run(query);
+    });
+  }
+</script>
