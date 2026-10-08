@@ -3,7 +3,7 @@ interface PagefindResultData {
   excerpt: string;
   meta: {
     title?: string;
-    image?: string;
+    thumb?: string;
     date?: string;
     category?: string;
   };
@@ -53,18 +53,18 @@ function renderResult(template: HTMLTemplateElement, data: PagefindResultData): 
   if (!(fragment instanceof DocumentFragment)) return null;
   const item = fragment.querySelector('li');
   const link = fragment.querySelector('a');
-  const thumb = fragment.querySelector('.search-result-thumb');
   const image = fragment.querySelector('img');
   const meta = fragment.querySelector('.search-result-meta');
   const title = fragment.querySelector('.search-result-title');
   const excerpt = fragment.querySelector('.search-result-excerpt');
-  if (!item || !link || !thumb || !image || !meta || !title || !excerpt) return null;
+  if (!item || !link || !image || !meta || !title || !excerpt) return null;
 
   link.href = data.url;
-  if (data.meta.image) {
-    image.src = data.meta.image;
+  // heroImageのない記事は、記事カードと同じく枠だけを残して画像を表示しない
+  if (data.meta.thumb) {
+    image.src = data.meta.thumb;
   } else {
-    thumb.remove();
+    image.remove();
   }
   meta.textContent = [data.meta.category, data.meta.date].filter(Boolean).join(' / ');
   title.textContent = data.meta.title ?? '';
