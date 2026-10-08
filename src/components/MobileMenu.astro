@@ -1,5 +1,5 @@
 ---
-import { X } from '@lucide/astro';
+import { Moon, Sun, X } from '@lucide/astro';
 import { navGroups, snsLinks, isNavActive } from '../lib/navigation';
 import type { Category } from '../lib/categories';
 
@@ -28,8 +28,18 @@ const year = new Date().getFullYear();
     >
       <X class="size-6" />
     </button>
-    <p class="text-sm font-medium tracking-wide">necotan log.</p>
-    <span class="size-6" aria-hidden="true"></span>
+    <button
+      type="button"
+      data-theme-toggle
+      aria-label="ダーク/ライトモードを切り替える"
+      aria-pressed="false"
+      class="flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium tracking-wide focus-visible:outline focus-visible:outline-2 focus-visible:outline-fg"
+    >
+      <Moon class="size-5 dark:hidden" />
+      <span class="dark:hidden">Dark</span>
+      <Sun class="hidden size-5 dark:block" />
+      <span class="hidden dark:inline">Light</span>
+    </button>
   </div>
 
   <nav class="flex flex-1 flex-col items-center justify-center gap-8 pb-16">
