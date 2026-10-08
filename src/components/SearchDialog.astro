@@ -233,5 +233,11 @@ import { Search, X } from '@lucide/astro';
   });
 
   // bfcache復元時にダイアログが開いた状態(body固定=スクロール不可)のまま残るのを防ぐ
-  window.addEventListener('pageshow', closeSearch);
+  // 入力欄はブラウザによって空に戻るが結果リストは残るため、両方を空にして食い違いをなくす
+  window.addEventListener('pageshow', () => {
+    closeSearch();
+    if (input instanceof HTMLInputElement) input.value = '';
+    list?.replaceChildren();
+    setStatus('');
+  });
 </script>
