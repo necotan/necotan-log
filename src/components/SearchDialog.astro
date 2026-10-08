@@ -104,14 +104,16 @@ import { Search, X } from '@lucide/astro';
   const list = document.getElementById('search-results');
   const template = document.getElementById('search-result-template');
 
+  // インデックスは astro build 後に pagefind が dist/ へ生成するため、実行時にURLで読み込む
+  // import() を直接書くとViteがpreload処理で包み、Astroがインライン化したscriptでは __VITE_PRELOAD__ が未置換のまま残って実行時エラーになる
+  const importPagefind = new Function('return import("/pagefind/pagefind.js")') as () => Promise<Pagefind>;
+
   let pagefindPromise: Promise<Pagefind | null> | undefined;
   let lastTrigger: HTMLElement | null = null;
 
   function loadPagefind(): Promise<Pagefind | null> {
-    // インデックスは astro build 後に pagefind が dist/ へ生成するため、Viteに解決させず実行時に読み込む
-    const path = '/pagefind/pagefind.js';
-    pagefindPromise ??= import(/* @vite-ignore */ path)
-      .then(async (module: Pagefind) => {
+    pagefindPromise ??= importPagefind()
+      .then(async (module) => {
         await module.options({ excerptLength: 40 });
         await module.init();
         return module;
@@ -174,7 +176,8 @@ import { Search, X } from '@lucide/astro';
 
     const items = results.map(renderResult).filter((item): item is HTMLLIElement => item !== null);
     list.replaceChildren(...items);
-    setStatus(response.results.length === 0 ? 'No results' : `${response.results.length} results`);
+    const count = response.results.length;
+    setStatus(count === 0 ? 'No results' : `${count} ${count === 1 ? 'result' : 'results'}`);
   }
 
   function openSearch(trigger: HTMLElement | null): void {
