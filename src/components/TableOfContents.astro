@@ -69,7 +69,7 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
         </div>
       </nav>
     ) : (
-      <details class="toc-details mt-8 mb-8 rounded-lg border border-border p-4 lg:hidden">
+      <details data-pagefind-ignore class="toc-details mt-8 mb-8 rounded-lg border border-border p-4 lg:hidden">
         <summary class="flex cursor-pointer list-none items-center justify-between text-sm font-semibold text-fg [&::-webkit-details-marker]:hidden">
           TOC
           <ChevronDown class="toc-chevron size-4 text-fg-muted transition-transform duration-300" aria-hidden="true" />

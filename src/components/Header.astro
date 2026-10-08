@@ -1,6 +1,7 @@
 ---
-import { Menu, Moon, Pin, PinOff, Sun } from '@lucide/astro';
+import { Menu, Moon, Pin, PinOff, Search, Sun } from '@lucide/astro';
 import MobileMenu from './MobileMenu.astro';
+import SearchDialog from './SearchDialog.astro';
 import { navGroups, isNavActive } from '../lib/navigation';
 import type { Category } from '../lib/categories';
 
@@ -43,7 +44,40 @@ const pathname = Astro.url.pathname;
       }
     </nav>
 
-    <div class="flex items-center gap-2">
+    <div class="flex items-center">
+      <button
+        type="button"
+        data-search-open
+        aria-label="サイト内を検索"
+        aria-haspopup="dialog"
+        aria-controls="search-dialog"
+        class="rounded-lg p-2 text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+      >
+        <Search class="size-4" />
+      </button>
+
+      <button
+        type="button"
+        data-pin-toggle
+        aria-label="ナビバーを上部に固定する"
+        aria-pressed="false"
+        class="rounded-lg p-2 text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+      >
+        <Pin class="size-4 pinned:hidden" />
+        <PinOff class="hidden size-4 pinned:block" />
+      </button>
+
+      <button
+        type="button"
+        data-theme-toggle
+        aria-label="ダーク/ライトモードを切り替える"
+        aria-pressed="false"
+        class="hidden rounded-lg p-2 text-fg md:block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+      >
+        <Moon class="size-4 dark:hidden" />
+        <Sun class="hidden size-4 dark:block" />
+      </button>
+
       <button
         id="mobile-menu-open"
         type="button"
@@ -55,35 +89,12 @@ const pathname = Astro.url.pathname;
       >
         <Menu class="size-4" />
       </button>
-
-      <div class="flex items-center">
-        <button
-          id="header-pin-toggle"
-          type="button"
-          aria-label="ナビバーを上部に固定する"
-          aria-pressed="false"
-          class="rounded-lg p-2 text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
-        >
-          <Pin class="size-4 pinned:hidden" />
-          <PinOff class="hidden size-4 pinned:block" />
-        </button>
-
-        <button
-          id="theme-toggle"
-          type="button"
-          aria-label="ダーク/ライトモードを切り替える"
-          aria-pressed="false"
-          class="rounded-lg p-2 text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
-        >
-          <Moon class="size-4 dark:hidden" />
-          <Sun class="hidden size-4 dark:block" />
-        </button>
-      </div>
     </div>
   </div>
 </header>
 
 <MobileMenu activeCategory={activeCategory} />
+<SearchDialog />
 
 <style>
   @reference "../styles/global.css";
@@ -105,8 +116,15 @@ const pathname = Astro.url.pathname;
 </style>
 
 <script>
-  const themeToggle = document.getElementById('theme-toggle');
-  themeToggle?.setAttribute('aria-pressed', String(document.documentElement.classList.contains('dark')));
+  const themeToggles = document.querySelectorAll<HTMLElement>('[data-theme-toggle]');
+  const pinToggles = document.querySelectorAll<HTMLElement>('[data-pin-toggle]');
+
+  const setPressed = (buttons: NodeListOf<HTMLElement>, pressed: boolean): void => {
+    buttons.forEach((button) => button.setAttribute('aria-pressed', String(pressed)));
+  };
+
+  setPressed(themeToggles, document.documentElement.classList.contains('dark'));
+  setPressed(pinToggles, document.documentElement.classList.contains('header-pinned'));
 
   const THEME_TRANSITION_MS = 250;
   let themeTransitionTimer: ReturnType<typeof setTimeout> | undefined;
@@ -115,7 +133,7 @@ const pathname = Astro.url.pathname;
     document.documentElement.classList.add('theme-transition');
     document.documentElement.classList.toggle('dark', isDark);
     document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
-    themeToggle?.setAttribute('aria-pressed', String(isDark));
+    setPressed(themeToggles, isDark);
 
     clearTimeout(themeTransitionTimer);
     themeTransitionTimer = setTimeout(() => {
@@ -123,22 +141,20 @@ const pathname = Astro.url.pathname;
     }, THEME_TRANSITION_MS);
   };
 
-  themeToggle?.addEventListener('click', () => {
-    const isDark = !document.documentElement.classList.contains('dark');
-    localStorage.setItem('theme', isDark ? 'dark' : 'light');
-    applyTheme(isDark);
+  themeToggles.forEach((button) => {
+    button.addEventListener('click', () => {
+      const isDark = !document.documentElement.classList.contains('dark');
+      localStorage.setItem('theme', isDark ? 'dark' : 'light');
+      applyTheme(isDark);
+    });
   });
 
-  const headerPinToggle = document.getElementById('header-pin-toggle');
-  headerPinToggle?.setAttribute(
-    'aria-pressed',
-    String(document.documentElement.classList.contains('header-pinned')),
-  );
-
-  headerPinToggle?.addEventListener('click', () => {
-    const isPinned = document.documentElement.classList.toggle('header-pinned');
-    localStorage.setItem('header-pinned', String(isPinned));
-    headerPinToggle.setAttribute('aria-pressed', String(isPinned));
+  pinToggles.forEach((button) => {
+    button.addEventListener('click', () => {
+      const isPinned = document.documentElement.classList.toggle('header-pinned');
+      localStorage.setItem('header-pinned', String(isPinned));
+      setPressed(pinToggles, isPinned);
+    });
   });
 
   // 戻る/進むでbfcacheから復元されたとき、離脱時にhoverしていたnavリンクの下線が表示されるのを防ぐ

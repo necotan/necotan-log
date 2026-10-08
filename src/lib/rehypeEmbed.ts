@@ -144,6 +144,8 @@ function buildLinkCard(data: LinkCardData): Element {
       className: ['embed-link-card'],
       target: '_blank',
       rel: ['noopener', 'noreferrer'],
+      // リンク先ページのタイトルや説明文で、この記事が検索に引っかからないようにする
+      dataPagefindIgnore: true,
     },
     children,
   };
