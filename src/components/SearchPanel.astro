@@ -55,10 +55,12 @@ import { Search } from '@lucide/astro';
   }
 
   .search-result-excerpt :global(mark) {
-    background: transparent;
+    background: color-mix(in srgb, var(--fg) 15%, transparent);
     color: var(--fg);
-    font-weight: 600;
-    text-decoration: underline;
-    text-underline-offset: 2px;
+    border-radius: 2px;
+    padding: 0 1px;
+    /* 抜粋の途中で改行されても、行ごとに角丸と余白を付ける */
+    box-decoration-break: clone;
+    -webkit-box-decoration-break: clone;
   }
 </style>
