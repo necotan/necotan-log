@@ -1,7 +1,6 @@
 ---
 import { Menu, Moon, Pin, PinOff, Search, Sun } from '@lucide/astro';
 import MobileMenu from './MobileMenu.astro';
-import SearchDialog from './SearchDialog.astro';
 import { navGroups, isNavActive } from '../lib/navigation';
 import type { Category } from '../lib/categories';
 
@@ -47,7 +46,6 @@ const pathname = Astro.url.pathname;
     <div class="flex items-center">
       <a
         href="/search/"
-        data-search-open
         aria-label="サイト内を検索"
         class="rounded-lg p-2 text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
       >
@@ -92,7 +90,6 @@ const pathname = Astro.url.pathname;
 </header>
 
 <MobileMenu activeCategory={activeCategory} />
-<SearchDialog />
 
 <style>
   @reference "../styles/global.css";
@@ -165,6 +162,22 @@ const pathname = Astro.url.pathname;
       },
       { once: true },
     );
+  });
+
+  document.addEventListener('keydown', (event) => {
+    const target = event.target;
+    const isTyping =
+      target instanceof HTMLElement && (target.isContentEditable || /^(INPUT|TEXTAREA|SELECT)$/.test(target.tagName));
+    const isShortcut = (event.key === 'k' && (event.metaKey || event.ctrlKey)) || (event.key === '/' && !isTyping);
+    if (!isShortcut) return;
+    event.preventDefault();
+    const searchInput = document.querySelector<HTMLInputElement>('#search-page [data-search-input]');
+    if (searchInput) {
+      searchInput.focus();
+      searchInput.select();
+    } else {
+      location.href = '/search/';
+    }
   });
 
   // 明示的な選択(localStorage)が無い場合のみ、OS側のダーク/ライト切替に追従する
