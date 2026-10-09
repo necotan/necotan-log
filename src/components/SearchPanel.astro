@@ -1,31 +1,8 @@
 ---
 import { Search } from '@lucide/astro';
-
-interface Props {
-  variant: 'dialog' | 'page';
-}
-
-const { variant } = Astro.props;
-
-const styles = {
-  dialog: {
-    form: 'mx-5 shrink-0',
-    body: 'search-scroll min-h-0 flex-1 overflow-y-auto overscroll-contain',
-    message: 'px-5 py-16',
-    status: 'px-5',
-    item: 'px-5',
-  },
-  page: {
-    form: '',
-    body: '',
-    message: 'pt-[20svh] pb-16 md:pt-24',
-    status: '',
-    item: '-mx-3 rounded-lg px-3',
-  },
-}[variant];
 ---
 
-<form role="search" data-search-form class:list={['flex items-center gap-3 border-b border-border py-3', styles.form]}>
+<form role="search" data-search-form class="flex items-center gap-3 border-b border-border py-3">
   <Search class="size-4 shrink-0 text-fg-muted" aria-hidden="true" />
   <input
     data-search-input
@@ -37,25 +14,22 @@ const styles = {
     aria-label="検索キーワード"
     class="search-input min-w-0 flex-1 bg-transparent py-1.5 text-base text-fg placeholder:text-fg-muted focus:outline-none"
   />
-  <slot name="actions" />
 </form>
 
-<div class={styles.body}>
-  <div data-search-empty class:list={['text-center', styles.message]}>
-    <p class="text-sm font-medium text-fg">Search the log</p>
-    <p class="mt-1.5 text-sm text-fg-muted">Titles, tags, and everything in between</p>
-  </div>
-  <div data-search-no-results class:list={['hidden text-center', styles.message]}>
-    <p class="text-sm font-medium text-fg">No results</p>
-    <p class="mt-1.5 text-sm text-fg-muted">Try a different or shorter word</p>
-  </div>
-  <p data-search-status class:list={['pt-4 text-xs text-fg-muted empty:hidden', styles.status]} aria-live="polite"></p>
-  <ul data-search-results class="flex flex-col py-2"></ul>
+<div data-search-empty class="pt-[20svh] pb-16 text-center md:pt-24">
+  <p class="text-sm font-medium text-fg">Search the log</p>
+  <p class="mt-1.5 text-sm text-fg-muted">Titles, tags, and everything in between</p>
 </div>
+<div data-search-no-results class="hidden pt-[20svh] pb-16 text-center md:pt-24">
+  <p class="text-sm font-medium text-fg">No results</p>
+  <p class="mt-1.5 text-sm text-fg-muted">Try a different or shorter word</p>
+</div>
+<p data-search-status class="pt-4 text-xs text-fg-muted empty:hidden" aria-live="polite"></p>
+<ul data-search-results class="flex flex-col py-2"></ul>
 
 <template data-search-result-template>
   <li>
-    <a class:list={['flex gap-4 py-3 hover:bg-fg/5 focus-visible:bg-fg/5 focus-visible:outline-none', styles.item]}>
+    <a class="-mx-3 flex gap-4 rounded-lg px-3 py-3 hover:bg-fg/5 focus-visible:bg-fg/5 focus-visible:outline-none">
       <span class="search-result-thumb aspect-video w-24 shrink-0 self-start overflow-hidden rounded-md bg-bg-subtle md:w-32">
         <img alt="" loading="lazy" class="size-full object-cover" />
       </span>
@@ -69,14 +43,6 @@ const styles = {
 </template>
 
 <style>
-  .search-scroll {
-    scrollbar-width: none;
-  }
-
-  .search-scroll::-webkit-scrollbar {
-    display: none;
-  }
-
   .search-input::-webkit-search-cancel-button {
     appearance: none;
   }

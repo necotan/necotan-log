@@ -37,7 +37,7 @@ const importPagefind = new Function('return import("/pagefind/pagefind.js")') as
 
 let pagefindPromise: Promise<Pagefind | null> | undefined;
 
-export function loadPagefind(): Promise<Pagefind | null> {
+function loadPagefind(): Promise<Pagefind | null> {
   pagefindPromise ??= importPagefind()
     .then(async (module) => {
       await module.options({ excerptLength: 40 });
@@ -73,7 +73,6 @@ function renderResult(template: HTMLTemplateElement, data: PagefindResultData): 
   return item;
 }
 
-// 検索ページとPCのモーダルの両方が同じページに載ることがあるため、要素はidではなくroot内のdata属性で探す
 export function createSearch(root: HTMLElement): SearchController | null {
   const form = root.querySelector('[data-search-form]');
   const input = root.querySelector('[data-search-input]');
