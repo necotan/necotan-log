@@ -76,6 +76,7 @@ function renderResult(template: HTMLTemplateElement, data: PagefindResultData): 
 export function createSearch(root: HTMLElement): SearchController | null {
   const form = root.querySelector('[data-search-form]');
   const input = root.querySelector('[data-search-input]');
+  const clearButton = root.querySelector('[data-search-clear]');
   const status = root.querySelector('[data-search-status]');
   const list = root.querySelector('[data-search-results]');
   const emptyState = root.querySelector('[data-search-empty]');
@@ -84,6 +85,7 @@ export function createSearch(root: HTMLElement): SearchController | null {
   if (
     !(form instanceof HTMLFormElement) ||
     !(input instanceof HTMLInputElement) ||
+    !(clearButton instanceof HTMLButtonElement) ||
     !status ||
     !list ||
     !emptyState ||
@@ -95,6 +97,7 @@ export function createSearch(root: HTMLElement): SearchController | null {
 
   const run = async (term: string): Promise<void> => {
     const query = term.trim();
+    clearButton.classList.toggle('hidden', term === '');
     emptyState.classList.toggle('hidden', query !== '');
     if (!query) {
       noResults.classList.add('hidden');
@@ -126,6 +129,13 @@ export function createSearch(root: HTMLElement): SearchController | null {
   };
 
   input.addEventListener('input', () => void run(input.value));
+
+  // inputイベントとして流し、検索ページ側の?q=の更新も同じ経路で行わせる
+  clearButton.addEventListener('click', () => {
+    input.value = '';
+    input.dispatchEvent(new Event('input', { bubbles: true }));
+    input.focus();
+  });
 
   form.addEventListener('submit', (event) => {
     event.preventDefault();
