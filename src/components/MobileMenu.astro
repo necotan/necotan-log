@@ -12,9 +12,11 @@ const pathname = Astro.url.pathname;
 const year = new Date().getFullYear();
 ---
 
+{/* iOS 26 Safariは画面端にfixed要素があるとその色を表示切替時にしか読まず、テーマのフェードにバーが追従しないため、fixedにせずbodyの背景色を読ませる */}
+{/* 下部ツールバーの裏まで覆うためlvhにし、dvhとの差を下余白にして中身はツールバーの上に収める */}
 <div
   id="mobile-menu"
-  class="fixed inset-0 z-50 hidden flex-col bg-bg text-fg"
+  class="absolute inset-x-0 top-0 z-50 hidden h-lvh flex-col bg-bg pb-[calc(100lvh-100dvh)] text-fg"
   role="dialog"
   aria-modal="true"
   aria-label="サイトメニュー"
@@ -92,8 +94,13 @@ const year = new Date().getFullYear();
   const openButton = document.getElementById('mobile-menu-open');
   const closeButton = document.getElementById('mobile-menu-close');
 
+  let savedScrollY: number | null = null;
+
   function openMenu() {
     if (!menu) return;
+    // メニューはページ先頭に置いたabsoluteなので、先頭までスクロールしてから開く(閉じたら元の位置に戻す)
+    savedScrollY = window.scrollY;
+    window.scrollTo(0, 0);
     menu.classList.remove('hidden');
     menu.classList.add('flex');
     document.body.classList.add('overflow-hidden');
@@ -106,6 +113,10 @@ const year = new Date().getFullYear();
     menu.classList.remove('flex');
     document.body.classList.remove('overflow-hidden');
     openButton?.setAttribute('aria-expanded', 'false');
+    if (savedScrollY !== null) {
+      window.scrollTo(0, savedScrollY);
+      savedScrollY = null;
+    }
   }
 
   function closeMenu() {
