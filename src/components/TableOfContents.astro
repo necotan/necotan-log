@@ -48,9 +48,9 @@ const items = headings.filter((heading) => heading.depth === 2 || heading.depth 
                     href={`#${heading.slug}`}
                     data-toc-link
                     data-slug={heading.slug}
-                    class="flex items-center gap-2 text-fg-muted transition-text hover:text-fg"
+                    class="flex items-center gap-2 text-fg-muted transition-text duration-300 hover:text-fg hover:duration-150"
                   >
-                    <span data-toc-dot class="size-1.5 shrink-0 rounded-full border border-border transition-colors" aria-hidden="true" />
+                    <span data-toc-dot class="size-1.5 shrink-0 rounded-full border border-border transition-colors duration-300" aria-hidden="true" />
                     {heading.text}
                   </a>
                 </li>
