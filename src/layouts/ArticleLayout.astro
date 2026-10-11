@@ -180,7 +180,7 @@ const breadcrumbJsonLd = {
           target="_blank"
           rel="noopener noreferrer"
           aria-label="Share on X"
-          class="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm text-fg-muted hover:border-fg hover:text-fg"
+          class="inline-flex items-center gap-2 rounded-full border border-border px-4 py-2 text-sm text-fg-muted transition-bg-text hover:bg-fg/5 hover:text-fg"
         >
           Share on
           <svg class="size-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -193,7 +193,7 @@ const breadcrumbJsonLd = {
         (prevPost || nextPost) && (
           <nav class="mt-8 grid grid-cols-1 gap-4 border-t border-border pt-8 sm:grid-cols-2" aria-label="前後の記事" data-pagefind-ignore>
             {prevPost && (
-              <a href={prevPost.href} class="rounded-lg border border-border p-4 hover:border-fg">
+              <a href={prevPost.href} class="rounded-lg border border-border p-4 transition-bg hover:bg-fg/5">
                 <p class="text-xs text-fg-muted">Older</p>
                 <p class="mt-1 line-clamp-2 text-sm font-medium text-fg">{prevPost.title}</p>
               </a>
@@ -201,7 +201,7 @@ const breadcrumbJsonLd = {
             {nextPost && (
               <a
                 href={nextPost.href}
-                class:list={['rounded-lg border border-border p-4 hover:border-fg', !prevPost && 'sm:col-start-2']}
+                class:list={['rounded-lg border border-border p-4 transition-bg hover:bg-fg/5', !prevPost && 'sm:col-start-2']}
               >
                 <p class="text-xs text-fg-muted">Newer</p>
                 <p class="mt-1 line-clamp-2 text-sm font-medium text-fg">{nextPost.title}</p>
