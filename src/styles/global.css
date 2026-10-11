@@ -117,6 +117,12 @@ html {
   }
 }
 
+@utility transition-text {
+  @media (hover: hover) {
+    @apply transition-[color];
+  }
+}
+
 /* テーマ切替は各要素の色をtransitionせず、:rootで色トークン自体を補間して全要素をそのまま追従させる */
 /* 要素ごとだと、継承した色を自分でもtransitionするアイコンなどがiOSで遅れ、独自のtransitionを持つnavリンクは色だけ瞬時に変わる */
 /* 補間するには型が必要なため、テーマ切替で変わるトークンを<color>として登録する */
