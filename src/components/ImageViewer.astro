@@ -11,6 +11,8 @@
   <div id="image-viewer-track" class="image-viewer-track flex h-full w-full snap-x snap-mandatory overflow-x-auto overscroll-x-contain">
   </div>
 
+  <div id="image-viewer-svh" class="pointer-events-none invisible absolute left-0 top-0 h-svh w-0" aria-hidden="true"></div>
+
   <div class="pointer-events-none absolute inset-x-0 top-0 flex items-center justify-center px-4 py-4">
     <span
       id="image-viewer-counter"
@@ -73,6 +75,7 @@
   const closeButton = document.getElementById('image-viewer-close');
   const prevButton = document.getElementById('image-viewer-prev');
   const nextButton = document.getElementById('image-viewer-next');
+  const svhProbe = document.getElementById('image-viewer-svh');
 
   let images: ViewerImage[] = [];
   let currentIndex = 0;
@@ -85,7 +88,8 @@
     track.innerHTML = '';
     images.forEach((image) => {
       const slide = document.createElement('div');
-      slide.className = 'flex h-full w-full shrink-0 snap-center items-center justify-center px-4 py-16 md:px-20';
+      slide.className =
+        'flex h-full w-full shrink-0 snap-center items-center justify-center px-4 pt-16 pb-[calc(4rem+var(--viewer-top-inset,0px))] md:px-20';
       const img = document.createElement('img');
       img.src = image.src;
       img.alt = image.alt;
@@ -117,11 +121,26 @@
     );
   }
 
+  // iOS 26 Safariはツールバー縮小時にfixed要素をURLピルより下へ切り詰め、画像が下にずれて見えるため、欠けた高さ(画面の高さ - innerHeight)を下余白に足す
+  function updateTopInset(): void {
+    if (!viewer || !svhProbe) return;
+    // iOS 26の縮小時のinnerHeightはlvh(ステータスバー分を除いた高さ)に届かないため、svhより大きいかで判定する。PCはsvhと等しい
+    const isToolbarCollapsed = window.innerHeight > svhProbe.offsetHeight + 1;
+    // iOSのscreen.width/heightは横向きでも縦向きの値を返す
+    const screenHeight =
+      window.innerWidth > window.innerHeight
+        ? Math.min(screen.width, screen.height)
+        : Math.max(screen.width, screen.height);
+    const inset = isToolbarCollapsed ? Math.max(0, screenHeight - window.innerHeight) : 0;
+    viewer.style.setProperty('--viewer-top-inset', `${inset}px`);
+  }
+
   function openViewer(index: number): void {
     if (!viewer) return;
     currentIndex = index;
     viewer.classList.remove('hidden');
     document.body.classList.add('overflow-hidden');
+    updateTopInset();
     updateUI();
     scrollToIndex(index, 'instant');
   }
@@ -194,6 +213,7 @@
 
   window.addEventListener('resize', () => {
     if (viewer?.classList.contains('hidden')) return;
+    updateTopInset();
     scrollToIndex(currentIndex, 'instant');
   });
 </script>
