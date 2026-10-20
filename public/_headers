@@ -1,0 +1,8 @@
+# HSTSとX-Content-Type-OptionsはCloudflare側で付与されるため、ここでは重複させない
+# CSPはインラインスクリプトとPagefindを壊さないよう、スクリプトを制限しないディレクティブだけにする
+# Permissions-Policyには、YouTube埋め込み(rehypeEmbed.tsのallow)で使う機能を含めない
+/*
+  Content-Security-Policy: frame-ancestors 'none'; base-uri 'self'; object-src 'none'; form-action 'self'
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
