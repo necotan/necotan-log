@@ -6,6 +6,7 @@ import ArticleCard from '../../../components/ArticleCard.astro';
 import CategoryFilter from '../../../components/CategoryFilter.astro';
 import Pagination from '../../../components/Pagination.astro';
 import { CATEGORIES, categoryLabels, categoryDescriptions } from '../../../lib/categories';
+import { serializeJsonLd } from '../../../lib/jsonLd';
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
   const posts = await getCollection('blog', ({ data }) => !data.draft);
@@ -39,7 +40,7 @@ const breadcrumbJsonLd = {
 ---
 
 <BaseLayout title={`${label} | necotan log.`} description={description}>
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} is:inline />
+  <script type="application/ld+json" set:html={serializeJsonLd(breadcrumbJsonLd)} is:inline />
   <section class="mx-auto max-w-6xl px-6 pt-10">
     <h1 class="text-2xl font-semibold tracking-tight text-fg">{label}</h1>
 

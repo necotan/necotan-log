@@ -5,6 +5,7 @@ import ArticleCard from '../components/ArticleCard.astro';
 import ImageViewer from '../components/ImageViewer.astro';
 import TableOfContents from '../components/TableOfContents.astro';
 import { categoryLabels, type Category } from '../lib/categories';
+import { serializeJsonLd } from '../lib/jsonLd';
 
 interface Heading {
   depth: number;
@@ -103,8 +104,8 @@ const breadcrumbJsonLd = {
   type="article"
   activeCategory={category}
 >
-  <script type="application/ld+json" set:html={JSON.stringify(articleJsonLd)} is:inline />
-  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLd)} is:inline />
+  <script type="application/ld+json" set:html={serializeJsonLd(articleJsonLd)} is:inline />
+  <script type="application/ld+json" set:html={serializeJsonLd(breadcrumbJsonLd)} is:inline />
   <article class="mx-auto max-w-6xl px-6 py-12 lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:items-start lg:gap-12 lg:transition-[grid-template-columns] lg:duration-300 lg:ease-out lg:toc-collapsed:grid-cols-[minmax(0,1fr)_4rem]">
     <div
       class="lg:col-start-1 lg:row-start-1"
