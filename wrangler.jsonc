@@ -1,6 +1,11 @@
 {
   "name": "necotan-log",
   "compatibility_date": "2026-08-01",
+  // ダッシュボードでworkers.devを無効にしても、未指定だと次のwrangler deployで有効になってしまうため、明示的に無効化する
+  "workers_dev": false,
+  // 未指定だとworkers_devに連動して無効になるため、マージ前の確認に使うPreview URLは明示的に残す
+  "preview_urls": true,
+  "routes": [{ "pattern": "necotan-log.com", "custom_domain": true }],
   "assets": {
     "directory": "./dist",
     "not_found_handling": "404-page"
