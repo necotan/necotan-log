@@ -2,17 +2,15 @@
 @import "@fontsource-variable/inter";
 @import "@fontsource-variable/noto-sans-jp";
 
-/* prefers-color-schemeではなく.darkクラスでダーク/ライトを切り替える(darkMode: 'class'相当) */
+/* prefers-color-schemeではなく.darkクラスで切り替える */
 @custom-variant dark (&:where(.dark, .dark *));
 
-/* ナビバーのピン留め状態(.header-pinned)を示すバリアント */
 @custom-variant pinned (&:where(.header-pinned, .header-pinned *));
 
-/* 目次を閉じた状態(.toc-collapsed)を示すバリアント */
 @custom-variant toc-collapsed (&:where(.toc-collapsed, .toc-collapsed *));
 
 @theme inline {
-  /* モノトーン基調(グレースケールのみ、色相を持つアクセントカラーは使わない) */
+  /* アクセントカラーは使わず、グレースケールのみで配色する */
   --color-bg: var(--bg);
   --color-bg-subtle: var(--bg-subtle);
   --color-fg: var(--fg);
@@ -21,13 +19,12 @@
   --color-badge-bg: var(--badge-bg);
   --color-badge-fg: var(--badge-fg);
 
-  /* 欧文はInter、和文はNoto Sans JPでOSに依存しない見た目の統一感を出す */
+  /* Interは和文グリフを持たないため、和文はNoto Sans JPにフォールバックする */
   --font-sans:
     'Inter Variable', 'Noto Sans JP Variable', ui-sans-serif, system-ui, sans-serif;
 }
 
-/* ダークモードを基準に設計し、ライトモードはその反転として構築する */
-/* gray系は青みがかった色相を持つため、純粋な無彩色のneutral系を使う */
+/* grayは青みがかるため、無彩色のneutralを使う */
 :root {
   color-scheme: dark;
 
@@ -42,7 +39,6 @@
 
   --glass-border: rgba(255, 255, 255, 0.12);
 
-  /* 404ページのターミナルウィンドウ */
   --terminal-bg: var(--color-neutral-900);
   --terminal-titlebar: var(--color-neutral-800);
   --terminal-border: var(--color-neutral-700);
@@ -73,7 +69,7 @@
 
 html {
   background-color: var(--bg);
-  /* 検索、画像ビューアを開くときのbody.overflow-hiddenでスクロールバーが消え、ページが横にずれるのを防ぐ */
+  /* 検索や画像ビューアでbodyをoverflow-hiddenにしたとき、スクロールバーが消えてページが横にずれるのを防ぐ */
   scrollbar-gutter: stable;
 }
 
@@ -193,7 +189,7 @@ html {
   transition: none !important;
 }
 
-/* 記事本文(Markdownレンダリング結果)のタイポグラフィ。既存パレット(--fg/--bg-subtle等)のみを使う */
+/* Markdownから生成した記事本文 */
 @layer components {
   .article-body {
     color: var(--fg);
@@ -336,7 +332,6 @@ html {
     padding: 0;
   }
 
-  /* YouTube埋め込み */
   .article-body .embed-youtube {
     position: relative;
     margin-top: 1.5rem;
@@ -354,7 +349,6 @@ html {
     border: 0;
   }
 
-  /* リンクカード */
   .article-body .embed-link-card {
     margin-top: 1.5rem;
     display: flex;
@@ -450,7 +444,6 @@ html {
   }
 }
 
-/* 404ページのターミナル風カーソル点滅(CSSアニメーションのみ、JS不使用) */
 @keyframes terminal-blink {
   0%,
   50% {
@@ -466,7 +459,6 @@ html {
   animation: terminal-blink 1s steps(1) infinite;
 }
 
-/* 404ページのターミナルウィンドウ */
 @layer components {
   .terminal-window {
     overflow: hidden;
