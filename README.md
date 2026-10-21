@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Astro-5-BC52EE?logo=astro&logoColor=white">
+  <img src="https://img.shields.io/badge/Astro-7-BC52EE?logo=astro&logoColor=white">
   <img src="https://img.shields.io/badge/Tailwind%20CSS-v4-06B6D4?logo=tailwindcss&logoColor=white">
   <img src="https://img.shields.io/badge/Cloudflare-Workers%20%2F%20R2-F38020?logo=cloudflare&logoColor=white">
   <br>
@@ -22,6 +22,7 @@
 - [Tailwind CSS v4](https://tailwindcss.com/)
 - [@fontsource-variable/inter](https://fontsource.org/fonts/inter) / [@fontsource-variable/noto-sans-jp](https://fontsource.org/fonts/noto-sans-jp)
 - [@lucide/astro](https://lucide.dev/)
+- [Pagefind](https://pagefind.app/)
 - Cloudflare Workers / Cloudflare R2
 
 ## プロジェクト構成
@@ -29,18 +30,22 @@
 ```text
 /
 ├── src/
-│   ├── components/       # ArticleCard, Header, MobileMenu, TableOfContents など
+│   ├── assets/           # ファビコン・PWAアイコン
+│   ├── components/       # ArticleCard, Header, MobileMenu, SearchPanel, ImageViewer, TableOfContents など
 │   ├── content/
-│   │   └── blog/         # 記事本体(Markdown/MDX、年フォルダ単位で管理)
+│   │   └── blog/         # 記事本体
 │   │       └── 2026/     # 例: 2026-08-01.md
 │   ├── content.config.ts # 記事のフロントマタースキーマ(zod)
 │   ├── layouts/          # BaseLayout, ArticleLayout
-│   ├── lib/              # categories.ts, navigation.ts, readingTime.ts など
-│   ├── pages/            # ルーティング(index, about, category/[category], tag/[tag], blog/[...slug] など)
-│   └── styles/           # global.css(テーマ変数・記事本文タイポグラフィ)
+│   ├── lib/              # categories.ts, navigation.ts, rehypeEmbed.ts, rehypeImageGrid.ts, linkCard.ts など
+│   ├── pages/            # ルーティング([...page](トップ・ページネーション), about, search, category/[category], tag/[tag], blog/[...slug], rss.xml, robots.txt, 404 など)
+│   └── styles/           # global.css
+├── public/
+│   └── _headers          # セキュリティヘッダ
 ├── .cache/
 │   └── link-cards.json   # リンクカードのOGPキャッシュ
 ├── astro.config.mjs
+├── wrangler.jsonc        # Cloudflare Workersのデプロイ設定
 └── package.json
 ```
 
@@ -59,13 +64,27 @@ description: "一覧・OGPで使う概要文"
 pubDate: 2026-08-01
 category: essay # (photo、life、essay)
 tags: ["タグ1", "タグ2"] # /tag/[tag]/ ページ生成に使用する
-heroImage: "https://images.necotan-log.com/..." # 未設定ならプレースホルダー表示する
-draft: false # trueにすると一覧・RSSから除外される
+heroImage: "https://images.necotan-log.com/..." # 一覧カード、OGP、検索結果のサムネイル(未設定の場合、カードはプレースホルダー、OGPは og-default.png になる)
+showHeroImage: false # trueにすると記事ページの本文上部にもheroImageを表示する(デフォルトはfalse)
+draft: false # trueにすると記事ページ自体を生成せず、一覧・RSSからも除外される
 ---
 ```
 
 - カテゴリの定義・ラベルは [src/lib/categories.ts](src/lib/categories.ts)
 - ナビゲーション項目は [src/lib/navigation.ts](src/lib/navigation.ts)
+
+### 縦写真のペア表示(image-grid)
+
+Markdown画像のtitle記法でマーカー `vertical` を指定すると、rehypeプラグイン [src/lib/rehypeImageGrid.ts](src/lib/rehypeImageGrid.ts) が該当段落を `<div class="image-grid">` に変換する。
+
+```md
+![1](https://images.necotan-log.com/... "vertical")
+![2](https://images.necotan-log.com/... "vertical")
+```
+
+- 変換条件：子要素が `<img>`(と空白テキスト)のみの `<p>` で、`<img>` がちょうど2つ、かつ両方の `title` が `vertical` であること。条件を満たさない段落は `<p>` のまま出力する。
+- レイアウト：`global.css` の `.article-body .image-grid` で2カラムのCSS Gridにする(639px以下は1カラム)。
+- 画像のみの `<p>` では、ツールチップとして表示されないよう `title="vertical"` を出力前に削除する。
 
 ### 埋め込み・リンクカード
 
@@ -89,7 +108,7 @@ https://example.com/
 | :------------------------ | :----------------------------------------------- |
 | `npm install`             | 依存関係のインストール                              |
 | `npm run dev`             | ローカル開発サーバーを `localhost:4321` で起動        |
-| `npm run build`           | `./dist/` に本番用サイトをビルド                      |
+| `npm run build`           | `./dist/` に本番用サイトをビルドし、Pagefindで検索インデックスを生成 |
 | `npm run preview`         | ビルド済みサイトをローカルでプレビュー                  |
 | `npm run astro check`     | 型・Astroファイルのチェック                           |
 
