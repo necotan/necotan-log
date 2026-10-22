@@ -44,6 +44,7 @@
 │   └── _headers          # セキュリティヘッダ
 ├── .cache/
 │   └── link-cards.json   # リンクカードのOGPキャッシュ
+├── .node-version         # ビルドに使うNode.jsのバージョン
 ├── astro.config.mjs
 ├── wrangler.jsonc        # Cloudflare Workersのデプロイ設定
 └── package.json
@@ -98,9 +99,20 @@ https://example.com/
 
 リンクカードのOGPはビルド時に取得し、`.cache/link-cards.json` に保存する。本番ビルドは毎回クリーンな環境で走るため、このファイルもコミットしてローカルで取得した結果を使用する。
 
-- リンクカードを含む記事を追加したら、`npm run dev` か `npm run build` を実行し `.cache/link-cards.json` を更新して、記事と一緒にコミットする。
+リンクカードを追加するときは、次の順に作業する。OGPの取得では、ビルドを実行したマシンのNode.jsが外部サイトのレスポンスを処理するため。
+
+1. 追加するURLの取得先を検証し、運営元が明確で信頼できるドメインに限定する。
+2. ローカルのNode.jsが `.node-version` のバージョン以上か確認してから、`npm run dev` か `npm run build` を実行する。
+3. ビルドログに `[linkCard]` の警告が出ていないことを確認し、`.cache/link-cards.json` を記事と一緒にコミットする。
+
 - 保存済みのURLは再取得しない。リンク先のOGPを取り直したいときは、該当エントリを削除してから再度ビルドする。
 - 取得に失敗したURLは保存されず、ビルドログに `[linkCard]` の警告が出る。本番でも再取得を試み、失敗すればホスト名だけのカードになる。
+
+## Node.jsのバージョン
+
+- ビルドに使うNode.jsのバージョンは `.node-version` で指定する。Cloudflare Workers Buildsはこのファイルを読んでNode.jsをインストールする。
+- `package.json` の `engines` には、許可するバージョンの範囲(各系統のセキュリティ修正版以上)を書く。
+- Node.jsのセキュリティリリースが出たら、`.node-version` と `engines`、ローカルのNode.jsを更新する。
 
 ## コマンド
 
