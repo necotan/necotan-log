@@ -113,6 +113,7 @@ https://example.com/
 - ビルドに使うNode.jsのバージョンは `.node-version` で指定する。Cloudflare Workers Buildsはこのファイルを読んでNode.jsをインストールする。
 - `package.json` の `engines` には、許可するバージョンの範囲(各系統のセキュリティ修正版以上)を書く。
 - Node.jsのセキュリティリリースが出たら、`.node-version` と `engines`、ローカルのNode.jsを更新する。
+- Cloudflare Workers Buildsの依存関係のインストールは、Node.jsと一緒に入るnpmではなく、ビルド環境のnpm(10.9.2、ビルドログで確認できる)で `npm clean-install` を実行する。ローカルのnpm(11系)で作ったlockfileが、このnpmでは不整合と判定されてビルドが失敗することがあるため、依存関係を更新したらpush前に `npx npm@10.9.2 ci --dry-run` を実行して確認する。
 
 ## コマンド
 
