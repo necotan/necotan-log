@@ -19,9 +19,12 @@ Design decisions for necotan log. Read this before changing UI, colors, navigati
 | `fg-muted` | Secondary text: dates, meta, captions, footer |
 | `border` | Dividers and outlines |
 | `badge-bg` / `badge-fg` | Category badge in `ArticleCard` |
+| `glass-border` | Outline of the translucent header panel (`.glass-panel`) |
 
 - The only colored values are the window dots on the 404 terminal (`--terminal-dot-*`). Do not treat them as a precedent for accent colors.
 - The theme switches by the `.dark` class on `<html>`, not by `prefers-color-scheme`. Style both themes through the tokens.
+- The theme toggle fades the tokens themselves on `:root`, not each element, and stops element transitions while `.theme-transition` is set. Fading per element left icons lagging on iOS and nav links switching instantly. A new token that differs between themes must be registered with `@property` as `<color>` and added to the `:root.theme-transition` list in `global.css`; otherwise it switches instantly while everything else fades.
+- Give every link its own color class (`text-fg-muted` or `text-fg`) instead of inheriting from the parent. Until the CSS loads, an inheriting link shows the browser's default blue or purple.
 
 ## Typography
 
