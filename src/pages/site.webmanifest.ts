@@ -7,7 +7,7 @@ export const GET: APIRoute = () => {
   const manifest = {
     name: 'necotan log.',
     short_name: 'necotan log.',
-    description: 'necotan log.は、写真・カメラ、愛車、デスク環境、個人開発など、日々の記録を残すために作成した個人ブログです。',
+    description: 'necotan log.は、写真・カメラ、愛車など、日々の記録を残すために作成した個人ブログです。',
     start_url: '/',
     display: 'standalone',
     background_color: '#fafafa',
