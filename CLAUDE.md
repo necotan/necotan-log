@@ -54,7 +54,12 @@ Read `docs/design.md` before changing UI, colors, navigation, or article layout.
 - CSS: Tailwind utilities. Put custom CSS only in `@layer components`. No inline `style`.
 - Accessibility: give every image `alt`, do not skip heading levels (h1 → h2 → h3), keep `focus-visible` styles.
 - Performance: aim for Lighthouse 90+ in Performance, Accessibility, Best Practices, and SEO.
-- Comments: no decorative characters such as `---`, `===`, `***`.
+
+## Comments
+
+- Write only why: the reason for a choice, workarounds for browser or library quirks (iOS Safari, Astro, Tailwind, etc.), and constraints the code alone does not show.
+- Do not write what the code, names, or markup already say (e.g. "ハンバーガーメニュー", "目次", "〜の処理"). If there is no why to explain, write no comment.
+- No decorative characters such as `---`, `===`, `***`.
 
 ## Git workflow
 
@@ -76,9 +81,14 @@ Read `docs/design.md` before changing UI, colors, navigation, or article layout.
 | upgrade | Version upgrade |
 | revert | Revert a change |
 
-- Line 1: `<prefix>: <summary in English>`. Then a blank line.
-- Body: about 4 Japanese bullets. Name the concrete files, components, classes, CSS properties, or storage targets changed and how.
+- Line 1: `<prefix>: <summary in English>`.
+- The body is optional. For a small change that line 1 fully describes, write line 1 only. Otherwise add a blank line and 1 to about 4 Japanese bullets; do not pad to reach 4.
+- Bullets name the concrete files, components, classes, CSS properties, or storage targets changed and how.
 - Only when the user explicitly asks for causes or background, write prose with the root cause and the fix approach.
+
+```
+update: document Cloudflare build npm version check in README
+```
 
 ```
 add: collapsible table of contents
