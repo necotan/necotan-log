@@ -10,7 +10,6 @@ import rehypeEmbed from './src/lib/rehypeEmbed.ts';
 
 const SITE_URL = 'https://necotan-log.com';
 
-// https://astro.build/config
 export default defineConfig({
   site: SITE_URL,
 

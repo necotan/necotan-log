@@ -86,7 +86,6 @@ html {
   initial-value: 0;
 }
 
-/* 下線をbackground-imageで描画し、hover時に--underline-opacityを1にしてフェードインさせる */
 /* ブロック要素に付けると下線がブロック幅になるため、文字を包むinline要素に付ける */
 /* 各セレクタ内で@applyして使い、元のカスケードレイヤーと詳細度を保つ */
 @utility animated-underline {
@@ -189,7 +188,6 @@ html {
   transition: none !important;
 }
 
-/* Markdownから生成した記事本文 */
 @layer components {
   .article-body {
     color: var(--fg);

@@ -150,7 +150,6 @@ export function getDisplayHost(url: string): string {
   }
 }
 
-// OGP情報を取得し.cache/link-cards.jsonに永続化する
 // 取得失敗時は警告をログに出し、ホスト名をタイトルとするフォールバックを返す(非キャッシュ)
 export async function getLinkCard(url: string): Promise<LinkCardData> {
   const store = loadCache();

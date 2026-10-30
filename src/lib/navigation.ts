@@ -5,7 +5,6 @@ export type NavItem = {
   href: string;
 };
 
-// ヘッダーでグルーピング表示するための区切り単位
 export const navGroups: NavItem[][] = [
   [{ label: 'Home', href: '/' }],
   [
