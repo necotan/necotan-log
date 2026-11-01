@@ -21,27 +21,30 @@ const year = new Date().getFullYear();
   aria-modal="true"
   aria-label="サイトメニュー"
 >
-  <div class="flex items-center justify-between px-6 py-5">
-    <button
-      id="mobile-menu-close"
-      type="button"
-      aria-label="メニューを閉じる"
-      class="rounded-full p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-fg"
-    >
-      <X class="size-6" />
-    </button>
-    <button
-      type="button"
-      data-theme-toggle
-      aria-label="ダーク/ライトモードを切り替える"
-      aria-pressed="false"
-      class="flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium tracking-wide focus-visible:outline focus-visible:outline-2 focus-visible:outline-fg"
-    >
-      <Moon class="size-5 dark:hidden" />
-      <span class="dark:hidden">Dark</span>
-      <Sun class="hidden size-5 dark:block" />
-      <span class="hidden dark:inline">Light</span>
-    </button>
+  {/* 閉じるボタンをヘッダーのハンバーガーと同じ位置に重ねるため、Headerの外側余白、glass-panelの枠線、内側余白を再現し、ボタンは負マージンで行の高さを32px(ハンバーガーと同じ)に揃える */}
+  <div class="px-4 pt-4">
+    <div class="flex items-center justify-between border border-transparent px-6 py-3">
+      <button
+        type="button"
+        data-theme-toggle
+        aria-label="ダーク/ライトモードを切り替える"
+        aria-pressed="false"
+        class="-my-0.5 -ml-3 flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium tracking-wide focus-visible:outline focus-visible:outline-2 focus-visible:outline-fg"
+      >
+        <Moon class="size-5 dark:hidden" />
+        <span class="dark:hidden">Dark</span>
+        <Sun class="hidden size-5 dark:block" />
+        <span class="hidden dark:inline">Light</span>
+      </button>
+      <button
+        id="mobile-menu-close"
+        type="button"
+        aria-label="メニューを閉じる"
+        class="-m-1 rounded-full p-2 focus-visible:outline focus-visible:outline-2 focus-visible:outline-fg"
+      >
+        <X class="size-6" />
+      </button>
+    </div>
   </div>
 
   <nav class="flex flex-1 flex-col items-center justify-center gap-8 pb-16">
