@@ -1,6 +1,10 @@
 <h1 align="center">necotan log.</h1>
 
 <p align="center">
+  English | <a href="README.ja.md">日本語</a>
+</p>
+
+<p align="center">
   <img src="public/necotan-log.png" width="120" alt="necotan log.">
 </p>
 
@@ -16,7 +20,7 @@
   <a href="https://necotan-log.com"><img src="https://img.shields.io/badge/Domain-necotan--log.com-000000?logo=data:image/svg%2bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiPjxjaXJjbGUgY3g9IjEyIiBjeT0iMTIiIHI9IjEwIi8+PHBhdGggZD0iTTEyIDJhMTQuNSAxNC41IDAgMCAwIDAgMjAgMTQuNSAxNC41IDAgMCAwIDAtMjAiLz48cGF0aCBkPSJNMiAxMmgyMCIvPjwvc3ZnPg=="></a>
 </p>
 
-## 技術スタック
+## Tech Stack
 
 - [Astro](https://astro.build/)
 - [Tailwind CSS v4](https://tailwindcss.com/)
@@ -25,71 +29,71 @@
 - [Pagefind](https://pagefind.app/)
 - Cloudflare Workers / Cloudflare R2
 
-## プロジェクト構成
+## Project Structure
 
 ```text
 /
 ├── src/
-│   ├── assets/           # ファビコン・PWAアイコン
-│   ├── components/       # ArticleCard, Header, MobileMenu, SearchPanel, ImageViewer, TableOfContents など
+│   ├── assets/           # Favicons and PWA icons
+│   ├── components/       # ArticleCard, Header, MobileMenu, SearchPanel, ImageViewer, TableOfContents, etc.
 │   ├── content/
-│   │   └── blog/         # 記事本体
-│   │       └── 2026/     # 例: 2026-08-01.md
-│   ├── content.config.ts # 記事のフロントマタースキーマ(zod)
+│   │   └── blog/         # Articles
+│   │       └── 2026/     # e.g. 2026-08-01.md
+│   ├── content.config.ts # Article frontmatter schema (zod)
 │   ├── layouts/          # BaseLayout, ArticleLayout
-│   ├── lib/              # categories.ts, navigation.ts, rehypeEmbed.ts, rehypeImageGrid.ts, linkCard.ts など
-│   ├── pages/            # ルーティング([...page](トップ・ページネーション), about, search, category/[category], tag/[tag], blog/[...slug], rss.xml, robots.txt, 404 など)
+│   ├── lib/              # categories.ts, navigation.ts, rehypeEmbed.ts, rehypeImageGrid.ts, linkCard.ts, etc.
+│   ├── pages/            # Routes ([...page] (top and pagination), about, search, category/[category], tag/[tag], blog/[...slug], rss.xml, robots.txt, 404, etc.)
 │   └── styles/           # global.css
 ├── public/
-│   └── _headers          # セキュリティヘッダ
+│   └── _headers          # Security headers
 ├── .cache/
-│   └── link-cards.json   # リンクカードのOGPキャッシュ
-├── .node-version         # ビルドに使うNode.jsのバージョン
+│   └── link-cards.json   # OGP cache for link cards
+├── .node-version         # Node.js version used for builds
 ├── astro.config.mjs
-├── wrangler.jsonc        # Cloudflare Workersのデプロイ設定
+├── wrangler.jsonc        # Cloudflare Workers deploy settings
 └── package.json
 ```
 
-## 記事の書き方
+## Writing Articles
 
-`src/content/blog/年/日付.md`(例: `src/content/blog/2026/2026-08-01.md`)の形でMarkdownファイルを追加する。年フォルダを跨いでも `content.config.ts` のglobパターンが再帰的に読み込むため、設定変更は不要。
+Add a Markdown file at `src/content/blog/<year>/<date>.md` (e.g. `src/content/blog/2026/2026-08-01.md`). The glob pattern in `content.config.ts` reads year folders recursively, so a new year needs no config change.
 
-URLはファイルパス(年フォルダ以下)がそのままスラッグになるため、公開後にファイルを移動・リネームするとURLが変わり既存リンクが404になる点に注意。
+The file path under the year folder becomes the URL slug. Moving or renaming a file after publishing changes its URL, and existing links will return 404.
 
-フロントマターは以下の通り。
+The frontmatter is as follows.
 
 ```yaml
 ---
-title: "記事タイトル"
-description: "一覧・OGPで使う概要文"
+title: "Article title"
+description: "Summary used in article lists and OGP"
 pubDate: 2026-08-01
-category: essay # (photo、life、essay)
-tags: ["タグ1", "タグ2"] # /tag/[tag]/ ページ生成に使用する
-heroImage: "https://images.necotan-log.com/..." # 一覧カード、OGP、検索結果のサムネイル(未設定の場合、カードはプレースホルダー、OGPは og-default.png になる)
-showHeroImage: false # trueにすると記事ページの本文上部にもheroImageを表示する(デフォルトはfalse)
-draft: false # trueにすると記事ページ自体を生成せず、一覧・RSSからも除外される
+category: essay # (photo, life, essay)
+tags: ["tag1", "tag2"] # Used to generate /tag/[tag]/ pages
+heroImage: "https://images.necotan-log.com/..." # Thumbnail for list cards, OGP, and search results (if unset, the card shows a placeholder and OGP uses og-default.png)
+showHeroImage: false # If true, heroImage is also shown above the body on the article page (default: false)
+draft: false # If true, the article page is not generated and the article is excluded from lists and RSS
 ---
 ```
 
-- カテゴリの定義・ラベルは [src/lib/categories.ts](src/lib/categories.ts)
-- ナビゲーション項目は [src/lib/navigation.ts](src/lib/navigation.ts)
+- Category definitions and labels: [src/lib/categories.ts](src/lib/categories.ts)
+- Navigation items: [src/lib/navigation.ts](src/lib/navigation.ts)
 
-### 縦写真のペア表示(image-grid)
+### Pairing Vertical Photos (image-grid)
 
-Markdown画像のtitle記法でマーカー `vertical` を指定すると、rehypeプラグイン [src/lib/rehypeImageGrid.ts](src/lib/rehypeImageGrid.ts) が該当段落を `<div class="image-grid">` に変換する。
+Put the marker `vertical` in the title of Markdown images, and the rehype plugin [src/lib/rehypeImageGrid.ts](src/lib/rehypeImageGrid.ts) converts the paragraph into `<div class="image-grid">`.
 
 ```md
 ![1](https://images.necotan-log.com/... "vertical")
 ![2](https://images.necotan-log.com/... "vertical")
 ```
 
-- 変換条件：子要素が `<img>`(と空白テキスト)のみの `<p>` で、`<img>` がちょうど2つ、かつ両方の `title` が `vertical` であること。条件を満たさない段落は `<p>` のまま出力する。
-- レイアウト：`global.css` の `.article-body .image-grid` で2カラムのCSS Gridにする(639px以下は1カラム)。
-- 画像のみの `<p>` では、ツールチップとして表示されないよう `title="vertical"` を出力前に削除する。
+- Conditions: a `<p>` whose children are only `<img>` elements (and whitespace text), with exactly two `<img>` elements, both with `title` set to `vertical`. Paragraphs that don't match stay as `<p>`.
+- Layout: `.article-body .image-grid` in `global.css` makes it a two-column CSS Grid (one column at 639px and below).
+- In image-only `<p>` elements, `title="vertical"` is removed before output so it doesn't show as a tooltip.
 
-### 埋め込み・リンクカード
+### Embeds and Link Cards
 
-`embed` コードブロックにURLを1つ書くと、YouTubeは埋め込みプレーヤー、それ以外はOGPを取得したリンクカードに変換される。
+Write a single URL in an `embed` code block. YouTube URLs become an embedded player; other URLs become a link card built from the page's OGP.
 
 ````md
 ```embed
@@ -97,40 +101,40 @@ https://example.com/
 ```
 ````
 
-リンクカードのOGPはビルド時に取得し、`.cache/link-cards.json` に保存する。本番ビルドは毎回クリーンな環境で走るため、このファイルもコミットしてローカルで取得した結果を使用する。
+Link card OGP is fetched at build time and saved to `.cache/link-cards.json`. Production builds always run in a clean environment, so this file is committed and the results fetched locally are used.
 
-リンクカードを追加するときは、次の順に作業する。OGPの取得では、ビルドを実行したマシンのNode.jsが外部サイトのレスポンスを処理するため。
+When adding a link card, work in the order below. Fetching OGP means the Node.js on the machine running the build processes responses from external sites.
 
-1. 追加するURLの取得先を検証し、運営元が明確で信頼できるドメインに限定する。
-2. ローカルのNode.jsが `.node-version` のバージョン以上か確認してから、`npm run dev` か `npm run build` を実行する。
-3. ビルドログに `[linkCard]` の警告が出ていないことを確認し、`.cache/link-cards.json` を記事と一緒にコミットする。
+1. Check where the URL points, and limit it to trustworthy domains with a clearly identifiable operator.
+2. Make sure your local Node.js is at or above the version in `.node-version`, then run `npm run dev` or `npm run build`.
+3. Check that the build log has no `[linkCard]` warnings, then commit `.cache/link-cards.json` together with the article.
 
-- 保存済みのURLは再取得しない。リンク先のOGPを取り直したいときは、該当エントリを削除してから再度ビルドする。
-- 取得に失敗したURLは保存されず、ビルドログに `[linkCard]` の警告が出る。本番でも再取得を試み、失敗すればホスト名だけのカードになる。
+- Saved URLs are not fetched again. To refetch a page's OGP, delete its entry and build again.
+- URLs that fail to fetch are not saved, and a `[linkCard]` warning appears in the build log. Production builds also try to fetch them; if that fails, the card shows only the host name.
 
-次の3つは検討したうえで採用していない。
+The following three were considered and not adopted.
 
-- favicon は表示しない。サイトごとに色の違うアイコンが並ぶのはモノトーンの方針に合わず、Google の favicon サービスを使うと閲覧のたびにリンク先のドメインが Google に送られる。
-- カードは `rehypeEmbed.ts` で hast ノードとして組み立て、HTML 文字列では組み立てない。リンク先から取得した文字列のエスケープを、手書きではなくシリアライザに任せるため。
-- og:image の `alt` は空にする。タイトルがカード内に表示されているので、同じ文言をスクリーンリーダーが2回読まないようにするため。
+- No favicon. A row of icons in different colors per site doesn't fit the monotone design, and Google's favicon service would send the linked domain to Google on every page view.
+- Cards are built as hast nodes in `rehypeEmbed.ts`, not as HTML strings. This leaves escaping of strings fetched from linked sites to the serializer instead of hand-written code.
+- The `alt` of og:image is empty. The title is already shown in the card, so screen readers would otherwise read the same text twice.
 
-## Node.jsのバージョン
+## Node.js Version
 
-- ビルドに使うNode.jsのバージョンは `.node-version` で指定する。Cloudflare Workers Buildsはこのファイルを読んでNode.jsをインストールする。
-- `package.json` の `engines` には、許可するバージョンの範囲(各系統のセキュリティ修正版以上)を書く。
-- Node.jsのセキュリティリリースが出たら、`.node-version` と `engines`、ローカルのNode.jsを更新する。
-- Cloudflare Workers Buildsの依存関係のインストールは、Node.jsと一緒に入るnpmではなく、ビルド環境のnpm(10.9.2、ビルドログで確認できる)で `npm clean-install` を実行する。ローカルのnpm(11系)で作ったlockfileが、このnpmでは不整合と判定されてビルドが失敗することがあるため、依存関係を更新したらpush前に `npx npm@10.9.2 ci --dry-run` を実行して確認する。
+- The Node.js version for builds is set in `.node-version`. Cloudflare Workers Builds reads this file to install Node.js.
+- `engines` in `package.json` lists the allowed version range (at or above the security release of each line).
+- When a Node.js security release comes out, update `.node-version`, `engines`, and your local Node.js.
+- Cloudflare Workers Builds installs dependencies by running `npm clean-install` with the build environment's npm (10.9.2, shown in the build log), not the npm bundled with Node.js. A lockfile created with local npm (11.x) can be judged inconsistent by this npm and fail the build, so after updating dependencies, run `npx npm@10.9.2 ci --dry-run` before pushing to check.
 
-## コマンド
+## Commands
 
-| コマンド                   | 内容                                              |
+| Command                   | Action                                            |
 | :------------------------ | :----------------------------------------------- |
-| `npm install`             | 依存関係のインストール                              |
-| `npm run dev`             | ローカル開発サーバーを `localhost:4321` で起動        |
-| `npm run build`           | `./dist/` に本番用サイトをビルドし、Pagefindで検索インデックスを生成 |
-| `npm run preview`         | ビルド済みサイトをローカルでプレビュー                  |
-| `npm run astro check`     | 型・Astroファイルのチェック                           |
+| `npm install`             | Install dependencies                              |
+| `npm run dev`             | Start the local dev server at `localhost:4321`    |
+| `npm run build`           | Build the production site to `./dist/` and generate the Pagefind search index |
+| `npm run preview`         | Preview the built site locally                    |
+| `npm run astro check`     | Check types and Astro files                       |
 
-## 参考
+## References
 
 - [Astro Docs](https://docs.astro.build)
