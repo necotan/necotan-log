@@ -1,14 +1,15 @@
 import rss from '@astrojs/rss';
-import { getCollection, render } from 'astro:content';
+import { render } from 'astro:content';
 import { experimental_AstroContainer as AstroContainer } from 'astro/container';
 import type { APIContext } from 'astro';
+import { getPosts } from '../lib/posts';
 
 export async function GET(context: APIContext) {
   if (!context.site) {
     throw new Error('astro.config.mjsでsiteが設定されていません');
   }
 
-  const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+  const posts = (await getPosts()).sort(
     (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
   );
 

@@ -1,5 +1,5 @@
 ---
-import { getCollection, type CollectionEntry } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 import type { GetStaticPathsOptions, Page } from 'astro';
 import BaseLayout from '../../../layouts/BaseLayout.astro';
 import ArticleCard from '../../../components/ArticleCard.astro';
@@ -7,9 +7,10 @@ import CategoryFilter from '../../../components/CategoryFilter.astro';
 import Pagination from '../../../components/Pagination.astro';
 import { CATEGORIES, categoryLabels, categoryDescriptions } from '../../../lib/categories';
 import { serializeJsonLd } from '../../../lib/jsonLd';
+import { getPosts } from '../../../lib/posts';
 
 export async function getStaticPaths({ paginate }: GetStaticPathsOptions) {
-  const posts = await getCollection('blog', ({ data }) => !data.draft);
+  const posts = await getPosts();
 
   return CATEGORIES.flatMap((category) => {
     const filtered = posts

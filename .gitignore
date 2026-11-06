@@ -30,3 +30,6 @@ pnpm-debug.log*
 /docs/*
 !/docs/design.md
 /.claude
+
+# local-only article drafts
+/src/content/blog/drafts/

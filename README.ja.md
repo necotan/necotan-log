@@ -78,6 +78,16 @@ draft: false # trueにすると記事ページ自体を生成せず、一覧・R
 - カテゴリの定義・ラベルは [src/lib/categories.ts](src/lib/categories.ts)
 - ナビゲーション項目は [src/lib/navigation.ts](src/lib/navigation.ts)
 
+### 下書き
+
+書きかけの記事は `src/content/blog/drafts/` に置く。このフォルダはgitignoreされているためコミットされず、`npm run dev` のときだけ一覧や `/blog/drafts/ファイル名/` に表示される。`npm run build` の出力には含まれない。
+
+公開するときは、ファイルを `src/content/blog/年/` に移動してコミットする。
+
+- 下書きはgitで管理されないため、ローカルにしか残らない
+- `drafts/` フォルダ自体もgitに含まれないため、別の環境では自分で作成する
+- 下書きもフロントマターのスキーマ検証の対象になる。必須項目が欠けていると `npm run build` と `npx astro check` が失敗する
+
 ### 縦写真のペア表示(image-grid)
 
 Markdown画像のtitle記法でマーカー `vertical` を指定すると、rehypeプラグイン [src/lib/rehypeImageGrid.ts](src/lib/rehypeImageGrid.ts) が該当段落を `<div class="image-grid">` に変換する。

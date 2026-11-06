@@ -78,6 +78,16 @@ draft: false # If true, the article page is not generated and the article is exc
 - Category definitions and labels: [src/lib/categories.ts](src/lib/categories.ts)
 - Navigation items: [src/lib/navigation.ts](src/lib/navigation.ts)
 
+### Drafts
+
+Put unfinished articles in `src/content/blog/drafts/`. This folder is git-ignored, so drafts are never committed. They appear in article lists and at `/blog/drafts/<file name>/` only under `npm run dev`, and are left out of the `npm run build` output.
+
+To publish a draft, move the file to `src/content/blog/<year>/` and commit it.
+
+- Drafts are not tracked by git, so they exist only on your local machine.
+- The `drafts/` folder itself is not in git either, so create it yourself on another machine.
+- Drafts are still validated against the frontmatter schema. If a required field is missing, `npm run build` and `npx astro check` fail.
+
 ### Pairing Vertical Photos (image-grid)
 
 Put the marker `vertical` in the title of Markdown images, and the rehype plugin [src/lib/rehypeImageGrid.ts](src/lib/rehypeImageGrid.ts) converts the paragraph into `<div class="image-grid">`.
