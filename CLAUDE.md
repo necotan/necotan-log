@@ -38,6 +38,7 @@ Article format, embeds, link cards, and the Node.js version policy are in `READM
 - `src/components/`: keep `Header`, `MobileMenu`, `Footer`, `ArticleCard`, and `TableOfContents` as separate components. Every article card (top, category, tag, related posts) uses the shared `ArticleCard`.
 - `src/layouts/`: `BaseLayout`, `ArticleLayout`. `src/lib/`: shared logic and rehype plugins. `src/styles/global.css`: color tokens and `@layer components`. `src/pages/`: file-based routing.
 - `.githooks/`: `pre-commit` (lint, type check, no photos, lockfile check) and `commit-msg` (line 1 format). Enable once per clone: `git config core.hooksPath .githooks`.
+- `.claude/`: Claude Code settings (denied git commands) and the Stop hook that runs lint and type check. `settings.local.json` is personal and git-ignored.
 - `docs/design.md`: design decisions (tracked). The rest of `docs/` is local-only notes (git-ignored), some outdated; use them only as a reference when stuck.
 - File names: components in PascalCase, everything else in camelCase.
 
