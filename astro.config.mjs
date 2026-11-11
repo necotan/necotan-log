@@ -7,6 +7,7 @@ import sitemap from '@astrojs/sitemap';
 import { unified } from '@astrojs/markdown-remark';
 import rehypeImageGrid from './src/lib/rehypeImageGrid.ts';
 import rehypeEmbed from './src/lib/rehypeEmbed.ts';
+import rehypeArticleCheck from './src/lib/rehypeArticleCheck.ts';
 
 const SITE_URL = 'https://necotan-log.com';
 
@@ -28,7 +29,7 @@ export default defineConfig({
       type: 'shiki',
       excludeLangs: ['math', 'embed'],
     },
-    processor: unified({ rehypePlugins: [rehypeImageGrid, rehypeEmbed] }),
+    processor: unified({ rehypePlugins: [rehypeArticleCheck, rehypeImageGrid, rehypeEmbed] }),
   },
 
   vite: {

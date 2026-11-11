@@ -1,0 +1,21 @@
+#!/bin/sh
+staged=$(git diff --cached --name-only --diff-filter=ACMR)
+
+# 写真は R2 から配信する
+# リポジトリに置くのはファビコン、PWAアイコン、OGPの既定画像のみ
+photos=$(printf '%s\n' "$staged" | grep -Ei '\.(jpe?g|png|webp|avif|gif|heic|tiff?)$' | grep -Ev '^(src/assets|public)/')
+if [ -n "$photos" ]; then
+  echo "pre-commit: 画像はコミットせず R2 に置いてください" >&2
+  printf '%s\n' "$photos" >&2
+  exit 1
+fi
+
+npm run lint && npm run typecheck || exit 1
+
+# Cloudflare Workers Builds は npm 10.9.2 で入れるため、npm 11 が書いたロックファイルを弾くことがある
+if printf '%s\n' "$staged" | grep -qx 'package-lock.json'; then
+  npx --yes npm@10.9.2 ci --dry-run >/dev/null || {
+    echo "pre-commit: npm 10.9.2 で package-lock.json を解決できません" >&2
+    exit 1
+  }
+fi
