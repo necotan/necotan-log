@@ -1,0 +1,19 @@
+#!/bin/sh
+# 書式の定義は CLAUDE.md の Commit messages
+subject=$(head -n 1 "$1")
+
+# git が自動生成する件名は対象外
+case "$subject" in
+  "Merge "*|"Revert "*|"fixup! "*|"squash! "*) exit 0 ;;
+esac
+
+if ! printf '%s\n' "$subject" | grep -Eq '^(fix|add|update|change|clean|disable|remove|upgrade|revert): .+'; then
+  echo "commit-msg: 1行目は '<prefix>: <summary>' の形式にしてください" >&2
+  echo "prefix: fix add update change clean disable remove upgrade revert" >&2
+  exit 1
+fi
+
+if printf '%s\n' "$subject" | LC_ALL=C grep -q '[^ -~]'; then
+  echo "commit-msg: 1行目は英語(ASCII)で書いてください" >&2
+  exit 1
+fi

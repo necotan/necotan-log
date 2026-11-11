@@ -86,15 +86,21 @@ draft: false # trueにすると記事ページ自体を生成せず、一覧・R
 
 - 下書きはgitで管理されないため、ローカルにしか残らない
 - `drafts/` フォルダ自体もgitに含まれないため、別の環境では自分で作成する
-- 下書きもフロントマターのスキーマ検証の対象になる。必須項目が欠けていると `npm run build` と `npx astro check` が失敗する
+- 下書きもフロントマターのスキーマ検証の対象になる。必須項目が欠けていると `npm run build` と `npm run typecheck` が失敗する
+
+### 記事の検査
+
+- `description` は英語(ASCIIのみ)で書く。`content.config.ts` のスキーマがそれ以外を拒否し、`npm run typecheck` と `npm run build` が失敗する
+- 写真の `alt` は空にする(`![](url)`)。写真がないと内容が伝わらない場合だけ説明を書く。`DSCF9935` のようなカメラのファイル名はスクリーンリーダーがそのまま読み上げるため、[src/lib/rehypeArticleCheck.ts](src/lib/rehypeArticleCheck.ts) がビルドを失敗させる
+- 見出しは `##` から始め、レベルを飛ばさない(`##` → `####`)。同じプラグインがビルドを失敗させる
 
 ### 縦写真のペア表示(image-grid)
 
 Markdown画像のtitle記法でマーカー `vertical` を指定すると、rehypeプラグイン [src/lib/rehypeImageGrid.ts](src/lib/rehypeImageGrid.ts) が該当段落を `<div class="image-grid">` に変換する。
 
 ```md
-![1](https://images.necotan-log.com/... "vertical")
-![2](https://images.necotan-log.com/... "vertical")
+![](https://images.necotan-log.com/... "vertical")
+![](https://images.necotan-log.com/... "vertical")
 ```
 
 - 変換条件：子要素が `<img>`(と空白テキスト)のみの `<p>` で、`<img>` がちょうど2つ、かつ両方の `title` が `vertical` であること。条件を満たさない段落は `<p>` のまま出力する。
@@ -133,7 +139,7 @@ https://example.com/
 - ビルドに使うNode.jsのバージョンは `.node-version` で指定する。Cloudflare Workers Buildsはこのファイルを読んでNode.jsをインストールする。
 - `package.json` の `engines` には、許可するバージョンの範囲(各系統のセキュリティ修正版以上)を書く。
 - Node.jsのセキュリティリリースが出たら、`.node-version` と `engines`、ローカルのNode.jsを更新する。
-- Cloudflare Workers Buildsの依存関係のインストールは、Node.jsと一緒に入るnpmではなく、ビルド環境のnpm(10.9.2、ビルドログで確認できる)で `npm clean-install` を実行する。ローカルのnpm(11系)で作ったlockfileが、このnpmでは不整合と判定されてビルドが失敗することがあるため、依存関係を更新したらpush前に `npx npm@10.9.2 ci --dry-run` を実行して確認する。
+- Cloudflare Workers Buildsの依存関係のインストールは、Node.jsと一緒に入るnpmではなく、ビルド環境のnpm(10.9.2、ビルドログで確認できる)で `npm clean-install` を実行する。ローカルのnpm(11系)で作ったlockfileが、このnpmでは不整合と判定されてビルドが失敗することがあるため、依存関係を更新したらpush前に `npx npm@10.9.2 ci --dry-run` を実行して確認する(`pre-commit` フックが実行する)。
 
 ## コマンド
 
@@ -143,7 +149,19 @@ https://example.com/
 | `npm run dev`             | ローカル開発サーバーを `localhost:4321` で起動        |
 | `npm run build`           | `./dist/` に本番用サイトをビルドし、Pagefindで検索インデックスを生成 |
 | `npm run preview`         | ビルド済みサイトをローカルでプレビュー                  |
-| `npm run astro check`     | 型・Astroファイルのチェック                           |
+| `npm run lint`            | ESLintを実行(warningも失敗扱い)                     |
+| `npm run typecheck`       | 型・Astroファイルのチェック(`astro check`)           |
+
+## Gitフック(変更をコミットする場合)
+
+`.githooks/` のフックを、クローンごとに一度だけ有効にする。
+
+```sh
+git config core.hooksPath .githooks
+```
+
+- `pre-commit` は `npm run lint` と `npm run typecheck` を実行し、`src/assets/` と `public/` 以外の画像ファイルを拒否する。`package-lock.json` がステージされているときは `npx npm@10.9.2 ci --dry-run` も実行する
+- `commit-msg` はコミットメッセージ1行目の書式を確認する
 
 ## 参考
 

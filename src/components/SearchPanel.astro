@@ -36,6 +36,8 @@ import { Search } from '@lucide/astro';
 
 <template data-search-result-template>
   <li>
+    {/* hrefは検索結果ごとにscriptで設定する */}
+    {/* eslint-disable-next-line astro/jsx-a11y/anchor-is-valid */}
     <a class="-mx-3 flex gap-4 rounded-lg px-3 py-3 hover:bg-fg/5 focus-visible:bg-fg/5 focus-visible:outline-none">
       <span class="search-result-thumb aspect-video w-24 shrink-0 self-start overflow-hidden rounded-md bg-bg-subtle md:w-32">
         <img alt="" loading="lazy" class="size-full object-cover" />

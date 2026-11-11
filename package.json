@@ -9,7 +9,9 @@
     "dev": "astro dev",
     "build": "astro build && pagefind --site dist",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "lint": "eslint --max-warnings 0",
+    "typecheck": "astro check"
   },
   "dependencies": {
     "@astrojs/markdown-remark": "^7.3.0",
@@ -27,8 +29,12 @@
     "@astrojs/check": "^0.9.10",
     "@types/hast": "^3.0.5",
     "@types/mdast": "^4.0.4",
+    "eslint": "^9.39.5",
+    "eslint-plugin-astro": "^1.7.0",
+    "eslint-plugin-jsx-a11y": "^6.10.2",
     "pagefind": "^1.5.2",
     "typescript": "^6.0.3",
+    "typescript-eslint": "^8.72.2",
     "unified": "^11.0.5",
     "unist-util-visit": "^5.1.0"
   }

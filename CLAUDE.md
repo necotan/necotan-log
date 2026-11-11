@@ -6,7 +6,7 @@
 - Commit messages: first line in English, all following lines in Japanese.
 - Write code comments in Japanese.
 - Use English for variable names, function names, file names, and translation keys.
-- Articles: write `title` and the body in Japanese and `description` in English. Series titles stay in English (e.g. `Monthly log｜2026.09`).
+- Articles: write `title` and the body in Japanese and `description` in English. Series titles stay in English (e.g. `Monthly log｜2026.09`). The schema rejects a non-ASCII `description`.
 
 ## Project
 
@@ -20,22 +20,24 @@ Article format, embeds, link cards, and the Node.js version policy are in `READM
 
 - `npm run dev` / `npm run preview`
 - `npm run build`: `astro build`, then the Pagefind index into `dist/`
-- `npx astro check`: type check
-- There is no lint script or test suite.
+- `npm run lint`: ESLint (warnings fail too)
+- `npm run typecheck`: `astro check`
+- There is no test suite.
 
 ## After every change
 
-- Run `npx astro check` and `npm run build`.
+- Run `npm run lint`, `npm run typecheck`, and `npm run build`. The git `pre-commit` hook runs the first two; only the build runs the article checks in `src/lib/rehypeArticleCheck.ts`.
 - For UI changes, check both PC and smartphone layouts, especially the header nav and `MobileMenu`.
-- After changing dependencies, run `npx npm@10.9.2 ci --dry-run` before pushing. Cloudflare Workers Builds installs with npm 10.9.2 and can reject a lockfile written by npm 11.
+- After changing dependencies, run `npx npm@10.9.2 ci --dry-run`. Cloudflare Workers Builds installs with npm 10.9.2 and can reject a lockfile written by npm 11. The `pre-commit` hook runs it when `package-lock.json` is staged.
 
 ## Layout
 
 - `src/content.config.ts`: collection schema. Astro 6+ reads only this path, not `src/content/config.ts`.
 - `src/content/blog/<year>/<date>.md`: articles. The path is the URL slug, so moving or renaming a published article breaks its URL.
-- `src/content/blog/drafts/`: local-only drafts (git-ignored), shown only in `npm run dev`. Fetch articles with `getPosts()` in `src/lib/posts.ts`, not `getCollection`, so drafts stay out of the build.
+- `src/content/blog/drafts/`: local-only drafts (git-ignored), shown only in `npm run dev`. Fetch articles with `getPosts()` in `src/lib/posts.ts` so drafts stay out of the build.
 - `src/components/`: keep `Header`, `MobileMenu`, `Footer`, `ArticleCard`, and `TableOfContents` as separate components. Every article card (top, category, tag, related posts) uses the shared `ArticleCard`.
 - `src/layouts/`: `BaseLayout`, `ArticleLayout`. `src/lib/`: shared logic and rehype plugins. `src/styles/global.css`: color tokens and `@layer components`. `src/pages/`: file-based routing.
+- `.githooks/`: `pre-commit` (lint, type check, no photos, lockfile check) and `commit-msg` (line 1 format). Enable once per clone: `git config core.hooksPath .githooks`.
 - `docs/design.md`: design decisions (tracked). The rest of `docs/` is local-only notes (git-ignored), some outdated; use them only as a reference when stuck.
 - File names: components in PascalCase, everything else in camelCase.
 
@@ -51,9 +53,9 @@ Read `docs/design.md` before changing UI, colors, navigation, or article layout.
 
 ## Coding
 
-- TypeScript. Do not use `any` or omit type definitions.
-- CSS: Tailwind utilities. Put custom CSS only in `@layer components`. No inline `style`.
-- Accessibility: give every image `alt`, do not skip heading levels (h1 → h2 → h3), keep `focus-visible` styles.
+- CSS: Tailwind utilities first. Shared custom CSS goes in `@layer components` in `global.css`; use a component `<style>` block only for what utilities cannot express (pseudo-elements, `:global()`, `@apply` of a shared `@utility`).
+- Accessibility: in `.astro` files, do not skip heading levels across components (h1 → h2 → h3), and keep `focus-visible` styles.
+- Article photos: leave `alt` empty (`![](url)`), or describe the photo when the text needs it. Never use the file name.
 - Performance: aim for Lighthouse 90+ in Performance, Accessibility, Best Practices, and SEO.
 
 ## Comments

@@ -86,15 +86,21 @@ To publish a draft, move the file to `src/content/blog/<year>/` and commit it.
 
 - Drafts are not tracked by git, so they exist only on your local machine.
 - The `drafts/` folder itself is not in git either, so create it yourself on another machine.
-- Drafts are still validated against the frontmatter schema. If a required field is missing, `npm run build` and `npx astro check` fail.
+- Drafts are still validated against the frontmatter schema. If a required field is missing, `npm run build` and `npm run typecheck` fail.
+
+### Checks on Articles
+
+- `description` must be English (ASCII only). The schema in `content.config.ts` rejects anything else, and `npm run typecheck` and `npm run build` fail.
+- Leave the `alt` of a photo empty (`![](url)`), or write a description when the article does not make sense without the photo. A camera file name such as `DSCF9935` is read aloud by screen readers as it is, so [src/lib/rehypeArticleCheck.ts](src/lib/rehypeArticleCheck.ts) fails the build.
+- Start headings at `##` and do not skip levels (`##` -> `####`). The same plugin fails the build.
 
 ### Pairing Vertical Photos (image-grid)
 
 Put the marker `vertical` in the title of Markdown images, and the rehype plugin [src/lib/rehypeImageGrid.ts](src/lib/rehypeImageGrid.ts) converts the paragraph into `<div class="image-grid">`.
 
 ```md
-![1](https://images.necotan-log.com/... "vertical")
-![2](https://images.necotan-log.com/... "vertical")
+![](https://images.necotan-log.com/... "vertical")
+![](https://images.necotan-log.com/... "vertical")
 ```
 
 - Conditions: a `<p>` whose children are only `<img>` elements (and whitespace text), with exactly two `<img>` elements, both with `title` set to `vertical`. Paragraphs that don't match stay as `<p>`.
@@ -133,7 +139,7 @@ The following three were considered and not adopted.
 - The Node.js version for builds is set in `.node-version`. Cloudflare Workers Builds reads this file to install Node.js.
 - `engines` in `package.json` lists the allowed version range (at or above the security release of each line).
 - When a Node.js security release comes out, update `.node-version`, `engines`, and your local Node.js.
-- Cloudflare Workers Builds installs dependencies by running `npm clean-install` with the build environment's npm (10.9.2, shown in the build log), not the npm bundled with Node.js. A lockfile created with local npm (11.x) can be judged inconsistent by this npm and fail the build, so after updating dependencies, run `npx npm@10.9.2 ci --dry-run` before pushing to check.
+- Cloudflare Workers Builds installs dependencies by running `npm clean-install` with the build environment's npm (10.9.2, shown in the build log), not the npm bundled with Node.js. A lockfile created with local npm (11.x) can be judged inconsistent by this npm and fail the build, so after updating dependencies, run `npx npm@10.9.2 ci --dry-run` before pushing to check (the `pre-commit` hook does this).
 
 ## Commands
 
@@ -143,7 +149,19 @@ The following three were considered and not adopted.
 | `npm run dev`             | Start the local dev server at `localhost:4321`    |
 | `npm run build`           | Build the production site to `./dist/` and generate the Pagefind search index |
 | `npm run preview`         | Preview the built site locally                    |
-| `npm run astro check`     | Check types and Astro files                       |
+| `npm run lint`            | Run ESLint (warnings fail too)                    |
+| `npm run typecheck`       | Check types and Astro files (`astro check`)       |
+
+## Git Hooks (for committing changes)
+
+Enable the hooks in `.githooks/` once per clone.
+
+```sh
+git config core.hooksPath .githooks
+```
+
+- `pre-commit` runs `npm run lint` and `npm run typecheck`, rejects image files outside `src/assets/` and `public/`, and runs `npx npm@10.9.2 ci --dry-run` when `package-lock.json` is staged.
+- `commit-msg` checks the format of the first line of the commit message.
 
 ## References
 
