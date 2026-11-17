@@ -92,7 +92,7 @@ draft: false # trueにすると記事ページ自体を生成せず、一覧・R
 
 - `description` は英語(ASCIIのみ)で書く。`content.config.ts` のスキーマがそれ以外を拒否し、`npm run typecheck` と `npm run build` が失敗する
 - 写真の `alt` は空にする(`![](url)`)。写真がないと内容が伝わらない場合だけ説明を書く。`DSCF9935` のようなカメラのファイル名はスクリーンリーダーがそのまま読み上げるため、[src/lib/rehypeArticleCheck.ts](src/lib/rehypeArticleCheck.ts) がビルドを失敗させる
-- 見出しは `##` から始め、レベルを飛ばさない(`##` → `####`)。同じプラグインがビルドを失敗させる
+- 見出しは `##` から始め、レベルを飛ばさない(`##` -> `####`)。同じプラグインがビルドを失敗させる
 
 ### 縦写真のペア表示(image-grid)
 

@@ -9,7 +9,7 @@
 </p>
 
 <p align="center">
-  A personal blog documenting everyday life — photography & cameras, my car, desk setup, and side projects.
+  A personal blog documenting everyday life: photography & cameras, my car, desk setup, and side projects.
 </p>
 
 <p align="center">

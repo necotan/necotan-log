@@ -7,6 +7,12 @@
 - Write code comments in Japanese.
 - Use English for variable names, function names, file names, and translation keys.
 - Articles: write `title` and the body in Japanese and `description` in English. Series titles stay in English (e.g. `Monthly log｜2026.09`). The schema rejects a non-ASCII `description`.
+- In docs, code comments, and commit messages, use ASCII instead of these symbols. This does not apply to UI text or articles.
+  - Arrows: `->` `<-` `=>` `<=>` (not `→` `←` `⇒` `⇔`)
+  - Dashes and ellipsis: `-` (not `—` `–`), `...` (not `…`)
+  - Math: `x` (not `×`), `~` (not `≒`), `>=` `<=` (not `≥` `≤`)
+  - Quotes: `"` `'` (not `“ ”` `‘ ’`)
+  - Lists and marks: `1.` `2.` (not `①` `②`), `OK` / `NG` or words (not `✓` `✗` or emoji)
 
 ## Project
 
@@ -55,7 +61,7 @@ Read `docs/design.md` before changing UI, colors, navigation, or article layout.
 ## Coding
 
 - CSS: Tailwind utilities first. Shared custom CSS goes in `@layer components` in `global.css`; use a component `<style>` block only for what utilities cannot express (pseudo-elements, `:global()`, `@apply` of a shared `@utility`).
-- Accessibility: in `.astro` files, do not skip heading levels across components (h1 → h2 → h3), and keep `focus-visible` styles.
+- Accessibility: in `.astro` files, do not skip heading levels across components (h1 -> h2 -> h3), and keep `focus-visible` styles.
 - Article photos: leave `alt` empty (`![](url)`), or describe the photo when the text needs it. Never use the file name.
 - Performance: aim for Lighthouse 90+ in Performance, Accessibility, Best Practices, and SEO.
 
