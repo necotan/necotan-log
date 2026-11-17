@@ -74,7 +74,7 @@ Read `docs/design.md` before changing UI, colors, navigation, or article layout.
 ## Git workflow
 
 - MUST NOT run `git commit`, `push`, `checkout -b`, PR creation, `merge`, or `pull`. The user runs them.
-- At the start of work, propose a branch name (`feature/xxx` or `fix/xxx`). Suggest pushing directly to main only when the change is visual only (CSS, text, colors) with no logic impact, and small enough to review the diff by eye.
+- At the start of work, propose a branch name (`feature/xxx` or `fix/xxx`). Say no branch is needed only when the change touches nothing that ships: docs, README, CLAUDE.md, or code comments. Articles in `src/content/blog/` are the exception and go directly to main. Changes to UI text, CSS, config, or dependencies need a branch.
 - After code changes, run `git status` and `git diff` (plus `git diff --staged` if anything is staged), then propose a commit message based on the actual diff.
 
 ## Commit messages
