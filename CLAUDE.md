@@ -70,6 +70,7 @@ Read `docs/design.md` before changing UI, colors, navigation, or article layout.
 - Write only why: the reason for a choice, workarounds for browser or library quirks (iOS Safari, Astro, Tailwind, etc.), and constraints the code alone does not show.
 - Do not write what the code, names, or markup already say (e.g. "ハンバーガーメニュー", "目次", "〜の処理"). If there is no why to explain, write no comment.
 - No decorative characters such as `---`, `===`, `***`.
+- Use `/** */` above an exported function, type, or a component's `Props` field when callers must know something to use it correctly: rules they must follow, what the return value means, or side effects. VS Code shows it on hover at call sites. Put implementation reasons in `//` inside the function, next to the code they explain. Use `//` for all other comments.
 
 ## Git workflow
 

@@ -140,7 +140,7 @@ function describeFetchError(error: unknown): string {
   return error.message;
 }
 
-// 表示用のホスト名を返す(国際化ドメインはPunycode(xn--...)から日本語表記に戻す)
+/** 表示用のホスト名を返す(国際化ドメインはPunycode(xn--...)から日本語表記に戻す) */
 export function getDisplayHost(url: string): string {
   try {
     const { hostname } = new URL(url);
@@ -150,7 +150,7 @@ export function getDisplayHost(url: string): string {
   }
 }
 
-// 取得失敗時は警告をログに出し、ホスト名をタイトルとするフォールバックを返す(非キャッシュ)
+/** 取得失敗時は警告をログに出し、ホスト名をタイトルとするフォールバックを返す(非キャッシュ) */
 export async function getLinkCard(url: string): Promise<LinkCardData> {
   const store = loadCache();
   const cached = store[url];
