@@ -31,10 +31,12 @@ interface Props {
 const { post, newerPost, olderPost, relatedPosts } = Astro.props as Props;
 const { Content, headings } = await render(post);
 const readingMinutes = estimateReadingMinutes(post.body ?? '');
+const fileName = post.filePath?.split(/[\\/]/).pop() ?? post.id;
 ---
 
 <ArticleLayout
   title={post.data.title}
+  fileName={fileName}
   description={post.data.description}
   pubDate={post.data.pubDate}
   category={post.data.category}

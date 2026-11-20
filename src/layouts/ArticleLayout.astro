@@ -1,5 +1,6 @@
 ---
 import { Image, getImage } from 'astro:assets';
+import { ChevronRight } from '@lucide/astro';
 import BaseLayout from './BaseLayout.astro';
 import ArticleCard from '../components/ArticleCard.astro';
 import ImageViewer from '../components/ImageViewer.astro';
@@ -29,6 +30,7 @@ interface AdjacentPost {
 
 interface Props {
   title: string;
+  fileName: string;
   description: string;
   pubDate: Date;
   category: Category;
@@ -44,6 +46,7 @@ interface Props {
 
 const {
   title,
+  fileName,
   description,
   pubDate,
   category,
@@ -117,12 +120,12 @@ const breadcrumbJsonLd = {
           <a href="/" class="shrink-0 text-fg-muted hover:text-fg">
             Home
           </a>
-          <span class="shrink-0" aria-hidden="true">/</span>
+          <ChevronRight class="size-3.5 shrink-0" aria-hidden="true" />
           <a href={`/category/${category}/`} class="shrink-0 text-fg-muted hover:text-fg">
             {categoryLabels[category]}
           </a>
-          <span class="shrink-0" aria-hidden="true">/</span>
-          <span class="min-w-0 truncate font-medium text-fg" aria-current="page">{title}</span>
+          <ChevronRight class="size-3.5 shrink-0" aria-hidden="true" />
+          <span class="min-w-0 truncate font-medium text-fg" aria-current="page">{fileName}</span>
         </nav>
 
         <div class="mt-5 flex flex-wrap items-center gap-2">
