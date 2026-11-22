@@ -18,7 +18,7 @@ Design decisions for necotan log. Read this before changing UI, colors, navigati
 | `fg` | Body text and headings |
 | `fg-muted` | Secondary text: dates, meta, captions, footer |
 | `border` | Dividers and outlines |
-| `surface` | Areas separated from `bg` by fill alone: older/newer post cards, code blocks, table headers, image placeholders |
+| `surface` | Areas separated from `bg` by fill alone: older/newer post cards, link cards, the mobile TOC, code blocks, table headers, image placeholders |
 | `chip-bg` / `chip-bg-hover` | Fill of unselected pills (`.pill-default`) |
 | `glass-border` | Outline of the translucent header panel (`.glass-panel`) |
 
