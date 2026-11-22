@@ -14,11 +14,10 @@ const { activeHref } = Astro.props;
       <a
         href={item.href}
         class:list={[
-          'rounded-full border border-border px-4 py-1.5 text-sm transition-bg-text',
-          item.href === activeHref
-            ? 'bg-fg/5 font-semibold text-fg'
-            : 'text-fg-muted hover:bg-fg/5 hover:text-fg',
+          'pill px-4 py-1.5 text-sm',
+          item.href === activeHref ? 'pill-active font-semibold' : 'pill-default font-medium',
         ]}
+        aria-current={item.href === activeHref ? 'page' : undefined}
       >
         {item.label}
       </a>

@@ -42,9 +42,8 @@ function getPageItems(currentPage: number, lastPage: number, siblingCount: numbe
 const mobilePageItems = getPageItems(page.currentPage, page.lastPage, 1);
 const desktopPageItems = getPageItems(page.currentPage, page.lastPage, 2);
 
-const prevNextClass =
-  'shrink-0 rounded-full border border-border px-5 py-2 text-xs font-medium tracking-wide text-fg-muted uppercase';
-const numberClass = 'flex size-9 shrink-0 items-center justify-center rounded-full border text-sm';
+const prevNextClass = 'pill pill-default shrink-0 px-5 py-2 text-xs font-medium tracking-wide uppercase';
+const numberClass = 'pill flex size-9 shrink-0 items-center justify-center text-sm';
 ---
 
 {
@@ -55,7 +54,7 @@ const numberClass = 'flex size-9 shrink-0 items-center justify-center rounded-fu
           href={page.url.prev ?? '#'}
           aria-disabled={!page.url.prev}
           tabindex={page.url.prev ? undefined : -1}
-          class:list={[prevNextClass, page.url.prev ? 'hover:border-fg hover:text-fg' : 'pointer-events-none opacity-40']}
+          class:list={[prevNextClass, !page.url.prev && 'pointer-events-none opacity-40']}
         >
           Prev
         </a>
@@ -71,9 +70,7 @@ const numberClass = 'flex size-9 shrink-0 items-center justify-center rounded-fu
               aria-current={item === page.currentPage ? 'page' : undefined}
               class:list={[
                 numberClass,
-                item === page.currentPage
-                  ? 'border-transparent bg-fg text-bg'
-                  : 'border-border text-fg-muted hover:border-fg hover:text-fg',
+                item === page.currentPage ? 'pill-active' : 'pill-default',
               ]}
             >
               {item}
@@ -85,7 +82,7 @@ const numberClass = 'flex size-9 shrink-0 items-center justify-center rounded-fu
           href={page.url.next ?? '#'}
           aria-disabled={!page.url.next}
           tabindex={page.url.next ? undefined : -1}
-          class:list={[prevNextClass, page.url.next ? 'hover:border-fg hover:text-fg' : 'pointer-events-none opacity-40']}
+          class:list={[prevNextClass, !page.url.next && 'pointer-events-none opacity-40']}
         >
           Next
         </a>
@@ -96,7 +93,7 @@ const numberClass = 'flex size-9 shrink-0 items-center justify-center rounded-fu
           href={page.url.prev ?? '#'}
           aria-disabled={!page.url.prev}
           tabindex={page.url.prev ? undefined : -1}
-          class:list={[prevNextClass, page.url.prev ? 'hover:border-fg hover:text-fg' : 'pointer-events-none opacity-40']}
+          class:list={[prevNextClass, !page.url.prev && 'pointer-events-none opacity-40']}
         >
           Prev
         </a>
@@ -112,9 +109,7 @@ const numberClass = 'flex size-9 shrink-0 items-center justify-center rounded-fu
               aria-current={item === page.currentPage ? 'page' : undefined}
               class:list={[
                 numberClass,
-                item === page.currentPage
-                  ? 'border-transparent bg-fg text-bg'
-                  : 'border-border text-fg-muted hover:border-fg hover:text-fg',
+                item === page.currentPage ? 'pill-active' : 'pill-default',
               ]}
             >
               {item}
@@ -126,7 +121,7 @@ const numberClass = 'flex size-9 shrink-0 items-center justify-center rounded-fu
           href={page.url.next ?? '#'}
           aria-disabled={!page.url.next}
           tabindex={page.url.next ? undefined : -1}
-          class:list={[prevNextClass, page.url.next ? 'hover:border-fg hover:text-fg' : 'pointer-events-none opacity-40']}
+          class:list={[prevNextClass, !page.url.next && 'pointer-events-none opacity-40']}
         >
           Next
         </a>

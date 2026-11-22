@@ -16,8 +16,6 @@
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
   --color-border: var(--border);
-  --color-badge-bg: var(--badge-bg);
-  --color-badge-fg: var(--badge-fg);
 
   /* Interは和文グリフを持たないため、和文はNoto Sans JPにフォールバックする */
   --font-sans:
@@ -34,8 +32,8 @@
   --fg-muted: var(--color-neutral-400);
   --border: var(--color-neutral-800);
 
-  --badge-bg: var(--color-neutral-800);
-  --badge-fg: var(--color-neutral-300);
+  --chip-bg: var(--color-neutral-800);
+  --chip-bg-hover: var(--color-neutral-700);
 
   --glass-border: rgba(255, 255, 255, 0.12);
 
@@ -57,8 +55,8 @@
   --fg-muted: var(--color-neutral-500);
   --border: var(--color-neutral-200);
 
-  --badge-bg: var(--color-neutral-200);
-  --badge-fg: var(--color-neutral-600);
+  --chip-bg: var(--color-neutral-200);
+  --chip-bg-hover: var(--color-neutral-300);
 
   --glass-border: rgba(0, 0, 0, 0.08);
 
@@ -76,6 +74,40 @@ html {
 @layer components {
   .glass-panel {
     border: 1px solid var(--glass-border);
+  }
+
+  /* 枠線と薄い文字だけでは押せるか分かりにくかったため、塗りと本文色の文字で区別する */
+  /* 文字色はtransitionしない。遷移直後に既定のリンク色(青)からフェードするため */
+  .pill {
+    border-radius: 9999px;
+    transition-property: background-color, scale;
+    transition-duration: 150ms;
+    transition-timing-function: ease-out;
+  }
+
+  .pill:active {
+    scale: 0.97;
+  }
+
+  .pill:focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+  }
+
+  .pill-default {
+    background-color: var(--chip-bg);
+    color: var(--fg);
+  }
+
+  .pill-active {
+    background-color: var(--fg);
+    color: var(--bg);
+  }
+
+  @media (hover: hover) {
+    .pill-default:hover {
+      background-color: var(--chip-bg-hover);
+    }
   }
 }
 
@@ -151,13 +183,13 @@ html {
   initial-value: transparent;
 }
 
-@property --badge-bg {
+@property --chip-bg {
   syntax: '<color>';
   inherits: true;
   initial-value: transparent;
 }
 
-@property --badge-fg {
+@property --chip-bg-hover {
   syntax: '<color>';
   inherits: true;
   initial-value: transparent;
@@ -176,8 +208,8 @@ html {
     --fg 0.2s ease,
     --fg-muted 0.2s ease,
     --border 0.2s ease,
-    --badge-bg 0.2s ease,
-    --badge-fg 0.2s ease,
+    --chip-bg 0.2s ease,
+    --chip-bg-hover 0.2s ease,
     --glass-border 0.2s ease;
 }
 
