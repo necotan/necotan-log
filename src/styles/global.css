@@ -12,7 +12,6 @@
 @theme inline {
   /* アクセントカラーは使わず、グレースケールのみで配色する */
   --color-bg: var(--bg);
-  --color-bg-subtle: var(--bg-subtle);
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
   --color-border: var(--border);
@@ -28,18 +27,14 @@
   color-scheme: dark;
 
   --bg: var(--color-neutral-950);
-  --bg-subtle: var(--color-neutral-900);
   --fg: var(--color-neutral-50);
   --fg-muted: var(--color-neutral-400);
   --border: var(--color-neutral-800);
-  /* bg-subtleはライトで白になり背景とほぼ同色のため、塗りだけで区切る面はこちらを使う */
   /* 隣に並ぶピルと塗りが揃うよう、両テーマでchip-bgと同じ段階にしている */
   --surface: var(--color-neutral-800);
 
   --chip-bg: var(--color-neutral-800);
   --chip-bg-hover: var(--color-neutral-700);
-
-  --glass-border: rgba(255, 255, 255, 0.12);
 
   --terminal-bg: var(--color-neutral-900);
   --terminal-titlebar: var(--color-neutral-800);
@@ -54,7 +49,6 @@
   color-scheme: light;
 
   --bg: var(--color-neutral-50);
-  --bg-subtle: var(--color-white);
   --fg: var(--color-neutral-950);
   --fg-muted: var(--color-neutral-500);
   --border: var(--color-neutral-200);
@@ -62,8 +56,6 @@
 
   --chip-bg: var(--color-neutral-200);
   --chip-bg-hover: var(--color-neutral-300);
-
-  --glass-border: rgba(0, 0, 0, 0.08);
 
   --terminal-bg: var(--color-white);
   --terminal-titlebar: var(--color-neutral-100);
@@ -77,10 +69,6 @@ html {
 }
 
 @layer components {
-  .glass-panel {
-    border: 1px solid var(--glass-border);
-  }
-
   /* 枠線と薄い文字だけでは押せるか分かりにくかったため、塗りと本文色の文字で区別する */
   /* 文字色はtransitionしない。遷移直後に既定のリンク色(青)からフェードするため */
   .pill {
@@ -164,12 +152,6 @@ html {
   initial-value: transparent;
 }
 
-@property --bg-subtle {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: transparent;
-}
-
 @property --fg {
   syntax: '<color>';
   inherits: true;
@@ -206,23 +188,15 @@ html {
   initial-value: transparent;
 }
 
-@property --glass-border {
-  syntax: '<color>';
-  inherits: true;
-  initial-value: transparent;
-}
-
 :root.theme-transition {
   transition:
     --bg 0.2s ease,
-    --bg-subtle 0.2s ease,
     --fg 0.2s ease,
     --fg-muted 0.2s ease,
     --border 0.2s ease,
     --surface 0.2s ease,
     --chip-bg 0.2s ease,
-    --chip-bg-hover 0.2s ease,
-    --glass-border 0.2s ease;
+    --chip-bg-hover 0.2s ease;
 }
 
 /* 各要素自身のtransition(transition-colorsなど)は補間中の色に毎フレーム反応してやり直しになり遅れるため、切替中は止める */

@@ -14,13 +14,11 @@ Design decisions for necotan log. Read this before changing UI, colors, navigati
 | Token | Use |
 |---|---|
 | `bg` | Page background |
-| `bg-subtle` | The translucent header panel only. It is white in light mode and nearly invisible on `bg` without the glass border |
 | `fg` | Body text and headings |
 | `fg-muted` | Secondary text: dates, meta, captions, footer |
 | `border` | Dividers and outlines |
-| `surface` | Areas separated from `bg` by fill alone: older/newer post cards, link cards, the mobile TOC, code blocks, table headers, image placeholders |
+| `surface` | Areas separated from `bg` by fill alone: the header panel, older/newer post cards, link cards, the mobile TOC, code blocks, table headers, image placeholders |
 | `chip-bg` / `chip-bg-hover` | Fill of unselected pills (`.pill-default`) |
-| `glass-border` | Outline of the translucent header panel (`.glass-panel`) |
 
 - The only colored values are the window dots on the 404 terminal (`--terminal-dot-*`). Do not treat them as a precedent for accent colors.
 - The theme switches by the `.dark` class on `<html>`, not by `prefers-color-scheme`. Style both themes through the tokens.
