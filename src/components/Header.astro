@@ -11,6 +11,9 @@ interface Props {
 
 const { activeCategory } = Astro.props;
 const pathname = Astro.url.pathname;
+
+const iconButtonClass =
+  'header-icon-button rounded-lg p-2 text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg';
 ---
 
 <header id="site-header" class="pinned:sticky pinned:top-0 z-40 px-4 pt-4 md:px-6">
@@ -23,7 +26,9 @@ const pathname = Astro.url.pathname;
       {
         navGroups.map((group, groupIndex) => (
           <>
-            {groupIndex > 0 && <span class="h-4 w-px scale-x-50 bg-fg" aria-hidden="true" />}
+            {/* 背景色の1px幅は125%表示などで両端が物理ピクセルに丸められ、位置しだいで1pxにも2pxにもなる */}
+            {/* 選択中の項目の太字で位置がページごとに変わるため、borderで描いて太さを物理ピクセル単位に揃える */}
+            {groupIndex > 0 && <span class="h-4 w-0 border-l border-fg" aria-hidden="true" />}
             <div class="flex items-center gap-6">
               {group.map((item) => (
                 <a
@@ -47,7 +52,7 @@ const pathname = Astro.url.pathname;
       <a
         href="/search/"
         aria-label="サイト内を検索"
-        class="rounded-lg p-2 text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+        class={iconButtonClass}
       >
         <Search class="size-4" />
       </a>
@@ -57,7 +62,7 @@ const pathname = Astro.url.pathname;
         data-pin-toggle
         aria-label="ナビバーを上部に固定する"
         aria-pressed="false"
-        class="rounded-lg p-2 text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+        class={iconButtonClass}
       >
         <Pin class="size-4 pinned:hidden" />
         <PinOff class="hidden size-4 pinned:block" />
@@ -68,7 +73,7 @@ const pathname = Astro.url.pathname;
         data-theme-toggle
         aria-label="ダーク/ライトモードを切り替える"
         aria-pressed="false"
-        class="hidden rounded-lg p-2 text-fg md:block focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+        class:list={[iconButtonClass, 'hidden md:block']}
       >
         <Moon class="size-4 dark:hidden" />
         <Sun class="hidden size-4 dark:block" />
@@ -81,7 +86,7 @@ const pathname = Astro.url.pathname;
         aria-haspopup="dialog"
         aria-expanded="false"
         aria-controls="mobile-menu"
-        class="rounded-lg p-2 text-fg md:hidden focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg"
+        class:list={[iconButtonClass, 'md:hidden']}
       >
         <Menu class="size-4" />
       </button>
@@ -103,9 +108,30 @@ const pathname = Astro.url.pathname;
     --underline-opacity: 1;
   }
 
-  /* bfcache復元直後のhover下線を抑止する(付け外しは下のscriptを参照) */
+  /* ボタン自体ではなくアイコンだけを持ち上げ、押せる範囲は動かさない */
+  /* lucideのsvgは子コンポーネントの要素でスコープ属性が付かないため:global()で指定する */
+  .header-icon-button > :global(svg) {
+    transition: translate 0.2s ease-out;
+  }
+
+  @media (hover: hover) {
+    .header-icon-button:hover > :global(svg) {
+      translate: 0 -2px;
+    }
+  }
+
+  .header-icon-button:active > :global(svg) {
+    translate: 0 0;
+  }
+
+  /* bfcache復元直後のhover下線とアイコンの浮きを抑止する(付け外しは下のscriptを参照) */
   :global(html.nav-hover-suppressed) .nav-link:not(.nav-link-active) {
     --underline-opacity: 0;
+    transition: none;
+  }
+
+  :global(html.nav-hover-suppressed) .header-icon-button > :global(svg) {
+    translate: none;
     transition: none;
   }
 </style>
@@ -152,7 +178,7 @@ const pathname = Astro.url.pathname;
     });
   });
 
-  // 戻る/進むでbfcacheから復元されたとき、離脱時にhoverしていたnavリンクの下線が表示されるのを防ぐ
+  // 戻る/進むでbfcacheから復元されたとき、離脱時にhoverしていたnavリンクの下線やアイコンの浮きが残るのを防ぐ
   window.addEventListener('pagehide', () => {
     document.documentElement.classList.add('nav-hover-suppressed');
     window.addEventListener(
