@@ -16,6 +16,7 @@
   --color-fg: var(--fg);
   --color-fg-muted: var(--fg-muted);
   --color-border: var(--border);
+  --color-surface: var(--surface);
 
   /* Interは和文グリフを持たないため、和文はNoto Sans JPにフォールバックする */
   --font-sans:
@@ -31,6 +32,9 @@
   --fg: var(--color-neutral-50);
   --fg-muted: var(--color-neutral-400);
   --border: var(--color-neutral-800);
+  /* bg-subtleはライトで白になり背景とほぼ同色のため、塗りだけで区切る面はこちらを使う */
+  /* 背景との明度差がダークとライトで同程度になる段階を選んでいる */
+  --surface: var(--color-neutral-900);
 
   --chip-bg: var(--color-neutral-800);
   --chip-bg-hover: var(--color-neutral-700);
@@ -54,6 +58,7 @@
   --fg: var(--color-neutral-950);
   --fg-muted: var(--color-neutral-500);
   --border: var(--color-neutral-200);
+  --surface: var(--color-neutral-200);
 
   --chip-bg: var(--color-neutral-200);
   --chip-bg-hover: var(--color-neutral-300);
@@ -183,6 +188,12 @@ html {
   initial-value: transparent;
 }
 
+@property --surface {
+  syntax: '<color>';
+  inherits: true;
+  initial-value: transparent;
+}
+
 @property --chip-bg {
   syntax: '<color>';
   inherits: true;
@@ -208,6 +219,7 @@ html {
     --fg 0.2s ease,
     --fg-muted 0.2s ease,
     --border 0.2s ease,
+    --surface 0.2s ease,
     --chip-bg 0.2s ease,
     --chip-bg-hover 0.2s ease,
     --glass-border 0.2s ease;
