@@ -312,7 +312,7 @@ html {
   }
 
   .article-body thead th {
-    background-color: var(--bg-subtle);
+    background-color: var(--surface);
     color: var(--fg-muted);
     font-size: 0.75rem;
     font-weight: 600;
@@ -355,7 +355,7 @@ html {
   }
 
   .article-body code {
-    background-color: var(--bg-subtle);
+    background-color: var(--surface);
     padding: 0.15rem 0.4rem;
     border-radius: 0.25rem;
     font-size: 0.875em;
@@ -365,7 +365,7 @@ html {
     margin-top: 1.5rem;
     overflow-x: auto;
     border-radius: 0.5rem;
-    background-color: var(--bg-subtle);
+    background-color: var(--surface);
     padding: 1rem;
   }
 

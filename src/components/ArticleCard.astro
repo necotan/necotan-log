@@ -23,7 +23,7 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
 
 <article>
   <a href={href} class="group block">
-    <div class="relative aspect-video overflow-hidden rounded-lg bg-bg-subtle">
+    <div class="relative aspect-video overflow-hidden rounded-lg bg-surface">
       {
         heroImage ? (
           <Image
@@ -33,7 +33,7 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
             class="card-hero-image h-full w-full object-cover group-hover:scale-105"
           />
         ) : (
-          <div class="flex h-full w-full items-center justify-center bg-bg-subtle">
+          <div class="flex h-full w-full items-center justify-center bg-surface">
             <ImageOff class="size-8 text-fg-muted" />
           </div>
         )

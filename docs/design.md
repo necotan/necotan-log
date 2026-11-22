@@ -14,11 +14,11 @@ Design decisions for necotan log. Read this before changing UI, colors, navigati
 | Token | Use |
 |---|---|
 | `bg` | Page background |
-| `bg-subtle` | Raised surfaces: header panel, article cards, search panel |
+| `bg-subtle` | The translucent header panel only. It is white in light mode and nearly invisible on `bg` without the glass border |
 | `fg` | Body text and headings |
 | `fg-muted` | Secondary text: dates, meta, captions, footer |
 | `border` | Dividers and outlines |
-| `surface` | Clickable cards separated by fill alone, without a border (older/newer post links). `bg-subtle` is white in light mode and nearly invisible on `bg`, so do not use it for these |
+| `surface` | Areas separated from `bg` by fill alone: older/newer post cards, code blocks, table headers, image placeholders |
 | `chip-bg` / `chip-bg-hover` | Fill of unselected pills (`.pill-default`) |
 | `glass-border` | Outline of the translucent header panel (`.glass-panel`) |
 
