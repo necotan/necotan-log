@@ -18,6 +18,7 @@ Design decisions for necotan log. Read this before changing UI, colors, navigati
 | `fg` | Body text and headings |
 | `fg-muted` | Secondary text: dates, meta, captions, footer |
 | `border` | Dividers and outlines |
+| `surface` | Clickable cards separated by fill alone, without a border (older/newer post links). `bg-subtle` is white in light mode and nearly invisible on `bg`, so do not use it for these |
 | `chip-bg` / `chip-bg-hover` | Fill of unselected pills (`.pill-default`) |
 | `glass-border` | Outline of the translucent header panel (`.glass-panel`) |
 

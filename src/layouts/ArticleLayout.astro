@@ -74,6 +74,10 @@ const shareUrl = Astro.url.href;
 const shareText = `${title} | necotan log.`;
 const shareHref = `https://x.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`;
 
+// ArticleCardと同じく、塗りは固定してホバーではタイトルの下線で反応させる
+const postNavClass =
+  'group rounded-lg bg-surface p-4 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-fg';
+
 const canonicalURL = new URL(Astro.url.pathname, Astro.site).href;
 const categoryHref = new URL(`/category/${category}/`, Astro.site).href;
 const homeHref = new URL('/', Astro.site).href;
@@ -197,18 +201,22 @@ const breadcrumbJsonLd = {
         (prevPost || nextPost) && (
           <nav class="mt-8 grid grid-cols-1 gap-4 border-t border-border pt-8 sm:grid-cols-2" aria-label="前後の記事" data-pagefind-ignore>
             {prevPost && (
-              <a href={prevPost.href} class="rounded-lg border border-border p-4 transition-bg hover:bg-fg/5">
+              <a href={prevPost.href} class={postNavClass}>
                 <p class="text-xs text-fg-muted">Older</p>
-                <p class="mt-1 line-clamp-2 text-sm font-medium text-fg">{prevPost.title}</p>
+                <p class="mt-1 line-clamp-2 text-sm font-medium text-fg">
+                  <span class="post-nav-title">{prevPost.title}</span>
+                </p>
               </a>
             )}
             {nextPost && (
               <a
                 href={nextPost.href}
-                class:list={['rounded-lg border border-border p-4 transition-bg hover:bg-fg/5', !prevPost && 'sm:col-start-2']}
+                class:list={[postNavClass, !prevPost && 'sm:col-start-2']}
               >
                 <p class="text-xs text-fg-muted">Newer</p>
-                <p class="mt-1 line-clamp-2 text-sm font-medium text-fg">{nextPost.title}</p>
+                <p class="mt-1 line-clamp-2 text-sm font-medium text-fg">
+                  <span class="post-nav-title">{nextPost.title}</span>
+                </p>
               </a>
             )}
           </nav>
@@ -241,3 +249,17 @@ const breadcrumbJsonLd = {
 
   <ImageViewer />
 </BaseLayout>
+
+<style>
+  @reference "../styles/global.css";
+
+  .post-nav-title {
+    @apply animated-underline;
+  }
+
+  @media (hover: hover) {
+    .group:hover .post-nav-title {
+      --underline-opacity: 1;
+    }
+  }
+</style>
