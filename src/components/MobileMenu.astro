@@ -51,7 +51,7 @@ const year = new Date().getFullYear();
     {
       navGroups.map((group, groupIndex) => (
         <>
-          {groupIndex > 0 && <span class="h-px w-32 bg-border" aria-hidden="true" />}
+          {groupIndex > 0 && <span class="h-0 w-32 border-t border-border" aria-hidden="true" />}
           <div class="flex flex-col items-center gap-8">
             {group.map((item) => (
               <a
