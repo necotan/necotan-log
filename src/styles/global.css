@@ -33,8 +33,8 @@
   --fg-muted: var(--color-neutral-400);
   --border: var(--color-neutral-800);
   /* bg-subtleはライトで白になり背景とほぼ同色のため、塗りだけで区切る面はこちらを使う */
-  /* 背景との明度差がダークとライトで同程度になる段階を選んでいる */
-  --surface: var(--color-neutral-900);
+  /* 隣に並ぶピルと塗りが揃うよう、両テーマでchip-bgと同じ段階にしている */
+  --surface: var(--color-neutral-800);
 
   --chip-bg: var(--color-neutral-800);
   --chip-bg-hover: var(--color-neutral-700);
