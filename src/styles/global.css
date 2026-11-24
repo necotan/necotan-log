@@ -5,8 +5,6 @@
 /* prefers-color-schemeではなく.darkクラスで切り替える */
 @custom-variant dark (&:where(.dark, .dark *));
 
-@custom-variant pinned (&:where(.header-pinned, .header-pinned *));
-
 @custom-variant toc-collapsed (&:where(.toc-collapsed, .toc-collapsed *));
 
 @theme inline {
@@ -224,11 +222,6 @@ html {
     margin-bottom: 0.75rem;
     font-size: 1.125rem;
     font-weight: 600;
-  }
-
-  /* ナビバーをピン留めしている間は、目次から飛んだ見出しがヘッダーの裏に隠れないようにする */
-  .header-pinned .article-body :is(h2, h3) {
-    scroll-margin-top: 6rem;
   }
 
   .article-body p {
