@@ -137,7 +137,7 @@ const breadcrumbJsonLd = {
             href={`/category/${category}/`}
             data-pagefind-meta="category"
             data-pagefind-ignore
-            class="pill pill-default px-3 py-1 text-xs font-semibold"
+            class="pill pill-default px-3 py-2 text-xs font-semibold md:py-1"
           >
             {categoryLabels[category]}
           </a>
@@ -146,7 +146,7 @@ const breadcrumbJsonLd = {
               tags.map((tag) => (
                 <a
                   href={`/tag/${encodeURIComponent(tag)}/`}
-                  class="pill pill-default px-3 py-1 text-xs font-medium"
+                  class="pill pill-default px-3 py-2 text-xs font-medium md:py-1"
                 >
                   #{tag}
                 </a>

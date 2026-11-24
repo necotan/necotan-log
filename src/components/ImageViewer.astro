@@ -20,11 +20,12 @@
     >
       1 / 1
     </span>
+    {/* 写真の上で目立たないよう見た目は36pxのまま、疑似要素で押せる範囲だけ44pxに広げる */}
     <button
       id="image-viewer-close"
       type="button"
       aria-label="閉じる"
-      class="pointer-events-auto absolute right-4 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-fg/10 text-fg backdrop-blur-sm transition-bg hover:bg-fg/20"
+      class="pointer-events-auto absolute right-4 top-1/2 flex size-9 -translate-y-1/2 items-center justify-center rounded-full bg-fg/10 text-fg backdrop-blur-sm transition-bg before:absolute before:-inset-1 hover:bg-fg/20"
     >
       <svg class="size-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
         <path d="M18 6 6 18M6 6l12 12" />
