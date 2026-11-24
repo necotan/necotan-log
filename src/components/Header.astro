@@ -12,8 +12,8 @@ interface Props {
 const { activeCategory } = Astro.props;
 const pathname = Astro.url.pathname;
 
-const iconButtonClass =
-  'header-icon-button rounded-lg p-2 text-fg';
+// モバイルで押せる範囲を44pxに広げ、負マージンで行の高さは32pxのまま保つ(MobileMenuの閉じるボタンの位置合わせが前提にしている)
+const iconButtonClass = 'header-icon-button -my-1.5 rounded-lg p-3.5 text-fg md:my-0 md:p-2';
 ---
 
 <header id="site-header" class="px-4 pt-4 md:px-6">
@@ -48,7 +48,8 @@ const iconButtonClass =
       }
     </nav>
 
-    <div class="flex items-center">
+    {/* 広げた分だけ右へ出し、メニューボタンのアイコンの位置を変えない */}
+    <div class="-mr-1.5 flex items-center md:mr-0">
       <a
         href="/search/"
         aria-label="サイト内を検索"

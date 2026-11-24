@@ -22,6 +22,7 @@ const year = new Date().getFullYear();
   aria-label="サイトメニュー"
 >
   {/* 閉じるボタンをヘッダーのハンバーガーと同じ位置に重ねるため、Headerの外側余白と内側余白を再現し、ボタンは負マージンで行の高さを32px(ハンバーガーと同じ)に揃える */}
+  {/* どちらのボタンも押せる範囲は高さ44pxで、はみ出す分を負マージンで打ち消している */}
   <div class="px-4 pt-4">
     <div class="flex items-center justify-between px-6 py-3">
       <button
@@ -29,7 +30,7 @@ const year = new Date().getFullYear();
         data-theme-toggle
         aria-label="ダーク/ライトモードを切り替える"
         aria-pressed="false"
-        class="-my-0.5 -ml-3 flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium tracking-wide"
+        class="-my-1.5 -ml-3 flex items-center gap-2 rounded-full px-3 py-3 text-sm font-medium tracking-wide"
       >
         <Moon class="size-5 dark:hidden" />
         <span class="dark:hidden">Dark</span>
@@ -40,7 +41,7 @@ const year = new Date().getFullYear();
         id="mobile-menu-close"
         type="button"
         aria-label="メニューを閉じる"
-        class="-m-1 rounded-full p-2"
+        class="-m-1.5 rounded-full p-2.5"
       >
         <X class="size-6" />
       </button>
