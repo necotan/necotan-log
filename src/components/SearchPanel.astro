@@ -1,8 +1,8 @@
 ---
-import { Search } from '@lucide/astro';
+import { Search, X } from '@lucide/astro';
 ---
 
-<form role="search" data-search-form class="flex items-center gap-3 border-b border-border py-3">
+<form role="search" data-search-form class="mt-3 flex items-center gap-3 rounded-full bg-surface py-1.5 pr-2 pl-4">
   <Search class="size-4 shrink-0 text-fg-muted" aria-hidden="true" />
   <input
     data-search-input
@@ -14,12 +14,14 @@ import { Search } from '@lucide/astro';
     aria-label="検索キーワード"
     class="search-input min-w-0 flex-1 bg-transparent py-1.5 text-base text-fg placeholder:text-fg-muted focus:outline-none"
   />
+  {/* 入力欄がchip-bgと同じ灰色のため、ピルにすると塗りが溶けて見えない。入力欄の中に置く一般的な×アイコンにする */}
   <button
     type="button"
     data-search-clear
-    class="hidden shrink-0 rounded-md px-2 py-1 text-xs text-fg-muted hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-fg"
+    aria-label="検索語を消す"
+    class="hidden shrink-0 rounded-full p-2 text-fg-muted transition-text hover:text-fg focus-visible:outline focus-visible:outline-2 focus-visible:outline-fg"
   >
-    Clear
+    <X class="size-4" />
   </button>
 </form>
 
@@ -38,7 +40,7 @@ import { Search } from '@lucide/astro';
   <li>
     {/* hrefは検索結果ごとにscriptで設定する */}
     {/* eslint-disable-next-line astro/jsx-a11y/anchor-is-valid */}
-    <a class="-mx-3 flex gap-4 rounded-lg px-3 py-3 hover:bg-fg/5 focus-visible:bg-fg/5 focus-visible:outline-none">
+    <a class="-mx-3 flex gap-4 rounded-lg px-3 py-3 hover:bg-surface focus-visible:bg-surface focus-visible:outline-none">
       <span class="search-result-thumb aspect-video w-24 shrink-0 self-start overflow-hidden rounded-md bg-surface md:w-32">
         <img alt="" loading="lazy" class="size-full object-cover" />
       </span>
