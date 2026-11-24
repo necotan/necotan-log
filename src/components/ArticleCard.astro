@@ -22,7 +22,8 @@ const formattedDate = pubDate.toLocaleDateString('en-US', {
 ---
 
 <article>
-  <a href={href} class="group block">
+  {/* 背景は無いが、フォーカス枠を画像と同じ角丸にするためrounded-lgを付ける */}
+  <a href={href} class="group block rounded-lg">
     <div class="relative aspect-video overflow-hidden rounded-lg bg-surface">
       {
         heroImage ? (
