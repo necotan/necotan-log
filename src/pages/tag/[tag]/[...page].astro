@@ -39,8 +39,10 @@ const breadcrumbJsonLd = {
 
 <BaseLayout title={`#${tag} | necotan log.`} description={`#${tag} の記事一覧`}>
   <script type="application/ld+json" set:html={serializeJsonLd(breadcrumbJsonLd)} is:inline />
-  <section class="mx-auto max-w-6xl px-6 pt-10">
+  <section class="mx-auto flex max-w-6xl flex-wrap items-baseline gap-x-3 px-6 pt-10">
     <h1 class="text-2xl font-semibold tracking-tight text-fg">#{tag}</h1>
+    {/* ページ分割していても件数はタグ全体の数を出す */}
+    <p class="text-sm text-fg-muted">{page.total} {page.total === 1 ? 'post' : 'posts'}</p>
   </section>
 
   <section class="mx-auto max-w-6xl px-6 py-10">
