@@ -66,6 +66,15 @@ html {
   scrollbar-gutter: stable;
 }
 
+/* ブラウザ既定のリングは色も形もブラウザごとに違い、モノクロの配色から浮くため、全要素で本文色の枠にそろえる */
+/* baseレイヤーなので、枠を出さない要素は各自のユーティリティ(outline-none)で上書きできる */
+@layer base {
+  :focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+  }
+}
+
 @layer components {
   /* 枠線と薄い文字だけでは押せるか分かりにくかったため、塗りと本文色の文字で区別する */
   /* 文字色はtransitionしない。遷移直後に既定のリンク色(青)からフェードするため */
@@ -78,11 +87,6 @@ html {
 
   .pill:active {
     scale: 0.97;
-  }
-
-  .pill:focus-visible {
-    outline: 2px solid var(--fg);
-    outline-offset: 2px;
   }
 
   .pill-default {

@@ -31,6 +31,7 @@ Design decisions for necotan log. Read this before changing UI, colors, navigati
 - Clickable pills (category filter, article category and tags, share button, pagination) use `.pill` plus one of the variants in `global.css`. Outlined pills with muted text were hard to recognize as clickable, so pills are filled and have no border.
   - `.pill-default`: `chip-bg` fill with `fg` text.
   - `.pill-active`: inverted (`fg` fill, `bg` text). Use it only for the selected state, with `aria-current`. Actions such as Share on X use `.pill-default`; an inverted action button stood out too much in the monochrome layout.
+- Keyboard focus uses one rule for every element: `:focus-visible` in the base layer of `global.css` draws a 2px `fg` outline. Do not add `focus-visible:outline-*` classes per element. An element that shows focus another way, such as the fill on search results, opts out with `focus-visible:outline-none`.
 - Non-clickable labels inside a larger link get no fill. The category in `ArticleCard` is plain `fg-muted` text, because a filled badge looked like a separate button.
 
 ## Typography
