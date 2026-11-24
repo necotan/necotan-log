@@ -65,6 +65,8 @@
 </style>
 
 <script>
+  import { inertOutside } from '../lib/dialog';
+
   interface ViewerImage {
     src: string;
     alt: string;
@@ -80,6 +82,8 @@
 
   let images: ViewerImage[] = [];
   let currentIndex = 0;
+  let openerIndex = 0;
+  let releaseInert: (() => void) | null = null;
   let isProgrammaticScroll = false;
   let settleTimeout: ReturnType<typeof setTimeout> | undefined;
   let scrollFrame: number | null = null;
@@ -139,17 +143,24 @@
   function openViewer(index: number): void {
     if (!viewer) return;
     currentIndex = index;
+    openerIndex = index;
     viewer.classList.remove('hidden');
     document.body.classList.add('overflow-hidden');
     updateTopInset();
     updateUI();
     scrollToIndex(index, 'instant');
+    releaseInert = inertOutside(viewer);
+    closeButton?.focus({ preventScroll: true });
   }
 
   function closeViewer(): void {
-    if (!viewer) return;
+    if (!viewer || viewer.classList.contains('hidden')) return;
     viewer.classList.add('hidden');
     document.body.classList.remove('overflow-hidden');
+    releaseInert?.();
+    releaseInert = null;
+    // ビューア内で別の画像へ送っていても、開いた画像に戻す(記事のスクロール位置はその画像のまま変わっていないため)
+    articleImages[openerIndex]?.focus({ preventScroll: true });
   }
 
   function goTo(index: number): void {

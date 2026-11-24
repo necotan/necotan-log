@@ -94,11 +94,14 @@ const year = new Date().getFullYear();
 </div>
 
 <script>
+  import { inertOutside } from '../lib/dialog';
+
   const menu = document.getElementById('mobile-menu');
   const openButton = document.getElementById('mobile-menu-open');
   const closeButton = document.getElementById('mobile-menu-close');
 
   let savedScrollY: number | null = null;
+  let releaseInert: (() => void) | null = null;
 
   function openMenu() {
     if (!menu) return;
@@ -109,6 +112,8 @@ const year = new Date().getFullYear();
     menu.classList.add('flex');
     document.body.classList.add('overflow-hidden');
     openButton?.setAttribute('aria-expanded', 'true');
+    releaseInert = inertOutside(menu);
+    closeButton?.focus({ preventScroll: true });
   }
 
   function resetMenu() {
@@ -117,6 +122,9 @@ const year = new Date().getFullYear();
     menu.classList.remove('flex');
     document.body.classList.remove('overflow-hidden');
     openButton?.setAttribute('aria-expanded', 'false');
+    // closeMenuがハンバーガーへフォーカスを戻すため、それより先にinertを外す
+    releaseInert?.();
+    releaseInert = null;
     if (savedScrollY !== null) {
       window.scrollTo(0, savedScrollY);
       savedScrollY = null;
