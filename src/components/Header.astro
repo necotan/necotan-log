@@ -1,15 +1,8 @@
 ---
 import { Menu, Moon, Search, Sun } from '@lucide/astro';
 import MobileMenu from './MobileMenu.astro';
-import { navGroups, isNavActive } from '../lib/navigation';
-import type { Category } from '../lib/categories';
+import { navItems, isNavActive } from '../lib/navigation';
 
-interface Props {
-  /** 記事詳細ページなど、pathnameだけではnav項目と一致しない場合に現在のカテゴリを渡す */
-  activeCategory?: Category;
-}
-
-const { activeCategory } = Astro.props;
 const pathname = Astro.url.pathname;
 
 // モバイルで押せる範囲を44pxに広げ、負マージンで行の高さは32pxのまま保つ(MobileMenuの閉じるボタンの位置合わせが前提にしている)
@@ -22,28 +15,16 @@ const iconButtonClass = 'header-icon-button -my-1.5 rounded-lg p-3.5 text-fg md:
       necotan log.
     </a>
 
-    <nav class="hidden items-center gap-4 md:flex">
+    <nav class="hidden items-center gap-6 md:flex">
       {
-        navGroups.map((group, groupIndex) => (
-          <>
-            {/* 背景色の1px幅は125%表示などで両端が物理ピクセルに丸められ、位置しだいで1pxにも2pxにもなる */}
-            {/* 選択中の項目の太字で位置がページごとに変わるため、borderで描いて太さを物理ピクセル単位に揃える */}
-            {groupIndex > 0 && <span class="h-4 w-0 border-l border-fg" aria-hidden="true" />}
-            <div class="flex items-center gap-6">
-              {group.map((item) => (
-                <a
-                  href={item.href}
-                  class:list={[
-                    'nav-link text-sm text-fg',
-                    isNavActive(pathname, item.href, activeCategory) ? 'nav-link-active font-semibold' : '',
-                  ]}
-                  aria-current={isNavActive(pathname, item.href, activeCategory) ? 'page' : undefined}
-                >
-                  {item.label}
-                </a>
-              ))}
-            </div>
-          </>
+        navItems.map((item) => (
+          <a
+            href={item.href}
+            class:list={['nav-link text-sm text-fg', isNavActive(pathname, item) ? 'nav-link-active font-semibold' : '']}
+            aria-current={isNavActive(pathname, item) ? 'page' : undefined}
+          >
+            {item.label}
+          </a>
         ))
       }
     </nav>
@@ -84,7 +65,7 @@ const iconButtonClass = 'header-icon-button -my-1.5 rounded-lg p-3.5 text-fg md:
   </div>
 </header>
 
-<MobileMenu activeCategory={activeCategory} />
+<MobileMenu />
 
 <style>
   @reference "../styles/global.css";

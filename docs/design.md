@@ -24,7 +24,7 @@ Design decisions for necotan log. Read this before changing UI, colors, navigati
 - The theme switches by the `.dark` class on `<html>`, not by `prefers-color-scheme`. Style both themes through the tokens.
 - The theme toggle fades the tokens themselves on `:root`, not each element, and stops element transitions while `.theme-transition` is set. Fading per element left icons lagging on iOS and nav links switching instantly. A new token that differs between themes must be registered with `@property` as `<color>` and added to the `:root.theme-transition` list in `global.css`; otherwise it switches instantly while everything else fades.
 - Give every link its own color class (`text-fg-muted` or `text-fg`) instead of inheriting from the parent. Until the CSS loads, an inheriting link shows the browser's default blue or purple.
-- Draw 1px lines with a border (`w-0 border-l`, `border-t`), not a 1px-wide filled box (`w-px bg-*`). At fractional display scaling such as Windows 125%, Chrome rounds both edges of a filled box to device pixels, so the line renders 1 or 2 device pixels wide depending on its position. The nav separators looked different on each page because the bold active item shifts them. Border widths are rounded to whole device pixels and stay constant. Headless Chrome with emulated device scale factor does not reproduce this; check in a real browser.
+- Draw 1px lines with a border (`w-0 border-l`, `border-t`), not a 1px-wide filled box (`w-px bg-*`). At fractional display scaling such as Windows 125%, Chrome rounds both edges of a filled box to device pixels, so the line renders 1 or 2 device pixels wide depending on its position. The former nav separators looked different on each page because the bold active item shifted them. Border widths are rounded to whole device pixels and stay constant. Headless Chrome with emulated device scale factor does not reproduce this; check in a real browser.
 
 ## Buttons and pills
 
@@ -40,7 +40,9 @@ Design decisions for necotan log. Read this before changing UI, colors, navigati
 
 ## Navigation
 
-- PC: the header shows every item in `navGroups` (`src/lib/navigation.ts`).
+- PC: the header shows every item in `navItems` (`src/lib/navigation.ts`).
+- Categories are not in the header. They duplicated the category pills on the home page, and the pills on the home page, category pages, and articles already link to every category.
+- A nav item is selected when the URL starts with its `href` or one of its `activePrefixes`. Tag pages (`/tag/...`) select Tags.
 - Mobile: an icon-only hamburger opens the full-screen `MobileMenu`. The button has no visible label; its accessible name comes from `aria-label`. Do not use a dropdown or horizontal-scroll tabs.
 
 ## Articles

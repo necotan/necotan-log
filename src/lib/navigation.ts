@@ -1,21 +1,15 @@
-import type { Category } from './categories';
-
 export type NavItem = {
   label: string;
   href: string;
+  /** hrefと別の階層にある配下のページでも選択中にしたいときに、そのパスの先頭を渡す */
+  activePrefixes?: string[];
 };
 
-export const navGroups: NavItem[][] = [
-  [{ label: 'Home', href: '/' }],
-  [
-    { label: 'Photo', href: '/category/photo/' },
-    { label: 'Life', href: '/category/life/' },
-    { label: 'Essay', href: '/category/essay/' },
-  ],
-  [{ label: 'About', href: '/about/' }],
+export const navItems: NavItem[] = [
+  { label: 'Home', href: '/' },
+  { label: 'Tags', href: '/tags/', activePrefixes: ['/tag/'] },
+  { label: 'About', href: '/about/' },
 ];
-
-export const navItems: NavItem[] = navGroups.flat();
 
 export type SnsLink = {
   label: string;
@@ -30,13 +24,9 @@ export const snsLinks: SnsLink[] = [
   { label: 'RSS', href: '/rss.xml' },
 ];
 
-export function isNavActive(pathname: string, href: string, activeCategory?: Category): boolean {
-  if (href === '/') {
+export function isNavActive(pathname: string, item: NavItem): boolean {
+  if (item.href === '/') {
     return pathname === '/';
   }
-  // 記事詳細ページではpathnameがカテゴリnavのhrefと一致しないため、記事のカテゴリを別途受け取って判定する
-  if (activeCategory && href === `/category/${activeCategory}/`) {
-    return true;
-  }
-  return pathname === href || pathname.startsWith(href);
+  return [item.href, ...(item.activePrefixes ?? [])].some((prefix) => pathname.startsWith(prefix));
 }
