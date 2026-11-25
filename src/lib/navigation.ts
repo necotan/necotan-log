@@ -8,6 +8,7 @@ export type NavItem = {
 export const navItems: NavItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Tags', href: '/tags/', activePrefixes: ['/tag/'] },
+  { label: 'Archive', href: '/archive/' },
   { label: 'About', href: '/about/' },
 ];
 
