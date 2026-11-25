@@ -1,0 +1,14 @@
+---
+interface Props {
+  title: string;
+  /** ページ分割していても、一覧全体の件数(Astroの page.total)を渡す */
+  total: number;
+}
+
+const { title, total } = Astro.props;
+---
+
+<div class="flex flex-wrap items-baseline gap-x-3">
+  <h1 class="text-2xl font-semibold tracking-tight text-fg">{title}</h1>
+  <p class="text-sm text-fg-muted">{total} {total === 1 ? 'post' : 'posts'}</p>
+</div>
