@@ -59,7 +59,8 @@ function buildYouTubeEmbed(videoId: string): Element {
         type: 'element',
         tagName: 'iframe',
         properties: {
-          src: `https://www.youtube.com/embed/${videoId}`,
+          // プライバシー強化モード: 再生するまでYouTubeが閲覧者のブラウザにCookieを保存しない
+          src: `https://www.youtube-nocookie.com/embed/${videoId}`,
           title: 'YouTube video player',
           loading: 'lazy',
           referrerPolicy: 'strict-origin-when-cross-origin',
