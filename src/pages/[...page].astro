@@ -20,6 +20,8 @@ const { page } = Astro.props as { page: Page<CollectionEntry<'blog'>> };
 
 <BaseLayout title="necotan log." description="necotan log.は、写真・カメラ、愛車など、日々の記録を残すために作成した個人ブログです。">
   <section class="mx-auto max-w-6xl px-6 pt-10">
+    {/* 見た目はヘッダーのサイト名が見出しを兼ねるため、読み上げ用にだけ置く */}
+    <h1 class="sr-only">necotan log.</h1>
     <CategoryFilter activeHref="/" />
   </section>
 

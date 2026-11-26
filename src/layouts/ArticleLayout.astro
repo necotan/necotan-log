@@ -226,7 +226,7 @@ const breadcrumbJsonLd = {
       {
         relatedPosts.length > 0 && (
           <section class="mt-10 border-t border-border pt-8" data-pagefind-ignore>
-            <p class="text-sm font-semibold text-fg">Related</p>
+            <h2 class="text-sm font-semibold text-fg">Related</h2>
             <div class="mt-4 grid grid-cols-1 gap-x-8 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
               {relatedPosts.map((post) => (
                 <ArticleCard
@@ -236,6 +236,7 @@ const breadcrumbJsonLd = {
                   pubDate={post.pubDate}
                   category={post.category}
                   heroImage={post.heroImage}
+                  headingLevel={3}
                 />
               ))}
             </div>
