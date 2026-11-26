@@ -1,0 +1,67 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import TableOfContents from '../components/TableOfContents.astro';
+
+const description = 'necotan log.のプライバシーポリシー(アクセス解析、アクセスログ、外部サービスなど)';
+
+const headings = [
+  { depth: 2, slug: 'personal-information', text: '1. 個人情報について' },
+  { depth: 2, slug: 'analytics', text: '2. アクセス解析' },
+  { depth: 2, slug: 'access-logs', text: '3. アクセスログ' },
+  { depth: 2, slug: 'browser-storage', text: '4. ブラウザへの保存' },
+  { depth: 2, slug: 'external-services', text: '5. 外部サービス' },
+  { depth: 2, slug: 'changes', text: '6. 改定について' },
+];
+---
+
+<BaseLayout title="Privacy Policy | necotan log." description={description}>
+  <div class="mx-auto max-w-6xl px-6 py-12 lg:grid lg:grid-cols-[minmax(0,1fr)_240px] lg:items-start lg:gap-12 lg:transition-[grid-template-columns] lg:duration-300 lg:ease-out lg:toc-collapsed:grid-cols-[minmax(0,1fr)_4rem]">
+    <div class="lg:col-start-1 lg:row-start-1">
+      <h1 class="text-3xl font-semibold tracking-tight text-fg">Privacy Policy</h1>
+
+      <TableOfContents headings={headings} variant="mobile" />
+
+      <div class="article-body max-w-3xl transition-[max-width] duration-300 ease-out lg:toc-collapsed:max-w-4xl">
+        <p class="mt-6">
+          necotan log.（以下、本サイト）で利用しているサービスと、閲覧時に送られる情報について説明します。
+        </p>
+
+        <h2 id="personal-information">1. 個人情報について</h2>
+        <p>
+          本サイトには問い合わせフォームやコメント欄がなく、氏名やメールアドレスなどの個人情報をお預かりすることはありません。
+        </p>
+
+        <h2 id="analytics">2. アクセス解析</h2>
+        <p>
+          本サイトでは、閲覧数や表示速度を把握するために<a href="https://www.cloudflare.com/web-analytics/">Cloudflare Web Analytics</a>を利用しています。CookieやlocalStorageを使わず、閲覧者を個人として識別しない方式で集計されます。
+        </p>
+
+        <h2 id="access-logs">3. アクセスログ</h2>
+        <p>
+          本サイトはCloudflareで配信しており、安全な配信のために、IPアドレス、ブラウザの種類、閲覧したURLなどがCloudflareに記録されます。また、不正なアクセスを防ぐために、CloudflareがCookieを保存する場合があります。運営者は、これらの情報をサイトの運営と不正アクセスへの対応にのみ利用します。詳しくは<a href="https://www.cloudflare.com/privacypolicy/">Cloudflareのプライバシーポリシー</a>をご覧ください。
+        </p>
+
+        <h2 id="browser-storage">4. ブラウザへの保存</h2>
+        <p>
+          ライト/ダークの表示テーマと、目次の開閉状態を、お使いのブラウザのlocalStorageに保存しています。これらはブラウザの中だけで使われ、外部には送信されません。
+        </p>
+
+        <h2 id="external-services">5. 外部サービス</h2>
+        <p>
+          一部の記事では、YouTubeの動画をプライバシー強化モードで埋め込んでいます。埋め込みを表示するとYouTubeのサーバーにIPアドレスなどが送られ、再生するとYouTubeがCookieなどを利用する場合があります。詳しくは<a href="https://policies.google.com/privacy">Googleのプライバシーポリシー</a>をご覧ください。
+        </p>
+        <p>
+          記事内のリンクカードの画像は、リンク先のサイトから直接読み込んでいるため、リンク先のサーバーにIPアドレスなどが送られます。Xへの共有ボタンはリンクで、押したときにだけXへ移動します。
+        </p>
+
+        <h2 id="changes">6. 改定について</h2>
+        <p>
+          本ポリシーは、利用するサービスの変更などに合わせて、予告なく改定することがあります。改定後の内容は、本ページに掲載した時点から適用されます。
+        </p>
+        <p>制定日: 2026年11月26日</p>
+      </div>
+    </div>
+
+    <TableOfContents headings={headings} variant="desktop" />
+  </div>
+</BaseLayout>
