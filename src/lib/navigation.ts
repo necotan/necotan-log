@@ -26,8 +26,9 @@ export const snsLinks: SnsLink[] = [
 ];
 
 export function isNavActive(pathname: string, item: NavItem): boolean {
+  // '/'は全ページの先頭に一致するため前方一致にせず、ホームの2ページ目以降(/2/など)だけを足す
   if (item.href === '/') {
-    return pathname === '/';
+    return pathname === '/' || /^\/\d+\/$/.test(pathname);
   }
   return [item.href, ...(item.activePrefixes ?? [])].some((prefix) => pathname.startsWith(prefix));
 }
