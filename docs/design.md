@@ -44,6 +44,7 @@ Design decisions for necotan log. Read this before changing UI, colors, navigati
 - Categories are not in the header. They duplicated the category pills on the home page, and the pills on the home page, category pages, and articles already link to every category.
 - A nav item is selected when the URL starts with its `href` or one of its `activePrefixes`. Tag pages (`/tag/...`) select Tags.
 - Footer: only a Privacy Policy link sits in small text just above the copyright line. Do not repeat the header items there. All footer rows share one `gap` so the spacing stays even; do not add per-row margins.
+- Archive: on PC, the list and a 240px right column use the same grid as articles and About, so the list does not end with empty space on the right. The column lists categories and years with post counts; categories without posts are left out because their pages would be empty. On mobile the column is hidden.
 - Mobile: an icon-only hamburger opens the full-screen `MobileMenu`. The button has no visible label; its accessible name comes from `aria-label`. Do not use a dropdown or horizontal-scroll tabs.
 
 ## Articles
