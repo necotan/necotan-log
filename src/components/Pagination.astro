@@ -1,5 +1,6 @@
 ---
 import type { Page } from 'astro';
+import PaginationStep from './PaginationStep.astro';
 
 interface Props {
   page: Page<unknown>;
@@ -42,22 +43,18 @@ function getPageItems(currentPage: number, lastPage: number, siblingCount: numbe
 const mobilePageItems = getPageItems(page.currentPage, page.lastPage, 1);
 const desktopPageItems = getPageItems(page.currentPage, page.lastPage, 2);
 
-const prevNextClass = 'pill pill-default shrink-0 px-5 py-2 text-xs font-medium tracking-wide uppercase';
 const numberClass = 'pill flex size-9 shrink-0 items-center justify-center text-sm';
+
+// page.url.prev/nextは末尾のスラッシュが無く(/2)、配信側で/2/へのリダイレクトが挟まるため、番号のリンクと同じpageUrlで作る
+const prevHref = page.url.prev ? pageUrl(page.currentPage - 1) : undefined;
+const nextHref = page.url.next ? pageUrl(page.currentPage + 1) : undefined;
 ---
 
 {
   page.lastPage > 1 && (
     <Fragment>
       <nav class="mt-20 flex items-center justify-center gap-2 sm:hidden" aria-label="ページネーション">
-        <a
-          href={page.url.prev ?? '#'}
-          aria-disabled={!page.url.prev}
-          tabindex={page.url.prev ? undefined : -1}
-          class:list={[prevNextClass, !page.url.prev && 'pointer-events-none opacity-40']}
-        >
-          Prev
-        </a>
+        <PaginationStep label="Prev" href={prevHref} />
 
         {mobilePageItems.map((item) =>
           item === 'ellipsis' ? (
@@ -78,25 +75,11 @@ const numberClass = 'pill flex size-9 shrink-0 items-center justify-center text-
           ),
         )}
 
-        <a
-          href={page.url.next ?? '#'}
-          aria-disabled={!page.url.next}
-          tabindex={page.url.next ? undefined : -1}
-          class:list={[prevNextClass, !page.url.next && 'pointer-events-none opacity-40']}
-        >
-          Next
-        </a>
+        <PaginationStep label="Next" href={nextHref} />
       </nav>
 
       <nav class="mt-20 hidden items-center justify-center gap-2 sm:flex" aria-label="ページネーション">
-        <a
-          href={page.url.prev ?? '#'}
-          aria-disabled={!page.url.prev}
-          tabindex={page.url.prev ? undefined : -1}
-          class:list={[prevNextClass, !page.url.prev && 'pointer-events-none opacity-40']}
-        >
-          Prev
-        </a>
+        <PaginationStep label="Prev" href={prevHref} />
 
         {desktopPageItems.map((item) =>
           item === 'ellipsis' ? (
@@ -117,14 +100,7 @@ const numberClass = 'pill flex size-9 shrink-0 items-center justify-center text-
           ),
         )}
 
-        <a
-          href={page.url.next ?? '#'}
-          aria-disabled={!page.url.next}
-          tabindex={page.url.next ? undefined : -1}
-          class:list={[prevNextClass, !page.url.next && 'pointer-events-none opacity-40']}
-        >
-          Next
-        </a>
+        <PaginationStep label="Next" href={nextHref} />
       </nav>
     </Fragment>
   )

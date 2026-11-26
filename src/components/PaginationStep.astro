@@ -1,0 +1,23 @@
+---
+interface Props {
+  label: string;
+  /** 先頭/末尾のページで前後が無いときはundefinedを渡すと、押せない文字として表示する */
+  href?: string;
+}
+
+const { label, href } = Astro.props;
+
+const stepClass = 'pill pill-default shrink-0 px-5 py-2 text-xs font-medium tracking-wide uppercase';
+---
+
+{
+  href ? (
+    <a href={href} class={stepClass}>
+      {label}
+    </a>
+  ) : (
+    // リンクのまま無効にするとスクリーンリーダーで「リンク、無効」と読まれ、押せない項目に寄り道させるため、ただの文字にする
+    // pill-defaultのhoverと:activeの反応は押せそうに見えるため、pointer-events-noneで止める
+    <span class:list={[stepClass, 'pointer-events-none opacity-40']}>{label}</span>
+  )
+}
