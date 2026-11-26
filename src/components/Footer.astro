@@ -2,13 +2,14 @@
 import { snsLinks } from '../lib/navigation';
 
 const year = new Date().getFullYear();
+const privacyHref = '/privacy/';
 ---
 
 <footer>
-  <div class="mx-auto max-w-6xl px-6 py-12 text-center">
+  <div class="mx-auto flex max-w-6xl flex-col items-center gap-6 px-6 py-12 text-center">
     <p class="text-lg font-semibold tracking-tight text-fg">necotan log.</p>
 
-    <div class="mt-8 flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-fg-muted">
+    <div class="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-fg-muted">
       {
         snsLinks.map((sns) => (
           <a
@@ -23,7 +24,15 @@ const year = new Date().getFullYear();
       }
     </div>
 
-    <p class="mt-8 text-xs text-fg-muted">
+    <a
+      href={privacyHref}
+      aria-current={Astro.url.pathname === privacyHref ? 'page' : undefined}
+      class="py-1 text-xs text-fg-muted transition-text hover:text-fg"
+    >
+      Privacy Policy
+    </a>
+
+    <p class="text-xs text-fg-muted">
       &copy; {year} necotan. All rights reserved.
     </p>
   </div>
