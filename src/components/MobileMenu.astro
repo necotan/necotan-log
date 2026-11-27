@@ -1,6 +1,6 @@
 ---
 import { Moon, Sun, X } from '@lucide/astro';
-import { navItems, snsLinks, isNavActive } from '../lib/navigation';
+import { navItems, snsLinks, privacyHref, isNavActive } from '../lib/navigation';
 
 const pathname = Astro.url.pathname;
 const year = new Date().getFullYear();
@@ -74,7 +74,15 @@ const year = new Date().getFullYear();
     }
   </div>
 
-  <p class="mt-6 pb-10 text-center text-xs text-fg-muted">
+  <a
+    href={privacyHref}
+    aria-current={pathname === privacyHref ? 'page' : undefined}
+    class="mt-5 self-center py-1 text-xs text-fg-muted hover:text-fg"
+  >
+    Privacy Policy
+  </a>
+
+  <p class="mt-5 pb-10 text-center text-xs text-fg-muted">
     &copy; {year} necotan. All rights reserved.
   </p>
 </div>
