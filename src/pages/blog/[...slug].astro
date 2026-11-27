@@ -1,7 +1,7 @@
 ---
 import { render, type CollectionEntry } from 'astro:content';
 import ArticleLayout from '../../layouts/ArticleLayout.astro';
-import { getPosts } from '../../lib/posts';
+import { getPosts, getRelatedPosts } from '../../lib/posts';
 import { estimateReadingMinutes } from '../../lib/readingTime';
 
 export async function getStaticPaths() {
@@ -14,9 +14,7 @@ export async function getStaticPaths() {
       post,
       newerPost: sorted[index - 1],
       olderPost: sorted[index + 1],
-      relatedPosts: sorted
-        .filter((p) => p.id !== post.id && p.data.category === post.data.category)
-        .slice(0, 3),
+      relatedPosts: getRelatedPosts(post, sorted),
     },
   }));
 }
