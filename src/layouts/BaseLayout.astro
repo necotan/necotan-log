@@ -20,6 +20,7 @@ const { title, description, chrome = true, image, type = 'website' } = Astro.pro
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL(image ?? '/og-default.png', Astro.site).href;
+const rssURL = new URL('/rss.xml', Astro.site).href;
 ---
 
 <html lang="ja">
@@ -39,6 +40,7 @@ const ogImageURL = new URL(image ?? '/og-default.png', Astro.site).href;
     <link rel="apple-touch-icon" sizes="180x180" href={appleTouchIconUrl} />
     <link rel="manifest" href="/site.webmanifest" />
     <link rel="canonical" href={canonicalURL} />
+    <link rel="alternate" type="application/rss+xml" title="necotan log." href={rssURL} />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
