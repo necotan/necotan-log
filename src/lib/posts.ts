@@ -9,8 +9,9 @@ export function getPosts(): Promise<CollectionEntry<'blog'>[]> {
 }
 
 /**
- * 共通するタグが多い順、同数なら同じカテゴリを先にして返す。タグもカテゴリも共通しない記事は含めない
+ * 共通するタグが多い順、同数なら同じカテゴリを先にして返す
  * sortedPostsは新しい順に並べて渡す(同点の記事はその順のまま残る)
+ * 関連する記事が足りないと欄が空になるため、タグもカテゴリも共通しない記事も新しい順に後ろへ並べて埋める
  */
 export function getRelatedPosts(
   post: CollectionEntry<'blog'>,
@@ -26,7 +27,6 @@ export function getRelatedPosts(
       sharedTags: (candidate.data.tags ?? []).filter((tag) => tags.has(tag)).length,
       sameCategory: candidate.data.category === post.data.category,
     }))
-    .filter(({ sharedTags, sameCategory }) => sharedTags > 0 || sameCategory)
     .sort((a, b) => b.sharedTags - a.sharedTags || Number(b.sameCategory) - Number(a.sameCategory))
     .slice(0, limit)
     .map(({ candidate }) => candidate);
