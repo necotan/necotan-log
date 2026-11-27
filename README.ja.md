@@ -22,12 +22,18 @@
 
 ## 技術スタック
 
-- [Astro](https://astro.build/)
-- [Tailwind CSS v4](https://tailwindcss.com/)
-- [@fontsource-variable/inter](https://fontsource.org/fonts/inter) / [@fontsource-variable/noto-sans-jp](https://fontsource.org/fonts/noto-sans-jp)
-- [@lucide/astro](https://lucide.dev/)
-- [Pagefind](https://pagefind.app/)
-- Cloudflare Workers / Cloudflare R2
+- **Framework**: [Astro](https://astro.build/) (静的サイト) / [TypeScript](https://www.typescriptlang.org/)
+- **Content**: Markdown / [MDX](https://mdxjs.com/) (Content Collections、zod スキーマで検証)
+- **Markdown Processing**: [Shiki](https://shiki.style/) / 自前の rehype プラグイン (YouTube 埋め込み、リンクカード、画像グリッド)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) (v4)
+- **Fonts**: [Inter](https://fontsource.org/fonts/inter) / [Noto Sans JP](https://fontsource.org/fonts/noto-sans-jp) (Fontsource)
+- **Icons**: [Lucide](https://lucide.dev/) (@lucide/astro)
+- **Search**: [Pagefind](https://pagefind.app/)
+- **Feeds & SEO**: [@astrojs/rss](https://docs.astro.build/en/recipes/rss/) / [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/)
+- **Images**: Cloudflare R2 (写真の配信、astro:assets で最適化)
+- **PWA**: Web App Manifest
+- **Analytics**: Cloudflare Web Analytics
+- **Hosting**: Cloudflare Workers (静的アセット)
 
 ## プロジェクト構成
 

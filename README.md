@@ -22,12 +22,18 @@
 
 ## Tech Stack
 
-- [Astro](https://astro.build/)
-- [Tailwind CSS v4](https://tailwindcss.com/)
-- [@fontsource-variable/inter](https://fontsource.org/fonts/inter) / [@fontsource-variable/noto-sans-jp](https://fontsource.org/fonts/noto-sans-jp)
-- [@lucide/astro](https://lucide.dev/)
-- [Pagefind](https://pagefind.app/)
-- Cloudflare Workers / Cloudflare R2
+- **Framework**: [Astro](https://astro.build/) (static site) / [TypeScript](https://www.typescriptlang.org/)
+- **Content**: Markdown / [MDX](https://mdxjs.com/) (Content Collections with zod schema)
+- **Markdown Processing**: [Shiki](https://shiki.style/) / custom rehype plugins (YouTube embeds, link cards, image grids)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) (v4)
+- **Fonts**: [Inter](https://fontsource.org/fonts/inter) / [Noto Sans JP](https://fontsource.org/fonts/noto-sans-jp) (Fontsource)
+- **Icons**: [Lucide](https://lucide.dev/) (@lucide/astro)
+- **Search**: [Pagefind](https://pagefind.app/)
+- **Feeds & SEO**: [@astrojs/rss](https://docs.astro.build/en/recipes/rss/) / [@astrojs/sitemap](https://docs.astro.build/en/guides/integrations-guide/sitemap/)
+- **Images**: Cloudflare R2 (photos, optimized with astro:assets)
+- **PWA**: Web App Manifest
+- **Analytics**: Cloudflare Web Analytics
+- **Hosting**: Cloudflare Workers (Static Assets)
 
 ## Project Structure
 
