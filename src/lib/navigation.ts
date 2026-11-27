@@ -25,6 +25,8 @@ export const snsLinks: SnsLink[] = [
   { label: 'RSS', href: '/rss.xml' },
 ];
 
+export const privacyHref = '/privacy/';
+
 export function isNavActive(pathname: string, item: NavItem): boolean {
   // '/'は全ページの先頭に一致するため前方一致にせず、ホームの2ページ目以降(/2/など)だけを足す
   if (item.href === '/') {
